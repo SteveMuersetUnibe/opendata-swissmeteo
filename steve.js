@@ -1,6 +1,6 @@
 var location_files = [];
 var live_data_base_url = "";
-var data_path = "Standorte/ALT - Altdorf.csv";
+var data_path = "Standorte/LUZ - Luzern.csv";
 
 var win_height = window.innerHeight;
 var win_width = window.innerWidth;
@@ -11,13 +11,13 @@ var current_center = 0;
 var current_data;
 
 
-var mydata = new Array();
+var data = new Array();
 
-d3.dsv(";", data_path, (data, error) => {mydata.push(data)}).then(data => draw());
+d3.dsv(";", data_path, (d, error) => {data.push(d)}).then(data => prepareData());
 
-d3.select("svg")
-    .style("height", win_height)
-    .style("width", win_width)
+// d3.select("svg")
+//     .style("height", win_height)
+//     .style("width", win_width)
 
 function draw() {
     console.log(mydata);
@@ -26,7 +26,7 @@ function draw() {
     var selected_data = prepareData();
     current_data = selected_data;
 
-    console.log(current_data);
+    console.log(current_data)
 
     var line = prepareLine(selected_data, 0);
 
@@ -188,6 +188,7 @@ function indexRelativPosition(index, start, end){
 }
 
 function prepareData() {
+    //return updateCurrentData()
     return filterDate(new Date());
 }
 
@@ -197,7 +198,7 @@ function filterDate(date) {
     var month = date.getMonth() < 10 ? "0" + date.getMonth() : date.getMonth + "";
     var str = month + day
 
-    return mydata.filter(function (value){
+    data = data.filter(function (value){
         var time = value.time;
         var sub = time.substring(4);
         return sub === str;
@@ -208,12 +209,10 @@ function updateCurrentData() {
     //is a date selected?
     //is a timeframe selected?
 
-    var min = 10;
-    var max = 100;
+    var min = 0;
+    var max = 365;
 
-    return mydata.filter(function (value, index){
-        return index >= min && index <= max;
-    })
+    data = data.slice(min, max);
 
 }
 
