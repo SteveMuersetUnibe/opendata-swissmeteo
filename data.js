@@ -1,18 +1,20 @@
-var data = "";
+var data = new Array();
 var data_width = "";
 var data_hight ;
 
 
 function getdata(data_path){
-    d3.dsv(";", data_path, (d, error) => {data.push(d)}).then(data => prepareData());
+    d3.dsv(";", data_path, (d, error) => {data.push(d)}).then(data => null);
 
 }
+
 
 function changeLocation(){
     var Location=document.getElementById("Locations").value;
     window[Location]
     console.log(Location)
 }
+
 
 function changeParameter(){
     var Parameter=document.getElementById("Parameter").value;
