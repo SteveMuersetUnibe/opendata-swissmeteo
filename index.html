@@ -11,7 +11,7 @@
         <svg></svg>
 
         <form> 
-            <select id="Locations" onchange="changeLocation();">
+            <select id="Locations" onchange="changeLocation(this);">
 
                 <option value="live_data_base_url" > Mein Standort </option>
                 <option value="ALT" > Altdorf</option>
@@ -36,7 +36,7 @@
                 <option value="OTL" > Lugano</option>
                 <option value="PAY" > Payerne</option>
                 <option value="RAG" > Bad Ragaz</option>
-                <option value="SAE" > aenti</option>
+                <option value="SAE" > Saenti</option>
                 <option value="SAM" > Samedan</option>
                 <option value="SBE" > S. Bernardino</option>
                 <option value="SIA" > Segl-Maria</option>
@@ -46,7 +46,7 @@
 
             </select>
 
-            <select id="Parameter" onchange="changeParameter();">
+            <select id="Parameter" onchange="changeParameter(this);">
 
                 <option value=""> Durchschnitstemperatur </option>
                 <option value=""> Maximaltemperatur </option>
@@ -56,6 +56,7 @@
             </select>
         </form>
 
+        <script src="data.js"></script>
         <script src="steve.js"></script>
         <script src="merlin.js"></script>
         <script src="d3.js"></script>
