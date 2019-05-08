@@ -1,4 +1,4 @@
 
-function changeZeitspanne(){
-    
+function changeTimespane(){
+
 }
