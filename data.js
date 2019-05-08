@@ -10,7 +10,7 @@ function getdata(data_path){
 
 
 function changeLocation(){
-    var Location=document.getElementById("Locations").value;
+    var Location=document.getElementById("Location").value;
     window[Location]
     console.log(Location)
 }
