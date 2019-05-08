@@ -1,14 +1,17 @@
+var all_data = new Array();
 var data = new Array();
+var data_headers;
 var data_width = "";
 var data_hight ;
+
+var changed;
 
 
 function getdata(data_path){
     console.log(String(data_path))
     data = new Array();
-    
-    d3.dsv(";", String(data_path), (d, error) => {data.push(d)}).then(data => null);
-
+    all_data = new Array();
+    d3.dsv(";", String(data_path), (d, error) => {all_data.push(d)}).then(data_headers => {data_headers = data_headers, filterData()});
 }
 
 
@@ -21,11 +24,50 @@ function changeLocation(){
 
 function changeParameter(){
     var Parameter=document.getElementById("Parameter").value;
-    window[Parameter]
+    changed = true;
     console.log(Parameter)
 }
 
+function changeTime(){
+    changed = true;
+}
 
+function changeWidth() {
+    changed = true;
+}
+
+function filterData() {
+    data = filterTime(all_data, new Date());
+}
+
+
+function filterTime(data, time) {
+    var day = time.getDate() < 10 ? "0" + time.getDate() : time.getDate() + "";
+    var month = time.getMonth() < 10 ? "0" + time.getMonth() : time.getMonth + "";
+    var str = month + day
+
+    return data.filter(function (value){
+        var time = value.time;
+        var sub = time.substring(4);
+        return sub === str;
+    });
+}
+
+function agregateTimespan(all_data, data, timespan) {
+
+    data.forEach(function (value, index, array) {
+
+        var i = all_data.indexOf(value);
+
+        var agregate = all_data.slice(i - timespan, i + timespan + 1);
+
+        
+
+
+
+    });
+
+}
 
 
 
