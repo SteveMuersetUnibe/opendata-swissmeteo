@@ -28,7 +28,7 @@ function changeParameter(){
     console.log(Parameter)
 }
 
-function changeTime(){
+function changeTimespan(){
     changed = true;
 }
 
@@ -55,18 +55,24 @@ function filterTime(data, time) {
 
 function agregateTimespan(all_data, data, timespan) {
 
+    var n_data = new Array()
+
     data.forEach(function (value, index, array) {
 
         var i = all_data.indexOf(value);
 
         var agregate = all_data.slice(i - timespan, i + timespan + 1);
 
-        
 
+        value[params[0]] = d3.max(agregate, d => parseFloat(d[params[0]]))
+        value[params[1]] = d3.mean(agregate, d => parseFloat(d[params[1]]))
+        value[params[2]] = d3.min(agregate, d => parseFloat(d[params[2]]))
+        value[niederschlag] = d3.sum(agregate, d => parseFloat(d[niederschlag]))
 
-
+        n_data.push(value);
     });
 
+    return n_data;
 }
 
 
