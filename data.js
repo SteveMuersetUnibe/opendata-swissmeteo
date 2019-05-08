@@ -1,4 +1,7 @@
 var data = "";
+var data_width = "";
+var data_hight ;
+
 
 function getdata(data_path){
     d3.dsv(";", data_path, (d, error) => {data.push(d)}).then(data => prepareData());
