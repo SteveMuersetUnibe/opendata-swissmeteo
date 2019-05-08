@@ -4,8 +4,10 @@ var data_hight ;
 
 
 function getdata(data_path){
-    console.log(data_path)
-    d3.dsv(";", data_path, (d, error) => {data.push(d)}).then(data => null);
+    console.log(String(data_path))
+    data = new Array();
+    
+    d3.dsv(";", String(data_path), (d, error) => {data.push(d)}).then(data => null);
 
 }
 
