@@ -35,6 +35,10 @@ function setup() {
     svg = d3.select("svg");
 }
 
+function map(data, xParam, yParam) {
+    return data.map((value) => { return {x : value[xParam], y : value[yParam]} })
+}
+
 function drawAxis(group, left, xScale, yScale) {
 
     var yAxis = left ? d3.axisLeft() : d3.axisRight()
@@ -119,7 +123,6 @@ function drawLine(line, color, opacity) {
         .attr("fill", color)
         .attr("stroke", color)
         .attr("opacity", opacity)
-    
 }
 
 function setLine(param, xScale, yScale) {
@@ -140,9 +143,179 @@ function transition() {
             .transition()
             .duration(2000)
             .attr("transform", "translate(" + 0 + "," + (index * line_height) + ")")
+            .select("path")
+                .attr("stroke", "black")
+                .attr("fill", "black")
+                .attr("opacity", 1)
+            
     });
 }
 
 function clear() {
     svg.remove();
+}
+
+
+
+
+
+function startUp(param) {
+    setup()
+    prepareScale()
+
+    var x = xScale;
+    var y = yScale;
+
+    var a = data;
+    var b = new Array();
+
+    data.forEach(function(value, index, array) {
+
+        if (index == array.length) {
+            b.push(true);
+            return;
+        }
+
+        b.push(value);
+        if (array[index+1] > value){
+            b.push(true);
+        } else {
+            b.push(false);
+        }
+    });
+
+    var c = new Array()
+
+    data.forEach(function(value, index, array) {
+
+        if (index == array.length) {
+            c.push(true);
+            return;
+        }
+
+        c.push(value);
+        if (array[index+1] < value){
+            c.push(true);
+        } else {
+            c.push(false);
+        }
+    });
+
+    a = map(a, "time", param)
+    b = map(b, "time", param)
+    c = map(c, "time", param)
+
+    console.log(b);
+
+    var area = d3.area()
+        .x((d,i) => x(d.x))
+        .y0((d,i) => y(d.y))
+        .y1((d,i) => y(d+1));
+    
+    var low = d3.area()
+        .x0((d,i) => {
+            var val;
+            if (i % 2 == 1) {
+                val = x((i-1) / 2)
+            } else {
+                val = x(i / 2)
+            }
+            return val;
+        })
+        .x1((d,i) => {
+            var val;
+            if (i % 2 == 1) {
+                val = x(((i-1) / 2) + 0.5)
+            } else {
+                val = x((i / 2) + 0.5)
+            }
+            return val;
+        })
+        .y((d,i,a) => {
+            var val;
+            if (i % 2 == 1) {
+                val = y(a[i-1][param])
+            } else {
+                val =  y(d[param]);
+            }
+            return val;
+        })
+        .defined((d,i,a) => {return d})
+
+    var high = d3.area()
+        .x0((d,i) => {
+            var val;
+            if (i % 2 == 1) {
+                val = x((i-1) / 2)
+            } else {
+                val = x(i / 2)
+            }
+            return val;
+        })
+        .x1((d,i) => {
+            var val;
+            if (i % 2 == 1) {
+                val = x(((i-1) / 2) + 0.5)
+            } else {
+                val = x((i / 2) + 0.5)
+            }
+            console.log(val);
+            return val;
+        })
+        .y((d,i,a) => {
+            var val;
+            if (i % 2 == 1) {
+                val = y(a[i-1][param] + 1)
+            } else {
+                val =  y(d[param] + 1);
+            }
+            
+            return val;
+            
+        })
+        .defined((d,i,a) => d)
+    
+  
+    var path_high = svg.append("g")
+        .classed("area-group", true)
+        .style("height", line_height)
+        .style("width", win_width)
+
+        .append("path")
+        .attr("d", high(c))
+        .attr("fill", "blue")
+        .attr("stroke", "none")
+
+    var path_low = svg.append("g")
+        .classed("area-group", true)
+        .style("height", line_height)
+        .style("width", win_width)
+
+        .append("path")
+        .attr("d", low(b))
+        .attr("fill", "blue")
+        .attr("stroke", "none")
+
+    var path = svg.append("g")
+        .classed("area-group", true)
+        .style("height", line_height)
+        .style("width", win_width)
+
+        .append("path")
+        .attr("d", area(a))
+        .attr("fill", "lightblue")
+        //.attr("stroke", "green")
+
+    var t = d3.transition()
+        .duration(5000)
+        .ease(d3.easeCubicIn)
+    
+    svg.append("rect")
+        .attr("x", 0)
+        .attr("y", 0)
+        .attr("height", win_height)
+        .attr("width", win_width)
+        .attr("fill", "white")
+        .transition(t)
+        .attr("x", win_width)
 }

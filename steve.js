@@ -13,7 +13,7 @@ var current_data;
 
 var data = new Array();
 
-d3.dsv(";", data_path, (d, error) => {data.push(d)}).then(data => prepareData());
+d3.dsv(";", data_path, (d, error) => {data.push(d)}).then(data => {prepareData()});
 
 // d3.select("svg")
 //     .style("height", win_height)
