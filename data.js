@@ -1,17 +1,20 @@
 var all_data = new Array();
 var data = new Array();
 var data_headers;
+
+
 var data_width = "";
 var data_hight ;
+var timespan = 0;
+var date = new Date();
 
-var changed;
 
 
 function getdata(data_path){
     console.log(String(data_path))
     data = new Array();
     all_data = new Array();
-    d3.dsv(";", String(data_path), (d, error) => {all_data.push(d)}).then(data_headers => {data_headers = data_headers, filterData()});
+    d3.dsv(";", String(data_path), (d, error) => {all_data.push(d)}).then(data_headers => {data_headers = data_headers; filterData(); update()});
 }
 
 
@@ -24,12 +27,17 @@ function changeLocation(){
 
 function changeParameter(){
     var Parameter=document.getElementById("Parameter").value;
-    changed = true;
     console.log(Parameter)
 }
 
 function changeTimespan(){
-    changed = true;
+    var Timespan = document.getElementById("Timespan").value;
+    
+    timespan = parseInt(Timespan);
+    console.log(timespan)
+
+    filterData()
+    update()
 }
 
 function changeWidth() {
@@ -37,9 +45,10 @@ function changeWidth() {
 }
 
 function filterData() {
-    data = filterTime(all_data, new Date());
+    data = filterTime(all_data, date);
+    if (timespan == 0) return;
+    data = agregateTimespan(all_data, data, timespan);
 }
-
 
 function filterTime(data, time) {
     var day = time.getDate() < 10 ? "0" + time.getDate() : time.getDate() + "";
@@ -62,7 +71,6 @@ function agregateTimespan(all_data, data, timespan) {
         var i = all_data.indexOf(value);
 
         var agregate = all_data.slice(i - timespan, i + timespan + 1);
-
 
         value[params[0]] = d3.max(agregate, d => parseFloat(d[params[0]]))
         value[params[1]] = d3.mean(agregate, d => parseFloat(d[params[1]]))
@@ -106,3 +114,5 @@ var SIA = "Standorte/SIA.csv";
 var SIO = "Standorte/SIO.csv"; 
 var SMA = "Standorte/SMA.csv"; 
 var STG = "Standorte/STG.csv";
+
+getdata(BER)

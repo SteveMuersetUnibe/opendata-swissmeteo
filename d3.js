@@ -134,7 +134,7 @@ function setLine(param, xScale, yScale) {
         .y0(function(d,i) { return yScale(parseFloat(d[param]))})
         .y1(function(d,i) { return yScale(parseFloat(d[param]) + 1)})
         .defined(function(d,i) { return !isNaN(parseFloat(d[param]))})
-        .curve(d3.curveStep);
+        .curve(d3.curveCatmullRom.alpha(0.5));
 }
 
 function transition() {
@@ -157,8 +157,12 @@ function update() {
     prepareScale();
 
     var areas = svg.selectAll(".area-group")._groups[0];
+
+    if (areas.length == 0) {
+        draw()
+        return null;
+    } 
     params.forEach(function(value, index) {
-        console.log(value);
         var line = setLine(value, xScale, yScale);
         d3.select(areas[index])
             .select("path")
@@ -170,8 +174,6 @@ function update() {
     min = d3.min(data, d => parseFloat(d[niederschlag]))
 
     yScale = d3.scaleLinear().domain([min, max]).range([line_height - margin_bottom, margin_top]);
-
-
 
     var line = setLine(niederschlag, xScale,yScale)
     d3.select(areas[3])
