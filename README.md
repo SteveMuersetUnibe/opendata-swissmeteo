@@ -9,8 +9,7 @@ Steve:
 
 
 Merlin:
-- Dropdownliste mit allen 26 Standorten (Optional momentaner Standort)
-<select onchange="Funktion"> W3 schools / dynamically fill option
+- Feld Mit Tag und Abstandsgrösse
 
 
 
