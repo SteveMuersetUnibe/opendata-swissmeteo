@@ -3,14 +3,61 @@
     <head>
     
         <script src="d3/d3.js"></script>
-       
+        <link rel="stylesheet" type="text/css" href="main.css">
 
     </head>
 
     <body>
         <svg></svg>
 
+        <form> 
+            <select id="Locations" onchange="changeLocation();">
+
+                <option value="live_data_base_url" > Mein Standort </option>
+                <option value="ALT" > Altdorf</option>
+                <option value="ANT" > Andermatt</option>
+                <option value="BAS" > Basel</option>
+                <option value="BER" > Bern</option>
+                <option value="CDF" > La Chaux de Fonds</option>
+                <option value="CHD" > La Chateau-d'Oex</option>
+                <option value="CHM" > Chaumont</option>
+                <option value="DAV" > Davos</option>
+                <option value="ELM" > Elm</option>
+                <option value="ENG" > Engelberg</option>
+                <option value="GRC" > Gränchen</option>
+                <option value="GRH" > Grimsel Hospiz</option>
+                <option value="GSB" > Col du Grand St-Bernard</option>
+                <option value="GVE" > Geneve</option>
+                <option value="JUN" > Jungfraujoch</option>
+                <option value="LUG" > Lugano</option>
+                <option value="LUZ" > Luzern</option>
+                <option value="MER" > Meiringen</option>
+                <option value="NEU" > Neuchatel</option>
+                <option value="OTL" > Lugano</option>
+                <option value="PAY" > Payerne</option>
+                <option value="RAG" > Bad Ragaz</option>
+                <option value="SAE" > aenti</option>
+                <option value="SAM" > Samedan</option>
+                <option value="SBE" > S. Bernardino</option>
+                <option value="SIA" > Segl-Maria</option>
+                <option value="SIO" > Sion</option>
+                <option value="SMA" > Zuerich</option>
+                <option value="STG" > St. Gallen</option>
+
+            </select>
+
+            <select id="Parameter" onchange="changeParameter();">
+
+                <option value=""> Durchschnitstemperatur </option>
+                <option value=""> Maximaltemperatur </option>
+                <option value=""> Tiefsttemperatur </option>
+                <option value=""> Niederschlag </option>
+
+            </select>
+        </form>
+
         <script src="steve.js"></script>
+        <script src="merlin.js"></script>
         <script src="d3.js"></script>
         
     </body>

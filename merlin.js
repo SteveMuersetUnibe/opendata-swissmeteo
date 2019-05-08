@@ -1,3 +1,13 @@
+function changeLocation(){
+    var Locations=document.getElementById("Locations").value;
+    console.log(Locations)
+}
+
+function changeParameter(){
+    var Parameter=document.getElementById("Parameter").value;
+    console.log(Parameter)
+}
+
 var ALT = "Standorte/ALT - Altdorf.csv";
 var ANT = "Standorte/ANT - Andermatt.csv";
 var BAS = "Standorte/BAS - Basel.csv";
