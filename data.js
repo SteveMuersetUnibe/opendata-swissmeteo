@@ -4,6 +4,7 @@ var data_hight ;
 
 
 function getdata(data_path){
+    console.log(data_path)
     d3.dsv(";", data_path, (d, error) => {data.push(d)}).then(data => null);
 
 }
@@ -11,7 +12,7 @@ function getdata(data_path){
 
 function changeLocation(){
     var Location=document.getElementById("Location").value;
-    window[Location]
+    getdata(window[Location])
     console.log(Location)
 }
 
@@ -39,9 +40,9 @@ var ENG = "Standorte/ENG - Engelberg.csv";
 var GRC = "Standorte/GRC - Gränchen.csv";
 var GRH = "Standorte/GRH - Grimsel Hospiz.csv";
 var GSB = "Standorte/GSB - Col du Grand St-Bernard.csv";
-var GVE = "Standorte/GVE - Geneve";
-var JUN = "Standorte/JUN - Jungfraujoch";
-var LUG = "Standorte/LUG - Lugano";
+var GVE = "Standorte/GVE - Geneve.csv";
+var JUN = "Standorte/JUN - Jungfraujoch.csv";
+var LUG = "Standorte/LUG - Lugano.csv";
 var LUZ = "Standorte/LUZ - Luzern.csv";
 var MER = "Standorte/MER - Meiringen.csv";
 var NEU = "Standorte/NEU - Neuchatel.csv";
