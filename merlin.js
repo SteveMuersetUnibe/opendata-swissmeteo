@@ -1,6 +1,7 @@
 function changeLocation(){
-    var Locations=document.getElementById("Locations").value;
-    console.log(Locations)
+    var Location=document.getElementById("Locations").value;
+    window[Location]
+    console.log(Location)
 }
 
 function changeParameter(){
