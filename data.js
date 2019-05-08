@@ -1,3 +1,10 @@
+var data = "";
+
+function getdata(data_path){
+    d3.dsv(";", data_path, (d, error) => {data.push(d)}).then(data => prepareData());
+
+}
+
 function changeLocation(){
     var Location=document.getElementById("Locations").value;
     window[Location]
