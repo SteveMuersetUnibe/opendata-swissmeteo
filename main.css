@@ -2,13 +2,38 @@ body {
     margin: 10px;
     padding: 10px;
     background: grey;
-}
+    font-family: Helvetica;
+    font-size: 30;
+}   
 
 .dropdown {
     
+
 }
 
 .dropdown select {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 30;
+    background: rgb(65, 62, 62);
+    color: #fff;
+    padding: 10 px;
+    width: 100px;
+    height: 40px;
+    border: none;
+    box-shadow; 0 5px 25px rgba(0,0,0, .5);
+    -webkit-appearance: button;
+}
 
+.dropdown select:hover{
+    background: rgb(110, 106, 106);
+}
+
+.dropdown option{
+    background: rgb(65, 62, 62);
+
+}
+
+.dropdown option:hover{
+    background: rgb(110, 106, 106);
 
 }
