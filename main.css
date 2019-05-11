@@ -7,20 +7,20 @@ body {
 }   
 
 .dropdown {
-    
-
+   
 }
 
 .dropdown select {
     font-family: Arial, Helvetica, sans-serif;
-    font-size: 30;
+    font-size: 16px;
+    text-align: center;
     background: rgb(65, 62, 62);
     color: #fff;
     padding: 10 px;
-    width: 100px;
-    height: 40px;
+    width: 150px;
+    height: 50px;
     border: none;
-    box-shadow; 0 5px 25px rgba(0,0,0, .5);
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.5);
     -webkit-appearance: button;
 }
 
@@ -28,12 +28,20 @@ body {
     background: rgb(110, 106, 106);
 }
 
-.dropdown option{
+.dropdown button {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 16px;
+    text-align: center;
     background: rgb(65, 62, 62);
-
+    color: #fff;
+    padding: 10 px;
+    width: 150px;
+    height: 50px;
+    border: none;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.5);
+    -webkit-appearance: button;
 }
 
-.dropdown option:hover{
+.dropdown button:hover{
     background: rgb(110, 106, 106);
-
 }
