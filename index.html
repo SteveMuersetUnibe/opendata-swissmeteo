@@ -3,70 +3,76 @@
     <head>
     
         <script src="d3/d3.js"></script>
+        <link href="jquery-ui-selectmenu" >
         <link rel="stylesheet" type="text/css" href="main.css">
 
     </head>
 
     <body>
 
-        <form> 
-            <select id="Location" onchange="changeLocation(this);">
+        <div class="dropdown"> 
+            <form> 
+                <select id="Location" onchange="changeLocation(this);">
 
-                <option value="live_data_base_url" > Mein Standort </option>
-                <option value="ALT" > Altdorf</option>
-                <option value="ANT" > Andermatt</option>
-                <option value="BAS" > Basel</option>
-                <option value="BER" selected> Bern</option>
-                <option value="CDF" > La Chaux de Fonds</option>
-                <option value="CHD" > La Chateau-d'Oex</option>
-                <option value="CHM" > Chaumont</option>
-                <option value="DAV" > Davos</option>
-                <option value="ELM" > Elm</option>
-                <option value="ENG" > Engelberg</option>
-                <option value="GRC" > Gränchen</option>
-                <option value="GRH" > Grimsel Hospiz</option>
-                <option value="GSB" > Col du Grand St-Bernard</option>
-                <option value="GVE" > Geneve</option>
-                <option value="JUN" > Jungfraujoch</option>
-                <option value="LUG" > Lugano</option>
-                <option value="LUZ" > Luzern</option>
-                <option value="MER" > Meiringen</option>
-                <option value="NEU" > Neuchatel</option>
-                <option value="OTL" > Lugano</option>
-                <option value="PAY" > Payerne</option>
-                <option value="RAG" > Bad Ragaz</option>
-                <option value="SAE" > Saenti</option>
-                <option value="SAM" > Samedan</option>
-                <option value="SBE" > S. Bernardino</option>
-                <option value="SIA" > Segl-Maria</option>
-                <option value="SIO" > Sion</option>
-                <option value="SMA" > Zuerich</option>
-                <option value="STG" > St. Gallen</option>
+                    <option value="live_data_base_url" > Mein Standort </option>
+                    <option value="ALT" > Altdorf</option>
+                    <option value="ANT" > Andermatt</option>
+                    <option value="BAS" > Basel</option>
+                    <option value="BER" > Bern</option>
+                    <option value="CDF" > La Chaux de Fonds</option>
+                    <option value="CHD" > La Chateau-d'Oex</option>
+                    <option value="CHM" > Chaumont</option>
+                    <option value="DAV" > Davos</option>
+                    <option value="ELM" > Elm</option>
+                    <option value="ENG" > Engelberg</option>
+                    <option value="GRC" > Gränchen</option>
+                    <option value="GRH" > Grimsel Hospiz</option>
+                    <option value="GSB" > Col du Grand St-Bernard</option>
+                    <option value="GVE" > Geneve</option>
+                    <option value="JUN" > Jungfraujoch</option>
+                    <option value="LUG" > Lugano</option>
+                    <option value="LUZ" > Luzern</option>
+                    <option value="MER" > Meiringen</option>
+                    <option value="NEU" > Neuchatel</option>
+                    <option value="OTL" > Lugano</option>
+                    <option value="PAY" > Payerne</option>
+                    <option value="RAG" > Bad Ragaz</option>
+                    <option value="SAE" > Saenti</option>
+                    <option value="SAM" > Samedan</option>
+                    <option value="SBE" > S. Bernardino</option>
+                    <option value="SIA" > Segl-Maria</option>
+                    <option value="SIO" > Sion</option>
+                    <option value="SMA" > Zuerich</option>
+                    <option value="STG" > St. Gallen</option>
 
-            </select>
+                </select>
+    <!--
+                <select id="Parameter" onchange="changeParameter(this);">
 
-            <select id="Parameter" onchange="changeParameter(this);">
+                    <option value=""> Durchschnitstemperatur </option>
+                    <option value=""> Maximaltemperatur </option>
+                    <option value=""> Tiefsttemperatur </option>
+                    <option value=""> Niederschlag </option>
 
-                <option value=""> Durchschnitstemperatur </option>
-                <option value=""> Maximaltemperatur </option>
-                <option value=""> Tiefsttemperatur </option>
-                <option value=""> Niederschlag </option>
+                </select>
+    -->
+                <select id="Timespan" onchange="changeTimespan(this)">
+                                    
+                    <option value="0" selected> 1 Tag </option>
+                    <option value="1"> 3 Tage </option>
+                    <option value="3"> 1 Woche </option>
+                    <option value="15"> 1 Monat </option>
+                    <option value="45"> 3 Monate </option>
+                    <option value="91"> 6 Monate </option>
+                    <option value="182"> 1 Jahr </option>
 
-            </select>
+                </select>
 
-            <select id="Timespan" onchange="changeTimespan(this)">
-                
-                <option value="0" selected> 1 Tag </option>
-                <option value="1"> 3 Tage </option>
-                <option value="3"> 1 Woche </option>
-                <option value="15"> 1 Monat </option>
-                <option value="45"> 3 Monate </option>
-                <option value="91"> 6 Monate </option>
-                <option value="182"> 1 Jahr </option>
 
-            </select>
+                <button onclick="transition()">Aufteilen</button>
 
-        </form>
+            </form>
+        </div>
 
         <script src="data.js"></script>
         <script src="d3.js"></script>
