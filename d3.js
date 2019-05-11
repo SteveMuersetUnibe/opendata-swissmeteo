@@ -1,192 +1,361 @@
 
-var params = ["Maximaltemperatur (�C)", "Durchschnittstemperatur (�C)", "Tiefsttemperatur (�C)"]
-var niederschlag = "Niederschlag (mm)"
-var colors = ["#85f441", "#4286f4", "#f44141", "#2c10cc"]
 
 var win_height = window.innerHeight;
 var win_width = window.innerWidth;
 
-var line_height = win_height / 4;
-
-var svg = d3.select("svg");
-
-var margin_left = 50;
-var margin_right = 50;
-var margin_top = 50;
-var margin_bottom = 50;
-
-var xScale;
-var yScale;
-
-var min;
-var max;
-
 var parse = d3.timeParse("%Y%m%d");
 
-function setup() {
+var svg;
 
-    clear()
-
-    d3.select("body")
-        .append("svg")
-        .style("height", win_height)
-        .style("width", win_width)
-   
-    svg = d3.select("svg");
+function clear() {
+    if (svg) svg.remove();
 }
 
 function map(data, xParam, yParam) {
-    return data.map((value) => { return {x : value[xParam], y : value[yParam]} })
+    return data.map((value) => { return {x : parse(value[xParam]), y : parseFloat(value[yParam])} })
 }
 
-function drawAxis(group, left, xScale, yScale) {
+function LineParameter(param, data, color, left, dimension) {
+    this.color = color
+    this.param = param
+    this.raw_data = data
+    this.dimension = dimension
+    this.left = left
+    this.setup = false
 
-    var yAxis = left ? d3.axisLeft() : d3.axisRight()
-
-    var xAxis = d3.axisBottom()
-        .scale(xScale)
-        .ticks(10);
-
-    yAxis.scale(yScale)
-        .ticks(10)
-
-    group.append("g")
-        .attr("transform", "translate(" + 0 + "," + (line_height - margin_bottom + 5) + ")")
-        .call(xAxis)
-
-    var transition = left ? margin_left : win_width - margin_right;
-
-    group.append("g")
-        .attr("transform", "translate(" + transition + "," + 0 + ")")
-        .call(yAxis)
-
+    dataAnalysis(this);
 }
 
-function prepareScale() {
+function setupLine(line) {
+    setScales(line);
+    setAxis(line);
+    setLine(line);
+    drawLine(line);
+    addClip(line);
+    addZoom(line);
+    line.setup = true
+}
 
-    var length = data.length;
+function dataAnalysis(line) {
+    //error if raw_data and param not defined
+    line.data = map(line.raw_data, "time", line.param.name)
 
-    max = 0;
-    min = 0;
+    var check = line.data.slice(options.start, options.start + options.width)
+    line.data = check
+    line.ymin = d3.min(check, d => d.y)
+    line.ymax = d3.max(check, d => d.y)
+    line.ymean = d3.mean(check, d => d.y)
 
-    for (param of params) {
+    line.data_length = line.data.length
+    line.xmin = line.data[options.start].x
+    line.xmax = line.data[options.start + options.width -1].x
+}
 
-        var new_max = d3.max(data, d => parseFloat(d[param]))
-        var new_min = d3.min(data, d => parseFloat(d[param]))
+function setScales(line) {
+    //error if widht and height not defined
 
-        max = new_max > max ? new_max : max;
-        min = new_min < min ? new_min : min;
-        
+    line.xScaleBase = d3.scaleTime().domain([line.xmin, line.xmax]).range([0, line.width]).clamp(true)
+    line.yScaleBase = d3.scaleLinear().domain([line.ymin, line.ymax]).range([line.height, 0]).clamp(true)
+    line.xScale = line.xScaleBase
+    line.yScale = line.yScaleBase
+}
+
+function setAxis(line) {
+    //error if scales are not defined
+
+    line.xAxis = d3.axisBottom()
+    line.yAxis = this.left ? d3.axisLeft() : d3.axisRight()
+    line.yAxis = line.yAxis
+    updateAxis(line)
+}
+
+function updateAxis(line) {
+    line.xAxis.scale(line.xScale);
+    line.yAxis.scale(line.yScale);
+}
+
+function setLine(line) {
+    line.line = d3.area()
+        .x(d => line.xScale(d.x))
+        .y(d => line.yScale(d.y))
+        .defined(d => !isNaN(d.y))
+}
+
+function drawLine(line) {
+
+    line.group = svg.append("g")
+    line.group
+        .classed("area-group", true)
+        .attr("clip-path", "url(#clip" + line.param.name + ")")
+        .attr("opacity", 0)
+        .attr("transform", line.transform)
+                
+    line.path = line.group.append("path")
+        .attr("fill", line.color)
+        .attr("stroke", line.color)
+        .attr("d", line.line(line.data))
+
+    line.yAxisGroup = line.group.append("g")
+        .attr("transform", "translate(" + (line.left ? 0 : line.width) +",0)") 
+        .call(line.yAxis)
+    
+    line.xAxisGroup = line.group.append("g")
+        .attr("transform", "translate(0, "+ line.height +")")
+        .call(line.xAxis)
+
+    line.canvas.transitions.push(new LineTransition(line, opacityTransition))
+}
+
+function updateLine(line) {
+
+    line.group
+        .attr("transform" , line.transform)
+
+    line.path
+        .attr("fill", line.color)
+        .attr("stroke", line.color)
+        .attr("d", line.line(line.data))
+
+    line.xAxisGroup
+        .attr("transform", "translate(0, "+ line.height +")")
+        .call(line.xAxis)
+
+    line.yAxisGroup
+        .attr("transform", "translate(" + (line.left ? 0 : line.width) +",0)") 
+        .call(line.yAxis)
+}
+
+function opacityTransition(line) {
+
+    if (line.group.attr("opacity") == 1){
+        line.group
+            .transition()
+            .duration(100)
+            .attr("opacity", 0)
+            .on("end", d => {line.setup = false; line.canvas.nextTransition()})
+            .remove()
+
+        return false
     }
 
-    console.log(max);
-    console.log(min);
-
-    var a = parse(data[0].time);
-    var b = parse(data[length-1].time);
-
-    xScale = d3.scaleTime().domain([a,b]).range([margin_left, win_width - margin_right])
-    yScale = d3.scaleLinear().domain([min, max]).range( [line_height - margin_bottom, margin_top])
+    line.group
+        .transition()
+        .duration(600)
+        .attr("opacity", 1)
+    line.canvas.nextTransition()
 }
 
-function draw() {
-    setup();
-    prepareScale();
-    params.forEach(function(value, index){
-        var line = setLine(value, xScale, yScale);
-        var path = drawLine(line, colors[index], 0.8)
-        var group = d3.select(path.node().parentNode)
-        drawAxis(group,true,xScale, yScale);
-    });
+function translateTransition(line) {
 
-    max = d3.max(data, d => parseFloat(d[niederschlag]))
-    min = d3.min(data, d => parseFloat(d[niederschlag]))
+    if (
+        line.path.attr("d") == line.line(line.data)
+        && line.xAxisGroup.attr("transform") == "translate(0, " + line.height + ")"
+        && line.yAxisGroup.attr("transform") == "translate(" + (line.left ? 0 : line.width) + ",0)"
+        && line.group.attr("transform") == line.transform
+    ) {
+        line.canvas.nextTransition()
+        return false
+    } else if (line.group.attr("opacity") == 0) {
+        updateLine(line)
+        line.canvas.nextTransition()
+        return false
+    }
 
-    yScale = d3.scaleLinear().domain([min, max]).range([line_height - margin_bottom, margin_top]);
+    line.path
+        .transition()
+        .duration(500)
+        .attr("d", line.line(line.data))
 
-    var line = setLine(niederschlag, xScale, yScale);
-    var path = drawLine(line, "black", 0.5)
-    var group = d3.select(path.node().parentNode)
+    line.xAxisGroup
+    .transition()
+    .duration(500)
+        .attr("transform", "translate(0, "+ line.height +")")
+        .call(line.xAxis)
 
-    drawAxis(group, false, xScale, yScale);
+    line.yAxisGroup
+    .transition()
+    .duration(500)
+        .attr("transform", "translate(" + (line.left ? 0 : line.width) +",0)") 
+        .call(line.yAxis)
+
+    line.group
+        .transition()
+        .duration(500)
+        .attr("transform", line.transform)
+    line.canvas.nextTransition()
+}
+
+function addClip(line) {
+    line.clip_id = "clip" + line.param.name
+    line.clip = line.group.append("clipPath")
+        .attr("id", line.clip_id)
+        .append("rect")
+    updateClip(line)
+}
+
+function updateClip(line) {
+    line.clip
+        .attr("width", line.width )
+        .attr("height", line.height )
+        .attr("x", 0)
+        .attr("y", 0);
+}
+
+function addZoom(line) {
+
+    // Set the zoom and Pan features: how much you can zoom, on which part, and what to do when there is a zoom
+    line.zoom = d3.zoom()
+        .scaleExtent([0.5, 40])
+        .translateExtent([[0, 0], [line.width, line.height]])
+        .extent([[0, 0], [line.width, line.height]])
+        .on("zoom", updateChart.bind(null, line));
+
+    line.zoom_rect = line.group.append("rect")
+    // This add an invisible rect on top of the chart area. This rect can recover pointer events: necessary to understand when the user zoom
+        .style("pointer-events", "all")
+        .call(line.zoom);
+
+    updateZoom(line)
+// now the user can zoom and it will trigger the function called updateChart
+}
+
+function updateZoom(line) {
+    line.zoom_rect
+        .attr("width", line.width)
+        .attr("height",line.height)
+        .style("fill", "none")
+}
+
+// A function that updates the chart when the user zoom and thus new boundaries are available
+function updateChart(line) {
+    var t = d3.event.transform
+
+    for (line of line.canvas.lines) {
+        line.xScale = t.rescaleX(line.xScaleBase);
+        updateAxis(line);
+        setLine(line);
+        updateLine(line);
+    }
+}
+
+function Canvas(together, width, height, margin, padding) {
+    
+    this.together = together
+    this.width = width
+    this.height = height
+    this.lines = new Array()
+    this.margin = margin ? margin : [0,0,0,0] //bottom, left, top, right
+    this.padding = padding ? padding : [0,0,0,0] //bottom, left, top, right
+    this.transitions = new Array();
+    this.nextTransition = function () {
+        var t = this.transitions.shift()
+        if (t) {
+            t.transitionFn(t.line)
+        }
+    }
+
+    this.addLine = function(line) { line.canvas = this; this.lines.push(line);}
+    this.removeLine = function(line) {
+        this.lines = this.lines.filter(d => d != line);
+        line.canvas.transitions.push(new LineTransition(line, opacityTransition))
+        }
+    setup(this)
+    //this.removeLine = function(line) { line.canvas = null; this.lines.remove(line)}
+}
+
+function setup(canvas) {
+    clear()
+    svg = d3.select("body")
+        .append("svg")
+        .style("height", canvas.height)
+        .style("width", canvas.width)
+            .append("g")
+}
+
+function drawCanvas(canvas) {
+    updateCanvas(canvas)
+    canvas.nextTransition()
+}
+
+function updateCanvas(canvas) {
+
+    calculateLineSize(canvas)
+    calculateLinePosition(canvas)
+
+    if (canvas.together){
+        calculateLineScale(canvas);
+    }
+    
+    for (line of canvas.lines.slice().reverse()){
+
+        if (line.setup) {
+            setScales(line)
+            updateAxis(line)
+            updateClip(line)
+            updateZoom(line)
+            canvas.transitions.unshift(new LineTransition(line, translateTransition))
+        } else {
+            setupLine(line)
+        }
+    }
+}
+
+function calculateLinePosition(canvas) {
+
+    for (line_index in canvas.lines) {
+        if (!canvas.together) {
+            canvas.lines[line_index].transform = "translate(" + (canvas.margin[1] +  canvas.padding[1]) + "," + (canvas.margin[2] + canvas.padding[2] + (line_index * (canvas.padding[2] + canvas.padding[0] +  canvas.lines[line_index].height))) + ")";
+        } else {
+            canvas.lines[line_index].transform = "translate(" +(canvas.margin[1] + canvas.padding[1])+ "," + (canvas.margin[2] + canvas.padding[2])+ ")"
+        }
+    }
+}
+
+function calculateLineSize(canvas) {
+    var line_count = canvas.lines.length;
+
+    for (line of canvas.lines) {
+        line.width = canvas.width - (canvas.margin[1] + canvas.margin[3] + canvas.padding[1] + canvas.padding[3])
+
+        var height = canvas.height - (canvas.margin[0] + canvas.margin[2])
+        line.height = canvas.together ? canvas.height - (canvas.margin[0] + canvas.margin[2] + canvas.padding[0] + canvas.padding[2]) : (height / line_count) - (canvas.padding[0] + canvas.padding[2])
+    }
+}
+
+function calculateLineScale(canvas) {
+
+    var lmax, lmin;
+    var rmax, rmin;
+
+    for (line of canvas.lines) {
+
+        if (line.left) {
+            lmax = lmax > line.ymax ? lmax : line.ymax
+            lmin = lmin < line.ymin ? lmin : line.ymin
+
+        } else {
+            rmax = rmax > line.ymax ? rmax : line.ymax
+            rmin = rmin < line.ymin ? rmin : line.ymin
+        }
+    }
+
+    for (line of canvas.lines) {
+        if (line.left) {
+            line.ymax = lmax;
+            line.ymin = lmin;
+        } else {
+            line.ymax = rmax;
+            line.ymin = rmin;
+        }
+    }
+}
+
+function LineTransition(line, transitionFn) {
+    this.line = line
+    this.transitionFn = transitionFn
 }
 
 
-function drawLine(line, color, opacity) {
-    return svg.append("g")
-        .classed("area-group", true)
-        .style("height", line_height)
-        .style("width", win_width)
-
-        .append("path")
-        .attr("d", line(data))
-        .attr("fill", color)
-        .attr("stroke", color)
-        .attr("opacity", opacity)
-}
-
-function setLine(param, xScale, yScale) {
-
-    return d3.area()
-        .x(function(d,i) { 
-            return xScale(parse(d.time))
-        })
-        .y0(function(d,i) { return yScale(parseFloat(d[param]))})
-        .y1(function(d,i) { return yScale(parseFloat(d[param]) + 1)})
-        .defined(function(d,i) { return !isNaN(parseFloat(d[param]))})
-        .curve(d3.curveCatmullRom.alpha(0.5));
-}
-
-function transition() {
-    var areas = svg.selectAll(".area-group")._groups[0];
-    areas.forEach(function(value, index) {
-        d3.select(value)
-            .transition()
-            .duration(2000)
-            .attr("transform", "translate(" + 0 + "," + (index * line_height) + ")")
-            .select("path")
-                .attr("stroke", "black")
-                .attr("fill", "black")
-                .attr("opacity", 1)
-            
-    });
-}
-
-function update() {
-
-    prepareScale();
-
-    var areas = svg.selectAll(".area-group")._groups[0];
-
-    if (areas.length == 0) {
-        draw()
-        return null;
-    } 
-    params.forEach(function(value, index) {
-        var line = setLine(value, xScale, yScale);
-        d3.select(areas[index])
-            .select("path")
-                .attr("d", line(data))
-            
-    });
-
-    max = d3.max(data, d => parseFloat(d[niederschlag]))
-    min = d3.min(data, d => parseFloat(d[niederschlag]))
-
-    yScale = d3.scaleLinear().domain([min, max]).range([line_height - margin_bottom, margin_top]);
-
-    var line = setLine(niederschlag, xScale,yScale)
-    d3.select(areas[3])
-        .select("path")
-            .attr("d", line(data))
-
-
-
-}
-
-function clear() {
-    svg.remove();
-}
 
 
 
@@ -196,157 +365,104 @@ function clear() {
 
 
 
+function startUp() {
 
-
-function startUp(param) {
     setup()
     prepareScale()
 
-    var x = xScale;
-    var y = yScale;
+    var four = show3D(niederschlag)
+    // var one = show3D(params[0])
+    // var two = show3D(params[1])
+    
+    // var three = show3D(params[2])
+    
 
-    var a = data;
-    var b = new Array();
+    var graph_size = win_width;
 
-    data.forEach(function(value, index, array) {
+    // scale = 0.8
+    // off_center = win_x_scale((1-scale) * 0.5)
+    // off_top = win_y_scale(0.0)
 
-        if (index == array.length) {
-            b.push(true);
-            return;
+    // one.attr("transform", "translate("+ off_center +"," + off_top + ") scale(" + scale + ")" )
+
+    // scale = 0.8
+    // off_center = win_x_scale((1-scale) * 0.5)
+    // off_top = win_y_scale(0.2)
+    // two.attr("transform", "translate("+ off_center +"," + off_top + ") scale(" + scale + ")" )
+
+    // scale = 0.8
+    // off_center = win_x_scale((1-scale) * 0.5)
+    // off_top = win_y_scale(0.4)
+    // three.attr("transform", "translate("+ off_center +"," + off_top + ") scale(" + scale + ")" )
+
+    scale = 0.8
+    off_center = win_x_scale((1-scale) * 0.5)
+    off_top = win_y_scale(0.25)
+    four.attr("transform", "translate("+ off_center +"," + off_top + ") scale(" + scale + ")")
+
+   //magic()
+
+}
+
+function show3D(param, size, color, shadow) {
+
+    var mapped_data = map(data, "time", param)
+    var low_data = new Array();
+    var high_data = new Array();
+
+    mapped_data.forEach(function(value, index, array) {
+
+        low_data.push(value);
+        high_data.push(value);
+
+        if (index >= array.length - 1) {
+            low_data.push(true)
+            high_data.push(true)
+            return
         }
-
-        b.push(value);
-        if (array[index+1] > value){
-            b.push(true);
+        if (array[index+1].y > value.y){
+            low_data.push(true);
+            high_data.push(false);
         } else {
-            b.push(false);
+            high_data.push(true);
+            low_data.push(false);
         }
     });
 
-    var c = new Array()
-
-    data.forEach(function(value, index, array) {
-
-        if (index == array.length) {
-            c.push(true);
-            return;
-        }
-
-        c.push(value);
-        if (array[index+1] < value){
-            c.push(true);
-        } else {
-            c.push(false);
-        }
-    });
-
-    a = map(a, "time", param)
-    b = map(b, "time", param)
-    c = map(c, "time", param)
-
-    console.log(b);
-
-    var area = d3.area()
-        .x((d,i) => x(d.x))
-        .y0((d,i) => y(d.y))
-        .y1((d,i) => y(d+1));
+    var area_group = svg.append("g")
+        .classed("area-group", true)
+        .style("height", line_height)
+        .style("width", win_width)
     
-    var low = d3.area()
-        .x0((d,i) => {
-            var val;
-            if (i % 2 == 1) {
-                val = x((i-1) / 2)
-            } else {
-                val = x(i / 2)
-            }
-            return val;
-        })
-        .x1((d,i) => {
-            var val;
-            if (i % 2 == 1) {
-                val = x(((i-1) / 2) + 0.5)
-            } else {
-                val = x((i / 2) + 0.5)
-            }
-            return val;
-        })
-        .y((d,i,a) => {
-            var val;
-            if (i % 2 == 1) {
-                val = y(a[i-1][param])
-            } else {
-                val =  y(d[param]);
-            }
-            return val;
-        })
-        .defined((d,i,a) => {return d})
-
-    var high = d3.area()
-        .x0((d,i) => {
-            var val;
-            if (i % 2 == 1) {
-                val = x((i-1) / 2)
-            } else {
-                val = x(i / 2)
-            }
-            return val;
-        })
-        .x1((d,i) => {
-            var val;
-            if (i % 2 == 1) {
-                val = x(((i-1) / 2) + 0.5)
-            } else {
-                val = x((i / 2) + 0.5)
-            }
-            console.log(val);
-            return val;
-        })
-        .y((d,i,a) => {
-            var val;
-            if (i % 2 == 1) {
-                val = y(a[i-1][param] + 1)
-            } else {
-                val =  y(d[param] + 1);
-            }
-            
-            return val;
-            
-        })
-        .defined((d,i,a) => d)
-    
+    var low = lowArea(30, 20);
+    var path_low = area_group
+        .append("path")
+        .attr("d", low(low_data))
+        .attr("fill", "#0059b3")
+        .attr("stroke", "none")
   
-    var path_high = svg.append("g")
-        .classed("area-group", true)
-        .style("height", line_height)
-        .style("width", win_width)
-
+    var high = highArea(30, 20)
+    var path_high = area_group
         .append("path")
-        .attr("d", high(c))
-        .attr("fill", "blue")
+        .attr("d", high(high_data))
+        .attr("fill", "#0059b3")
         .attr("stroke", "none")
 
-    var path_low = svg.append("g")
-        .classed("area-group", true)
-        .style("height", line_height)
-        .style("width", win_width)
-
+    var base = baseArea(30)
+    var path = area_group
         .append("path")
-        .attr("d", low(b))
-        .attr("fill", "blue")
-        .attr("stroke", "none")
+        .attr("d", base(mapped_data))
+        .attr("fill", "#3399ff")
+    
+    return area_group;
 
-    var path = svg.append("g")
-        .classed("area-group", true)
-        .style("height", line_height)
-        .style("width", win_width)
+   
+}
 
-        .append("path")
-        .attr("d", area(a))
-        .attr("fill", "lightblue")
-        //.attr("stroke", "green")
+function magic() {
 
     var t = d3.transition()
-        .duration(5000)
+        .duration(4000)
         .ease(d3.easeCubicIn)
     
     svg.append("rect")
@@ -357,4 +473,86 @@ function startUp(param) {
         .attr("fill", "white")
         .transition(t)
         .attr("x", win_width)
+
+}
+
+function baseArea(size) {
+
+    return d3.area()
+    .x((d,i) => { return xScale(parse(d.x))})
+    .y1((d,i) => yScale(d.y) + size) 
+    .y0((d,i) => yScale(d.y) - size)
+    .defined((d,i,a) => {return !isNaN(d.y) || d})
+}
+
+function lowArea(area_size, size) {
+
+    return d3.area()
+    .x0((d,i,a) => {
+        var val;
+        if (i % 2 == 1) {
+            val = xScale(parse(a[(i-1)].x))
+            
+        } else {
+            val = xScale(parse(a[i].x))
+        }
+        return val;
+    })
+    .x1((d,i, a) => {
+        var val;
+        if (i % 2 == 1) {
+            val = xScale(parse(a[(i-1)].x)) + size
+        } else {
+            val = xScale(parse(a[(i)].x)) + size
+        }
+        return val;
+    })
+    .y((d,i,a) => {
+        var val;
+        if (i % 2 == 1) {
+            val = yScale(a[i-1].y) + area_size
+        } else {
+            val =  yScale(d.y) + area_size
+        }
+        return val;
+    })
+    .defined((d,i,a) => d)
+
+}
+
+function highArea(area_size, size) {
+
+    return d3.area()
+    .x0((d,i, a) => {
+        var val;
+        if (i % 2 == 1) {
+            val = xScale(parse(a[i-1].x))
+        } else {
+            val = xScale(parse(a[i].x))
+        }
+        
+        return val;
+    })
+    .x1((d,i,a) => {
+        var val;
+        if (i % 2 == 1) {
+            val = xScale(parse(a[(i-1)].x)) + size
+        } else {
+            val = xScale(parse(a[(i)].x)) + size
+        }
+        
+        return val;
+    })
+    .y((d,i,a) => {
+        var val;
+        if (i % 2 == 1) {
+            val = yScale(a[i-1].y) - area_size;
+        } else {
+            val =  yScale(d.y) - area_size;
+        }
+        
+        return val;
+        
+    })
+    .defined((d,i,a) => d)
 }

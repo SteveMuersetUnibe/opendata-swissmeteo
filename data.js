@@ -1,90 +1,3 @@
-var all_data = new Array();
-var data = new Array();
-var data_headers;
-
-
-var data_width = "";
-var data_hight ;
-var timespan = 0;
-var date = new Date();
-
-
-
-function getdata(data_path){
-    console.log(String(data_path))
-    data = new Array();
-    all_data = new Array();
-    d3.dsv(";", String(data_path), (d, error) => {all_data.push(d)}).then(data_headers => {data_headers = data_headers; filterData(); update()});
-}
-
-
-function changeLocation(){
-    var Location=document.getElementById("Location").value;
-    getdata(window[Location])
-    console.log(Location)
-}
-
-
-function changeParameter(){
-    var Parameter=document.getElementById("Parameter").value;
-    console.log(Parameter)
-}
-
-function changeTimespan(){
-    var Timespan = document.getElementById("Timespan").value;
-    
-    timespan = parseInt(Timespan);
-    console.log(timespan)
-
-    filterData()
-    update()
-}
-
-function changeWidth() {
-    changed = true;
-}
-
-function filterData() {
-    data = filterTime(all_data, date);
-    if (timespan == 0) return;
-    data = agregateTimespan(all_data, data, timespan);
-}
-
-function filterTime(data, time) {
-    var day = time.getDate() < 10 ? "0" + time.getDate() : time.getDate() + "";
-    var month = time.getMonth() < 10 ? "0" + time.getMonth() : time.getMonth + "";
-    var str = month + day
-
-    return data.filter(function (value){
-        var time = value.time;
-        var sub = time.substring(4);
-        return sub === str;
-    });
-}
-
-function agregateTimespan(all_data, data, timespan) {
-
-    var n_data = new Array()
-
-    data.forEach(function (value, index, array) {
-
-        var i = all_data.indexOf(value);
-
-        var agregate = all_data.slice(i - timespan, i + timespan + 1);
-
-        value[params[0]] = d3.max(agregate, d => parseFloat(d[params[0]]))
-        value[params[1]] = d3.mean(agregate, d => parseFloat(d[params[1]]))
-        value[params[2]] = d3.min(agregate, d => parseFloat(d[params[2]]))
-        value[niederschlag] = d3.sum(agregate, d => parseFloat(d[niederschlag]))
-
-        n_data.push(value);
-    });
-
-    return n_data;
-}
-
-
-
 var ALT = "Standorte/ALT.csv"; 
 var ANT = "Standorte/ANT.csv"; 
 var BAS = "Standorte/BAS.csv"; 
@@ -115,4 +28,126 @@ var SIO = "Standorte/SIO.csv";
 var SMA = "Standorte/SMA.csv"; 
 var STG = "Standorte/STG.csv";
 
-getdata(BER)
+var data_list = new Array();
+var data;
+var options;
+
+var params = [ 
+    new Parameter("Maximaltemperatur (�C)", d3.max),
+    new Parameter("Durchschnittstemperatur (�C)", d3.mean),
+    new Parameter("Tiefsttemperatur (�C)", d3.min),
+    new Parameter("Niederschlag (mm)", d3.sum)]
+
+//Options Object Constructor
+function Options(data_path, data_width,agregate, start, date, param) {
+    this.data_path = data_path
+    this.width = data_width
+    this.agregate = agregate
+    this.start = start
+    this.date = date
+    this.param = param
+    options = this;
+}
+
+//Data Object Constructor to hold the raw data and the 
+function Data(all_data, data) {
+    this.all_data = all_data
+    this.data = data
+}
+
+function Parameter(name, agregateFn) {
+    this.name = name
+    this.agregateFn = agregateFn
+}
+
+//Load and filter data from CSV file
+async function onChangeOptions(options) {
+    var all_data = new Array()
+    return d3.dsv(";", 
+        String(options.data_path),
+        (d, e) => all_data.push(d)
+    ).then(d => filterData(all_data, options))
+}
+
+function changeLocation(){
+    var Location=document.getElementById("Location").value;
+    getdata(window[Location])
+    console.log(Location)
+}
+
+function changeParameter(){
+    var Parameter=document.getElementById("Parameter").value;
+    console.log(Parameter)
+}
+
+function changeTimespan(){
+    var Timespan = document.getElementById("Timespan").value;
+
+    timespan = parseInt(Timespan);
+    console.log(timespan)
+
+    applyData()
+}
+
+function changeCount(){}
+
+function changeCenter(){}
+
+function changeWidth() {}
+
+function filterData(all_data, options) {
+    data = all_data
+    if (options) {
+        if (options.agregate) {
+            if (options.date) {
+                data = filterDate(data, options.date)
+                data = agregateData(data, options.agregate, params, all_data)
+            } else {
+                data = agregateData(data, options.agregate, params)
+            }
+        }
+    }
+}
+
+function filterDate(data, time) {
+    var day = time.getDate() < 10 ? "0" + time.getDate() : time.getDate() + "";
+    var month = time.getMonth() < 10 ? "0" + time.getMonth() : time.getMonth + "";
+    var str = month + day
+
+    return data.filter(function (value){
+        var time = value.time;
+        var sub = time.substring(4);
+        return sub === str;
+    });
+}
+
+function agregateData(data, timespan, params, all_data) {
+
+    if (all_data) {
+
+        data.forEach(function (value){
+
+            var index = all_data.indexOf(value)
+            var agregate = all_data.slice(index - timespan, index + timespan + 1);
+
+            for (param of params) {
+                value[param.name] = param.agregateFn(agregate, d => d[param.name])
+            }
+        })
+        return data;
+
+    } else {
+        var new_data = new Array()
+        while (data.length > 0) {
+            var agregate = data.splice(0, timespan * 2)
+            var item = {}
+            for (param of params) {
+                item[param.name] = param.agregateFn(agregate, d => d[param.name])
+            }
+            item["time"] = agregate[0]["time"]
+            new_data.push(item);
+        }
+        return new_data;
+    }
+}
+
