@@ -5,15 +5,13 @@ var canvas;
 var lines;
 var promise = onChangeOptions(options).then(d => {
 
-    
-
     canvas = new Canvas(true, win_width * 0.8, win_height * 0.8, [50, 100, 50, 100], [0, 10, 50, 10])
 
     lines = [
-        new LineParameter(params[0], data, colors[0], true),
-        new LineParameter(params[1], data, colors[1], true),
-        new LineParameter(params[2], data, colors[2], true),
-        new LineParameter(params[3], data, colors[3], false)
+        new LineParameter(params[0], current_data, colors[0], true),
+        new LineParameter(params[1], current_data, colors[1], true),
+        new LineParameter(params[2], current_data, colors[2], true),
+        new LineParameter(params[3], current_data, colors[3], false)
     ]
 
     canvas.addLine(lines[0])
@@ -27,14 +25,14 @@ var promise = onChangeOptions(options).then(d => {
 function remove () {
 
 
-    canvas.removeLine(lines[2])
+    canvas.removeLine(lines[0])
     drawCanvas(canvas)
 
 }
 
 function add() {
 
-    canvas.addLine(lines[2])
+    canvas.addLine(lines[0])
     drawCanvas(canvas)
 }
 

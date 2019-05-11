@@ -29,7 +29,7 @@ var SMA = "Standorte/SMA.csv";
 var STG = "Standorte/STG.csv";
 
 var data_list = new Array();
-var data;
+var current_data;
 var options;
 
 var params = [ 
@@ -53,6 +53,8 @@ function Options(data_path, data_width,agregate, start, date, param) {
 function Data(all_data, data) {
     this.all_data = all_data
     this.data = data
+    current_data = this
+    data_list.push(this)
 }
 
 function Parameter(name, agregateFn) {
@@ -66,7 +68,7 @@ async function onChangeOptions(options) {
     return d3.dsv(";", 
         String(options.data_path),
         (d, e) => all_data.push(d)
-    ).then(d => filterData(all_data, options))
+    ).then(d => new Data(all_data, filterData(all_data, options)))
 }
 
 function changeLocation(){
@@ -96,17 +98,22 @@ function changeCenter(){}
 function changeWidth() {}
 
 function filterData(all_data, options) {
-    data = all_data
     if (options) {
+        var data = all_data;
+        if (options.width){
+            data = data.slice(options.start, options.start + options.width)
+        }
         if (options.agregate) {
             if (options.date) {
-                data = filterDate(data, options.date)
-                data = agregateData(data, options.agregate, params, all_data)
+                var filtered_data = filterDate(data, options.date)
+                data = agregateData(filtered_data, options.agregate, params, all_data)
             } else {
                 data = agregateData(data, options.agregate, params)
             }
         }
+        return data
     }
+    return all_data;
 }
 
 function filterDate(data, time) {

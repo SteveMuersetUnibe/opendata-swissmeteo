@@ -38,25 +38,25 @@ function setupLine(line) {
 
 function dataAnalysis(line) {
     //error if raw_data and param not defined
-    line.data = map(line.raw_data, "time", line.param.name)
+    line.data = map(line.raw_data.data, "time", line.param.name)
 
-    var check = line.data.slice(options.start, options.start + options.width)
-    line.data = check
-    line.ymin = d3.min(check, d => d.y)
-    line.ymax = d3.max(check, d => d.y)
-    line.ymean = d3.mean(check, d => d.y)
+    line.ymin = d3.min(line.data, d => d.y)
+    line.ymax = d3.max(line.data, d => d.y)
+    line.ymean = d3.mean(line.data, d => d.y)
 
     line.data_length = line.data.length
-    line.xmin = line.data[options.start].x
-    line.xmax = line.data[options.start + options.width -1].x
+    line.xmin = line.data[0].x
+    line.xmax = line.data[line.data.length - 1].x
 }
 
 function setScales(line) {
     //error if widht and height not defined
 
-    line.xScaleBase = d3.scaleTime().domain([line.xmin, line.xmax]).range([0, line.width]).clamp(true)
+    if (!line.setup) {
+        line.xScaleBase = d3.scaleTime().domain([line.xmin, line.xmax]).range([0, line.width]).clamp(true)
+        line.xScale = line.xScaleBase
+    }
     line.yScaleBase = d3.scaleLinear().domain([line.ymin, line.ymax]).range([line.height, 0]).clamp(true)
-    line.xScale = line.xScaleBase
     line.yScale = line.yScaleBase
 }
 
@@ -145,6 +145,15 @@ function opacityTransition(line) {
     line.canvas.nextTransition()
 }
 
+function axisTransition(line) {
+    line.xAxis
+        .transition()
+        .scale(line.xScale)
+    line.yAxis
+        .transition()
+        .scale(line.yScale)
+}
+
 function translateTransition(line) {
 
     if (
@@ -230,8 +239,24 @@ function updateZoom(line) {
 function updateChart(line) {
     var t = d3.event.transform
 
+    var scale = t.rescaleX(line.xScaleBase);
+
+    var one_day=1000*60*60*24;
+    var start = parseInt((scale.domain()[0].getTime() - parse(line.raw_data.all_data[0]["time"]).getTime()) / one_day)
+    var width = parseInt((scale.domain()[1].getTime() - scale.domain()[0].getTime()) / one_day) + 2
+    var options = new Options(null, width, 0, start)
+
+    var data = filterData(line.raw_data.all_data, options)
+    
     for (line of line.canvas.lines) {
-        line.xScale = t.rescaleX(line.xScaleBase);
+        line.raw_data.data = data
+        dataAnalysis(line)
+        line.xScale = scale
+    }
+    if (line.canvas.together) calculateLineScale(line.canvas)
+
+    for (line of line.canvas.lines) {
+        setScales(line)
         updateAxis(line);
         setLine(line);
         updateLine(line);
@@ -265,7 +290,8 @@ function Canvas(together, width, height, margin, padding) {
 
 function setup(canvas) {
     clear()
-    svg = d3.select("body")
+    svg = d3.select("#chart")
+        .attr("align", "center")
         .append("svg")
         .style("height", canvas.height)
         .style("width", canvas.width)
@@ -289,6 +315,7 @@ function updateCanvas(canvas) {
     for (line of canvas.lines.slice().reverse()){
 
         if (line.setup) {
+            if (!canvas.together) dataAnalysis(line)
             setScales(line)
             updateAxis(line)
             updateClip(line)
