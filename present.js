@@ -11,7 +11,7 @@ var lines;
 var promise = onChangeOptions(options).then(d => {
 
     var settings = new Settings(600, 1000, 100, 500)
-    canvas = new Canvas(options, true, win_width * 0.7, win_height * 0.5, [50, 50, 50, 50], [0, 10, 50, 10], settings)
+    canvas = new Canvas(options, true, win_width * 0.7, win_height * 0.5, [50, 50, 50, 50], [50, 10, 50, 10], settings)
 
     lines = [
         new LineParameter(params[0], current_data, colors[0], true),

@@ -32,11 +32,11 @@ function setupLine(line) {
     setScales(line);
     setAxis(line);
     setLine(line);
-    
     drawLine(line);
     setInfoBox(line.infoBox)
     setClip(line);
     setZoom(line);
+    setCaptureJerry(line)
     line.setup = true
 }
 
@@ -61,25 +61,33 @@ function dataAnalysis(line) {
  */
 
 function setScales(line) {
-    //error if widht and height not defined
-    if (!line.setup) {
-        line.xScaleBase = d3.scaleTime().domain([line.xmin, line.xmax]).range([0, line.width]) //.clamp(true)
-        line.xScale = line.xScaleBase
-        line.canvas.xScaleBase = line.xScaleBase
-    }
-    
-    line.yScaleBase = d3.scaleLinear().domain([line.ymin, line.ymax]).range([line.height, 0]) //.clamp(true)
-    line.yScale = line.yScaleBase
+    line.xScaleBase = d3.scaleTime().domain([line.xmin, line.xmax]).range([0, line.width]).clamp(true).nice()
+    line.xScale = line.xScaleBase
+    line.canvas.xScaleBase = line.xScaleBase
+
+    line.yScale = d3.scaleLinear().clamp(true).nice()
+
+    updateScales(line)
+}
+
+function updateScales(line) {
+    line.xScaleBase.range([0, line.width])
+    line.xScale.range([0, line.width])
+
+    line.yScale.domain([line.ymin, line.ymax]).range([line.height, 0])
 }
 
 function setAxis(line) {
-    //error if scales are not defined
-
     line.xAxis = d3.axisBottom()
-    line.yAxis = line.axisLeft ? d3.axisLeft() : d3.axisRight()
-    line.yAxis = line.yAxis
 
     updateAxis(line)
+}
+
+function updateAxis(line) {
+    line.drawAxisLeft = line.canvas.together ? line.axisLeft : true
+    line.yAxis = line.drawAxisLeft ? d3.axisLeft() : d3.axisRight()
+    line.xAxis.scale(line.xScale);
+    line.yAxis.scale(line.yScale);
 }
 
 function setLine(line) {
@@ -136,11 +144,7 @@ function drawLine(line) {
     |**|**|                                 |**|**|
  */
 
- function updateScales(line) {
-     line.xScaleBase.range([0, line.width])
-     line.xScale.range([0, line.width])
-     line.yScale.range([0, line.height])
- }
+ 
 
 function updateLineChart(line) {
     updateAxis(line)
@@ -149,13 +153,7 @@ function updateLineChart(line) {
     updatePath(line)
 }
 
-function updateAxis(line) {
-    
-    line.drawAxisLeft = line.canvas.together ? line.axisLeft : true
-    line.yAxis = line.drawAxisLeft ? d3.axisLeft() : d3.axisRight()
-    line.xAxis.scale(line.xScale);
-    line.yAxis.scale(line.yScale);
-}
+
 
 function updateAxisGroup(line) {
    updateXAxisGroup(line)
@@ -317,6 +315,8 @@ function updateZoom(line) {
 
 function zoomChart(line) {
     var t = d3.event.transform
+
+    createCircle(line)
     if (t.line && t.line != line) return false
     t.line = line
 
@@ -456,6 +456,7 @@ function updateCanvas(canvas) {
             updateAxis(line)
             updateClip(line)
             updateZoom(line)
+            updateInfoBox(line.infoBox)
             canvas.transitions.unshift(new ChartTransition(line, translateTransition))
         } else {
             setupLine(line)
@@ -467,11 +468,15 @@ function updateCanvas(canvas) {
 function calculateLinePosition(canvas) {
 
     for (line_index in canvas.lines) {
+        var l = canvas.lines[line_index]
+        l.translateX = (canvas.margin[1] +  canvas.padding[1])
         if (!canvas.together) {
-            canvas.lines[line_index].transform = "translate(" + (canvas.margin[1] +  canvas.padding[1]) + "," + (canvas.margin[2] + canvas.padding[2] + (line_index * (canvas.padding[2] + canvas.padding[0] +  canvas.lines[line_index].height))) + ")";
+            l.translateY = (canvas.margin[2] + 
+                    (line_index * (canvas.padding[2] + canvas.padding[0] +  canvas.lines[line_index].height)))
         } else {
-            canvas.lines[line_index].transform = "translate(" +(canvas.margin[1] + canvas.padding[1])+ "," + (canvas.margin[2] + canvas.padding[2])+ ")"
+            l.translateY = (canvas.margin[2] + canvas.padding[2])
         }
+        l.transform = "translate(" + l.translateX + "," + l.translateY + ")";
     }
 }
 
@@ -496,7 +501,8 @@ function calculateLineSize(canvas) {
         line.height = canvas.line_height
     }
 
-    var svg_height = (canvas.lines.length * (canvas.line_height + canvas.padding[0] + canvas.padding[2])) + canvas.margin[0] + canvas.margin[1]
+    var times = canvas.together ? 1 : canvas.lines.length
+    var svg_height = (times * (canvas.line_height + canvas.padding[0] + canvas.padding[2])) + canvas.margin[0] + canvas.margin[2]
     var svg_width = canvas.line_width + canvas.padding[1] + canvas.padding[3] + canvas.margin[1] + canvas.margin[3]
 
     canvas.group.style("height", svg_height)
@@ -538,20 +544,42 @@ function ChartTransition(line, transitionFn) {
 
 
 function setCaptureJerry(line) {
-
     line.zoom_rect.on("mousemove", findPoint.bind(line.zoom_rect.node(), line))
-
+    line.zoom_rect.on("mouseleave", removePoint.bind(null, line))
 }
 
 function findPoint(line) {
-    
     var coord = d3.mouse(this)
 
     var x = line.xScale.invert(coord[0])
 
     var index = findDateIndex(line.raw_data.data, format(x))
-    console.log(format(x), line.raw_data.data[index])
-   
+    for (l of line.canvas.lines){
+        l.mouse_data = line.raw_data.data[index]
+        updateInfoBox(l.infoBox)
+        createCircle(l)
+    }
+}
+
+function createCircle(line) {
+    if (!line.mouse_data) return false
+    var posX = line.xScale(parse(line.mouse_data["time"]))
+    console.log(line.mouse_data[line.param.name])
+    var posY = line.yScale(line.mouse_data[line.param.name])
+    console.log(posY)
+
+    line.group.selectAll("circle").remove()
+
+    line.group.append("circle")
+        .attr("cx", posX)
+        .attr("cy", posY)
+        .attr("r", 2)
+        .attr("fill", line.color)
+
+} 
+
+function removePoint(line){
+    line.mouse_data = null
 }
 
 function Settings(l_min_width, l_max_width, l_min_height, l_max_height) {
@@ -571,25 +599,47 @@ function InfoBox(line) {
 function updateInfoBox(infoBox){
     infoBox.height = infoBox.line.height 
     infoBox.width = infoBox.line.height
+    if (infoBox.line.canvas.together) {
+        infoBox.group.style("opacity", 0)
+    } else {
+        drawInfoBox(infoBox)
+    }
+
 }
 
 function setInfoBox(infoBox) {
-    infoBox.container = infoBox.line.group.append("div")
-    drawInfoBox(infoBox)
+    //console.log(infoBox.line.group.append("div"))
+    infoBox.container = infoBox.line.chart
+        .append("g")
+        .classed("infobox", true)
+
+    infoBox.group = infoBox.container.append("foreignObject")
+    infoBox.text = infoBox.group.append("xhtml:div")
+        .classed("card-body text-center", true)
+        .append("label")
+        .classed("card-title", true)
+        .html("asdfasdf")
+    updateInfoBox(infoBox)
 }
 
 function drawInfoBox(infoBox) {
-    console.log("test")
-    infoBox.container
-        .classed("infobox")
-        .attr("x", line.width)
-        .style("width", line.height)
-        .sytle("height", line.height)
-        .style("background-color", "blue")
-}
+    infoBox.group
+        .classed("card bg-light center-text", true)
+        .attr("x", infoBox.line.width)
+        .attr("width", infoBox.width)
+        .attr("height", infoBox.height)
+        .attr("transform", "translate(" + (infoBox.line.translateX + infoBox.line.canvas.padding[1]) +  "," + infoBox.line.translateY + ")")
+        .style("opacity", 1)
 
-function drawInfoBox(infoBox) {
-
+    if (infoBox.line.mouse_data){
+        infoBox.text.html(infoBox.line.mouse_data[infoBox.line.param.name])
+    }
+    
+        // .classed("infobox", true)
+        // .attr("x", line.width)
+        // .style("width", line.height)
+        // .style("height", line.height)
+        // .style("background-color", "blue")
 }
 
 
