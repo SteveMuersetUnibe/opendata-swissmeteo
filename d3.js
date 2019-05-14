@@ -1,12 +1,6 @@
 var win_height = window.innerHeight;
 var win_width = window.innerWidth;
 
-var svg = d3.select("svg")
-
-function clear() {
-    if (svg) svg.remove();
-}
-
 function map(data, xParam, yParam) {
     return data.map((value) => { return {x : parse(value[xParam]), y : parseFloat(value[yParam])} })
 }
@@ -29,6 +23,8 @@ function LineParameter(param, data, color, left, dimension) {
     this.setup = false
     this.zoomLevel = 0
 
+    this.infoBox = new InfoBox(this)
+
     dataAnalysis(this);
 }
 
@@ -38,6 +34,7 @@ function setupLine(line) {
     setLine(line);
     
     drawLine(line);
+    setInfoBox(line.infoBox)
     setClip(line);
     setZoom(line);
     line.setup = true
@@ -65,12 +62,12 @@ function dataAnalysis(line) {
 
 function setScales(line) {
     //error if widht and height not defined
-
     if (!line.setup) {
         line.xScaleBase = d3.scaleTime().domain([line.xmin, line.xmax]).range([0, line.width]) //.clamp(true)
         line.xScale = line.xScaleBase
         line.canvas.xScaleBase = line.xScaleBase
     }
+    
     line.yScaleBase = d3.scaleLinear().domain([line.ymin, line.ymax]).range([line.height, 0]) //.clamp(true)
     line.yScale = line.yScaleBase
 }
@@ -139,6 +136,12 @@ function drawLine(line) {
     |**|**|                                 |**|**|
  */
 
+ function updateScales(line) {
+     line.xScaleBase.range([0, line.width])
+     line.xScale.range([0, line.width])
+     line.yScale.range([0, line.height])
+ }
+
 function updateLineChart(line) {
     updateAxis(line)
     updateAxisGroup(line)
@@ -147,7 +150,9 @@ function updateLineChart(line) {
 }
 
 function updateAxis(line) {
+    
     line.drawAxisLeft = line.canvas.together ? line.axisLeft : true
+    line.yAxis = line.drawAxisLeft ? d3.axisLeft() : d3.axisRight()
     line.xAxis.scale(line.xScale);
     line.yAxis.scale(line.yScale);
 }
@@ -251,6 +256,7 @@ function lineTransition(line) {
 }
 
 function axisGroupTransition(line) {
+    updateAxis(line)
     xAxisGroupTransition(line)
     yAxisGroupTransition(line)
 }
@@ -258,33 +264,19 @@ function axisGroupTransition(line) {
 function xAxisGroupTransition(line) {
     line.xAxisGroup
     .transition()
-    .duration(250)
-        .style("opacity", 0)
-    .transition()
-    .duration(0)
+    .duration(500)
         .call(line.xAxis)
         .attr("transform", "translate(0, "+ line.height +")")
-        
-    .transition()
-    .duration(250)
-        .style("opacity", 1)
-        
 }
 
 function yAxisGroupTransition(line) {
-
     line.yAxisGroup
     .transition()
-    .duration(250)
-        .style("opacity", 0)
-    .transition()
-    .duration(0)
-        .attr("transform", "translate(" + (line.drawAxisLeft ? 0 : line.width) +",0)") 
+    .duration(500)
+        .attr("transform", "translate(" + (line.drawAxisLeft ? 0 : line.width) +",0)")
         .call(line.yAxis)
-    .transition()
-    .duration(250)
-        .style("opacity", 1)
 }
+    
 
 
 /*
@@ -373,15 +365,15 @@ function calculateZoom(canvas) {
     var end_pos = canvas.xScaleBase(parse(canvas.options.end))
     var scaleTo = canvas.line_width / (end_pos - start_pos)
 
-    // for (l of canvas.lines) {
-    //     l.zoom_rect
-    //         .transition()
-    //         .duration(1000)
-    //         .call(l.zoom.transform, d3.zoomIdentity
-    //             .scale(scaleTo)
-    //             .translate(-start_pos, 0)
-    //         )
-    // }
+    for (l of canvas.lines) {
+        l.zoom_rect
+            .transition()
+            .duration(5000)
+            .call(l.zoom.transform, d3.zoomIdentity
+                .scale(scaleTo)
+                .translate(-start_pos, 0)
+            )
+    }
 }
 
 
@@ -393,8 +385,9 @@ function calculateZoom(canvas) {
     |**|**|                         |**|**|
  */
 
-function Canvas(options, together, width, height, margin, padding) {
+function Canvas(options, together, width, height, margin, padding, settings) {
     
+    this.settings = settings
     this.options = options
     this.together = together
     this.width = width
@@ -425,7 +418,6 @@ function setupCanvas(canvas) {
         .append("svg")
         .style("height", canvas.height)
         .style("width", canvas.width)
-            .append("g")
 }
 
 function removeCanvas(canvas) {
@@ -440,7 +432,7 @@ function drawCanvas(canvas) {
     updateCanvas(canvas)
     canvas.nextTransition()
     if (!canvas.drawn) {
-        calculateZoom(canvas)
+        //calculateZoom(canvas)
         canvas.drawn = true
     }
     
@@ -460,6 +452,7 @@ function updateCanvas(canvas) {
         if (line.setup) {
             if (!canvas.together) dataAnalysis(line)
             setScales(line)
+            updateScales(line)
             updateAxis(line)
             updateClip(line)
             updateZoom(line)
@@ -485,14 +478,29 @@ function calculateLinePosition(canvas) {
 function calculateLineSize(canvas) {
     var line_count = canvas.lines.length;
 
-    canvas.line_width = canvas.width - (canvas.margin[1] + canvas.margin[3] + canvas.padding[1] + canvas.padding[3])
+    var width = canvas.width - (canvas.margin[1] + canvas.margin[3] + canvas.padding[1] + canvas.padding[3])
+    
     var height = canvas.height - (canvas.margin[0] + canvas.margin[2])
     canvas.line_height = canvas.together ? canvas.height - (canvas.margin[0] + canvas.margin[2] + canvas.padding[0] + canvas.padding[2]) : (height / line_count) - (canvas.padding[0] + canvas.padding[2])
+    
+
+    canvas.line_width = canvas.line_width < canvas.settings.l_min_width ? canvas.settings.l_min_width : canvas.line_width
+    canvas.line_width = canvas.line_width > canvas.settings.l_max_width ? canvas.settings.l_max_width : canvas.line_width
+    canvas.line_height = canvas.line_height < canvas.settings.l_min_height ? canvas.settings.l_min_height : canvas.line_height
+    canvas.line_height = canvas.line_height > canvas.settings.l_max_height ? canvas.settings.l_max_height : canvas.line_height
+
+    canvas.line_width = canvas.together ? width : width - (canvas.line_height + canvas.padding[1] + canvas.padding[3])
 
     for (line of canvas.lines) {
         line.width = canvas.line_width
         line.height = canvas.line_height
     }
+
+    var svg_height = (canvas.lines.length * (canvas.line_height + canvas.padding[0] + canvas.padding[2])) + canvas.margin[0] + canvas.margin[1]
+    var svg_width = canvas.line_width + canvas.padding[1] + canvas.padding[3] + canvas.margin[1] + canvas.margin[3]
+
+    canvas.group.style("height", svg_height)
+    canvas.group.style("widht", svg_width)
 }
 
 function calculateLineScale(canvas) {
@@ -541,62 +549,48 @@ function findPoint(line) {
 
     var x = line.xScale.invert(coord[0])
 
-    var y = line.yScale.invert(coord[1])
-
     var index = findDateIndex(line.raw_data.data, format(x))
     console.log(format(x), line.raw_data.data[index])
-    // var pathEl = line.path.node()
-    // var pathLength = pathEl.getTotalLength()
-    // var BBox = pathEl.getBBox()
-    // var scale = pathLength / BBox.width
+   
+}
 
-    // var _x = d3.mouse(this)[0]
-    // var beginning = _x
-    // var end = pathLength 
-    // var target
-
-    // while(true) {
-    //     target = Math.floor((beginning + end) / 2)
-    //     pos 
-    // }
-
+function Settings(l_min_width, l_max_width, l_min_height, l_max_height) {
+    this.l_min_height = l_min_height
+    this.l_max_height = l_max_height
+    this.l_min_width = l_min_width
+    this.l_max_width = l_max_width
 }
 
 
-
-
-
-function point(){
-    // var pathEl = path.node();
-    // var pathLength = pathEl.getTotalLength();
-    // var BBox = pathEl.getBBox();
-    // var scale = pathLength/BBox.width;
-    // var offsetLeft = document.getElementById("line").offsetLeft;
-    // var _x = d3.mouse(this)[0];
-    // var beginning = _x , end = pathLength, target;
-    // while (true) {
-    //     target = Math.floor((beginning + end) / 2);
-    //     pos = pathEl.getPointAtLength(target);
-    //     if ((target === end || target === beginning) && pos.x !== _x) {
-    //         break;
-    //     }
-    //     if (pos.x > _x){
-    //         end = target;
-    //     }else if(pos.x < _x){
-    //         beginning = target;
-    //     }else{
-    //         break; //position found
-    //     }
-    // }
-    // circle
-    // .attr("opacity", 1)
-    // .attr("cx", _x+ trans)
-    // .attr("cy", pos.y);
+function InfoBox(line) {
+    this.line = line
+    this.height = line.height
+    this.width = line.height
 }
 
+function updateInfoBox(infoBox){
+    infoBox.height = infoBox.line.height 
+    infoBox.width = infoBox.line.height
+}
 
+function setInfoBox(infoBox) {
+    infoBox.container = infoBox.line.group.append("div")
+    drawInfoBox(infoBox)
+}
 
+function drawInfoBox(infoBox) {
+    console.log("test")
+    infoBox.container
+        .classed("infobox")
+        .attr("x", line.width)
+        .style("width", line.height)
+        .sytle("height", line.height)
+        .style("background-color", "blue")
+}
 
+function drawInfoBox(infoBox) {
+
+}
 
 
 

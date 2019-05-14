@@ -1,6 +1,6 @@
 
 
-var x = "19990101"
+var x = "19800101"
 var y = "20010505"
 
 var options = new Options(BER, x, y, 0, 0)
@@ -10,7 +10,8 @@ var canvas;
 var lines;
 var promise = onChangeOptions(options).then(d => {
 
-    canvas = new Canvas(options, true, win_width * 0.8, win_height * 0.8, [150, 100, 150, 300], [0, 10, 50, 10])
+    var settings = new Settings(600, 1000, 100, 500)
+    canvas = new Canvas(options, true, win_width * 0.7, win_height * 0.5, [50, 50, 50, 50], [0, 10, 50, 10], settings)
 
     lines = [
         new LineParameter(params[0], current_data, colors[0], true),

@@ -37,9 +37,9 @@ var format = d3.timeFormat("%Y%m%d")
 
 
 var params = [ 
-    new Parameter("Maximaltemperatur (�C)", d3.max, "MaxTemp"),
-    new Parameter("Durchschnittstemperatur (�C)", d3.mean, "MeanTemp"),
-    new Parameter("Tiefsttemperatur (�C)", d3.min, "MinTemp"),
+    new Parameter("Maximaltemperatur", d3.max, "MaxTemp"),
+    new Parameter("Durchschnittstemperatur", d3.mean, "MeanTemp"),
+    new Parameter("Tiefsttemperatur", d3.min, "MinTemp"),
     new Parameter("Niederschlag (mm)", d3.sum, "Rain")]
 
 //Options Object Constructor
@@ -151,16 +151,10 @@ function filterData(data, options) {
         change_data = true
     }
 
-   
-
     if (change_data) {
         data.start_index = data.start_index > 0 ? data.start_index : 0
         data.end_index = data.end_index > 0 ? data.end_index : data_focus.length - 1
         var d = data_focus.slice(data.start_index, data.end_index)
-
-        
-
-        console.log(data.start_index, data.end_index, d.length, far_left, far_right)
 
         if (d.length < 500) return d
     }
@@ -172,10 +166,6 @@ function filterData(data, options) {
         options.zoomLevel -= 1
         options.zoomLevelChanged = true
     }
-
-    
-
-    
     return data.data
 }
 
