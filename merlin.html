@@ -3,76 +3,53 @@
     <head>
     
         <script src="d3/d3.js"></script>
-        <link rel="stylesheet" type="text/css" href="main.css">
+        <link rel="stylesheet" type="text/css" href="merlin.css">
 
     </head>
 
     <body>
         <svg></svg>
 
-        <div class="dropdown"> 
-            <form> 
-                <select id="Location" onchange="changeLocation(this);">
-                    <div class="dropdown-content"> 
-                        <option value="live_data_base_url" > Mein Standort </option>
-                        <option value="ALT" > Altdorf</option>
-                        <option value="ANT" > Andermatt</option>
-                        <option value="BAS" > Basel</option>
-                        <option value="BER" > Bern</option>
-                        <option value="CDF" > La Chaux de Fonds</option>
-                        <option value="CHD" > La Chateau-d'Oex</option>
-                        <option value="CHM" > Chaumont</option>
-                        <option value="DAV" > Davos</option>
-                        <option value="ELM" > Elm</option>
-                        <option value="ENG" > Engelberg</option>
-                        <option value="GRC" > Gränchen</option>
-                        <option value="GRH" > Grimsel Hospiz</option>
-                        <option value="GSB" > Col du Grand St-Bernard</option>
-                        <option value="GVE" > Geneve</option>
-                        <option value="JUN" > Jungfraujoch</option>
-                        <option value="LUG" > Lugano</option>
-                        <option value="LUZ" > Luzern</option>
-                        <option value="MER" > Meiringen</option>
-                        <option value="NEU" > Neuchatel</option>
-                        <option value="OTL" > Lugano</option>
-                        <option value="PAY" > Payerne</option>
-                        <option value="RAG" > Bad Ragaz</option>
-                        <option value="SAE" > Saenti</option>
-                        <option value="SAM" > Samedan</option>
-                        <option value="SBE" > S. Bernardino</option>
-                        <option value="SIA" > Segl-Maria</option>
-                        <option value="SIO" > Sion</option>
-                        <option value="SMA" > Zuerich</option>
-                        <option value="STG" > St. Gallen</option>
-                    </div>
-                </select>
-    <!--
-                <select id="Parameter" onchange="changeParameter(this);">
-
-                    <option value=""> Durchschnitstemperatur </option>
-                    <option value=""> Maximaltemperatur </option>
-                    <option value=""> Tiefsttemperatur </option>
-                    <option value=""> Niederschlag </option>
-
-                </select>
-    -->
-                <select id="Timespan" onchange="changeTimespan(this)">
-                                    
-                    <option value="0" selected> 1 Tag </option>
-                    <option value="1"> 3 Tage </option>
-                    <option value="3"> 1 Woche </option>
-                    <option value="15"> 1 Monat </option>
-                    <option value="45"> 3 Monate </option>
-                    <option value="91"> 6 Monate </option>
-                    <option value="182"> 1 Jahr </option>
-
-                </select>
-
-
-                <button onclick="transition()">Aufteilen</button>
-
-            </form>
+        <div class="dropdown">
+            <button class="dropbtn"> Standort </button>
+                <div id="Location" class="dropdown-content">
+                    <a onclick="changeLocation(this)" href="#" value="live_data_base_url" > Mein Standort </a>
+                    <a onclick="changeLocation(this)" href="#" value="ALT" > Altdorf</a>
+                    <a onclick="changeLocation(this)" href="#" value="ANT" > Andermatt</a>
+                    <a onclick="changeLocation(this)" href="#" value="BAS" > Basel</a>
+                    <a onclick="changeLocation(this)" href="#" value="BER" > Bern</a>
+                    <a onclick="changeLocation(this)" href="#" value="CDF" > La Chaux de Fonds</a>
+                    <a onclick="changeLocation(this)" href="#" value="CHD" > La Chateau-d'Oex</a>
+                    <a onclick="changeLocation(this)" href="#" value="CHM" > Chaumont</a>
+                    <a onclick="changeLocation(this)" href="#" value="DAV" > Davos</a>
+                    <a onclick="changeLocation(this)" href="#" value="ELM" > Elm</a>
+                    <a onclick="changeLocation(this)" href="#" value="ENG" > Engelberg</a>
+                    <a onclick="changeLocation(this)" href="#" value="GRC" > Gränchen</a>
+                    <a onclick="changeLocation(this)" href="#" value="GRH" > Grimsel Hospiz</a>
+                    <a onclick="changeLocation(this)" href="#" value="GSB" > Col du Grand St-Bernard</a>
+                    <a onclick="changeLocation(this)" href="#" value="GVE" > Geneve</a>
+                    <a onclick="changeLocation(this)" href="#" value="JUN" > Jungfraujoch</a>
+                    <a onclick="changeLocation(this)" href="#" value="LUG" > Lugano</a>
+                    <a onclick="changeLocation(this)" href="#" value="LUZ" > Luzern</a>
+                    <a onclick="changeLocation(this)" href="#" value="MER" > Meiringen</a>
+                    <a onclick="changeLocation(this)" href="#" value="NEU" > Neuchatel</a>
+                    <a onclick="changeLocation(this)" href="#" value="OTL" > Lugano</a>
+                    <a onclick="changeLocation(this)" href="#" value="PAY" > Payerne</a>
+                    <a onclick="changeLocation(this)" href="#" value="RAG" > Bad Ragaz</a>
+                    <a onclick="changeLocation(this)" href="#" value="SAE" > Saenti</a>
+                    <a onclick="changeLocation(this)" href="#" value="SAM" > Samedan</a>
+                    <a onclick="changeLocation(this)" href="#" value="SBE" > S. Bernardino</a>
+                    <a onclick="changeLocation(this)" href="#" value="SIA" > Segl-Maria</a>
+                    <a onclick="changeLocation(this)" href="#" value="SIO" > Sion</a>
+                    <a onclick="changeLocation(this)" href="#" value="SMA" > Zuerich</a>
+                    <a onclick="changeLocation(this)" href="#" value="STG" > St. Gallen</a>
+                </div>
         </div>
+               
+        <button onclick="spread()">Aufteilen</button>
+
+
+    </div>
 
         <script src="d3.js"></script>
         <script src="data.js"></script>
