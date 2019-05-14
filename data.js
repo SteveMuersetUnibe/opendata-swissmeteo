@@ -73,23 +73,9 @@ async function onChangeOptions(options) {
 
 function changeLocation(){
     var Location=document.getElementById("Location").value;
-    getdata(window[Location])
     console.log(Location)
 }
 
-function changeParameter(){
-    var Parameter=document.getElementById("Parameter").value;
-    console.log(Parameter)
-}
-
-function changeTimespan(){
-    var Timespan = document.getElementById("Timespan").value;
-
-    timespan = parseInt(Timespan);
-    console.log(timespan)
-
-    applyData()
-}
 
 function changeCount(){}
 
