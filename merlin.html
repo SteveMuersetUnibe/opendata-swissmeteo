@@ -44,16 +44,26 @@
                     <a onclick="changeLocation(this)" href="#" value="SMA" > Zuerich</a>
                     <a onclick="changeLocation(this)" href="#" value="STG" > St. Gallen</a>
                 </div>
-        </div>
-               
-        <button onclick="spread()">Aufteilen</button>
-
-
-    </div>
-
-        <script src="d3.js"></script>
-        <script src="data.js"></script>
         
+            </div>
+            
+            <button class="bttn" onclick="spread()">Aufteilen</button>
+        
+        </div>
+
+        <div class="chckbx"> 
+            <button class="checkbox" value="Maximaltemperatur (�C)" > Höchsttemperatur </button>
+            <button class="checkbox" value="Durchschnittstemperatur (�C" checked> Durchschnittstemperatur </button>
+            <button class="checkbox" value="Tiefsttemperatur (�C)" checked> Tiefsttemperatur </button>
+            <button class="checkbox" value="Niederschlag (mm)" checked> Niederschlag </button>
+            <button class="checkbox" value="Durchschnittslinien" checked> Durchschnittslinien </button> 
+        </div>
+
+    <div id="chart"></div>
+
+    <script src="data.js"></script>
+    <script src="d3.js"></script>
+    <script src="present.js"></script>
         
     </body>
 </html>
