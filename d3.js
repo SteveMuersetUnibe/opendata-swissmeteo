@@ -1,11 +1,7 @@
-
-
 var win_height = window.innerHeight;
 var win_width = window.innerWidth;
 
-var parse = d3.timeParse("%Y%m%d");
-
-var svg;
+var svg = d3.select("svg")
 
 function clear() {
     if (svg) svg.remove();
@@ -15,13 +11,23 @@ function map(data, xParam, yParam) {
     return data.map((value) => { return {x : parse(value[xParam]), y : parseFloat(value[yParam])} })
 }
 
+/*
+    |**|**|                                |**|**|
+    |**|**|    LineParameter Object and    |**|**|
+    |**|**|                                |**|**|
+    |**|**|            Functions           |**|**|
+    |**|**|                                |**|**|
+ */
+
 function LineParameter(param, data, color, left, dimension) {
     this.color = color
     this.param = param
     this.raw_data = data
     this.dimension = dimension
-    this.left = left
+    this.drawAxisLeft = left
+    this.axisLeft = left
     this.setup = false
+    this.zoomLevel = 0
 
     dataAnalysis(this);
 }
@@ -30,9 +36,10 @@ function setupLine(line) {
     setScales(line);
     setAxis(line);
     setLine(line);
+    
     drawLine(line);
-    addClip(line);
-    addZoom(line);
+    setClip(line);
+    setZoom(line);
     line.setup = true
 }
 
@@ -44,19 +51,27 @@ function dataAnalysis(line) {
     line.ymax = d3.max(line.data, d => d.y)
     line.ymean = d3.mean(line.data, d => d.y)
 
-    line.data_length = line.data.length
-    line.xmin = line.data[0].x
-    line.xmax = line.data[line.data.length - 1].x
+    line.xmin = parse(line.raw_data.all_data[0]["time"])
+    
+    line.xmax = parse(line.raw_data.all_data[line.raw_data.all_data.length - 1]["time"])
+    
 }
+
+/*
+    |**|**|                                 |**|**|
+    |**|**|    LineChart set Functions      |**|**|
+    |**|**|                                 |**|**|
+ */
 
 function setScales(line) {
     //error if widht and height not defined
 
     if (!line.setup) {
-        line.xScaleBase = d3.scaleTime().domain([line.xmin, line.xmax]).range([0, line.width]).clamp(true)
+        line.xScaleBase = d3.scaleTime().domain([line.xmin, line.xmax]).range([0, line.width]) //.clamp(true)
         line.xScale = line.xScaleBase
+        line.canvas.xScaleBase = line.xScaleBase
     }
-    line.yScaleBase = d3.scaleLinear().domain([line.ymin, line.ymax]).range([line.height, 0]).clamp(true)
+    line.yScaleBase = d3.scaleLinear().domain([line.ymin, line.ymax]).range([line.height, 0]) //.clamp(true)
     line.yScale = line.yScaleBase
 }
 
@@ -64,14 +79,10 @@ function setAxis(line) {
     //error if scales are not defined
 
     line.xAxis = d3.axisBottom()
-    line.yAxis = this.left ? d3.axisLeft() : d3.axisRight()
+    line.yAxis = line.axisLeft ? d3.axisLeft() : d3.axisRight()
     line.yAxis = line.yAxis
-    updateAxis(line)
-}
 
-function updateAxis(line) {
-    line.xAxis.scale(line.xScale);
-    line.yAxis.scale(line.yScale);
+    updateAxis(line)
 }
 
 function setLine(line) {
@@ -81,125 +92,93 @@ function setLine(line) {
         .defined(d => !isNaN(d.y))
 }
 
+function setClip(line) {
+    line.clip_id = "clip" + line.param.short
+    line.clip = line.group.append("clipPath")
+        .attr("id", line.clip_id)
+        .append("rect")
+    line.path.attr("clip-path", "url(#" + line.clip_id + ")")
+    updateClip(line)
+}
+
 function drawLine(line) {
 
-    line.group = svg.append("g")
+    line.chart = line.canvas.group.append("g")
+        .classed("chart-group", true)
+
+    line.group = line.chart.append("g")
+
     line.group
         .classed("area-group", true)
-        .attr("clip-path", "url(#clip" + line.param.name + ")")
-        .attr("opacity", 0)
+        .style("opacity", 0)
         .attr("transform", line.transform)
                 
     line.path = line.group.append("path")
+        
         .attr("fill", line.color)
         .attr("stroke", line.color)
         .attr("d", line.line(line.data))
 
     line.yAxisGroup = line.group.append("g")
-        .attr("transform", "translate(" + (line.left ? 0 : line.width) +",0)") 
+        .attr("transform", "translate(" + (line.drawAxisLeft ? 0 : line.width) +",0)") 
         .call(line.yAxis)
+        .style("z-index", -10)
     
     line.xAxisGroup = line.group.append("g")
         .attr("transform", "translate(0, "+ line.height +")")
         .call(line.xAxis)
+        .style("z-index", -10)
 
-    line.canvas.transitions.push(new LineTransition(line, opacityTransition))
+    line.canvas.transitions.push(new ChartTransition(line, opacityTransition))
 }
 
-function updateLine(line) {
 
+/*
+    |**|**|                                 |**|**|
+    |**|**|    LineChart update Functions   |**|**|
+    |**|**|                                 |**|**|
+ */
+
+function updateLineChart(line) {
+    updateAxis(line)
+    updateAxisGroup(line)
+    updateLineGroup(line)
+    updatePath(line)
+}
+
+function updateAxis(line) {
+    line.drawAxisLeft = line.canvas.together ? line.axisLeft : true
+    line.xAxis.scale(line.xScale);
+    line.yAxis.scale(line.yScale);
+}
+
+function updateAxisGroup(line) {
+   updateXAxisGroup(line)
+   updateYAxisGroup(line)
+}
+
+function updateXAxisGroup(line) {
+    line.xAxisGroup
+    .attr("transform", "translate(0, "+ line.height +")")
+    .call(line.xAxis)
+}
+
+function updateYAxisGroup(line) {
+    line.yAxisGroup
+    .attr("transform", "translate(" + (line.drawAxisLeft ? 0 : line.width) +",0)") 
+    .call(line.yAxis)
+}
+
+function updateLineGroup(line) {
     line.group
         .attr("transform" , line.transform)
+}
 
+function updatePath(line) {
     line.path
         .attr("fill", line.color)
         .attr("stroke", line.color)
         .attr("d", line.line(line.data))
-
-    line.xAxisGroup
-        .attr("transform", "translate(0, "+ line.height +")")
-        .call(line.xAxis)
-
-    line.yAxisGroup
-        .attr("transform", "translate(" + (line.left ? 0 : line.width) +",0)") 
-        .call(line.yAxis)
-}
-
-function opacityTransition(line) {
-
-    if (line.group.attr("opacity") == 1){
-        line.group
-            .transition()
-            .duration(100)
-            .attr("opacity", 0)
-            .on("end", d => {line.setup = false; line.canvas.nextTransition()})
-            .remove()
-
-        return false
-    }
-
-    line.group
-        .transition()
-        .duration(600)
-        .attr("opacity", 1)
-    line.canvas.nextTransition()
-}
-
-function axisTransition(line) {
-    line.xAxis
-        .transition()
-        .scale(line.xScale)
-    line.yAxis
-        .transition()
-        .scale(line.yScale)
-}
-
-function translateTransition(line) {
-
-    if (
-        line.path.attr("d") == line.line(line.data)
-        && line.xAxisGroup.attr("transform") == "translate(0, " + line.height + ")"
-        && line.yAxisGroup.attr("transform") == "translate(" + (line.left ? 0 : line.width) + ",0)"
-        && line.group.attr("transform") == line.transform
-    ) {
-        line.canvas.nextTransition()
-        return false
-    } else if (line.group.attr("opacity") == 0) {
-        updateLine(line)
-        line.canvas.nextTransition()
-        return false
-    }
-
-    line.path
-        .transition()
-        .duration(500)
-        .attr("d", line.line(line.data))
-
-    line.xAxisGroup
-    .transition()
-    .duration(500)
-        .attr("transform", "translate(0, "+ line.height +")")
-        .call(line.xAxis)
-
-    line.yAxisGroup
-    .transition()
-    .duration(500)
-        .attr("transform", "translate(" + (line.left ? 0 : line.width) +",0)") 
-        .call(line.yAxis)
-
-    line.group
-        .transition()
-        .duration(500)
-        .attr("transform", line.transform)
-    line.canvas.nextTransition()
-}
-
-function addClip(line) {
-    line.clip_id = "clip" + line.param.name
-    line.clip = line.group.append("clipPath")
-        .attr("id", line.clip_id)
-        .append("rect")
-    updateClip(line)
 }
 
 function updateClip(line) {
@@ -210,61 +189,213 @@ function updateClip(line) {
         .attr("y", 0);
 }
 
-function addZoom(line) {
+/*
+    |**|**|                             |**|**|
+    |**|**|    LineChart Transitions    |**|**|
+    |**|**|                             |**|**|
+ */
 
-    // Set the zoom and Pan features: how much you can zoom, on which part, and what to do when there is a zoom
+function opacityTransition(line) {
+
+    if (line.group.style("opacity") == 1){
+        line.group
+            .transition()
+            .duration(100)
+            .style("opacity", 0)
+            .on("end", d => {line.setup = false; line.canvas.nextTransition()})
+            .remove()
+        return false
+    }
+
+    line.group
+        .transition()
+        .duration(600)
+        .style("opacity", 1)
+    line.canvas.nextTransition()
+}
+
+function translateTransition(line) {
+
+    if (
+        line.path.attr("d") == line.line(line.data)
+        && line.xAxisGroup.attr("transform") == "translate(0, " + line.height + ")"
+        && line.yAxisGroup.attr("transform") == "translate(" + (line.drawAxisLeft ? 0 : line.width) + ",0)"
+        && line.group.attr("transform") == line.transform
+    ) {
+        line.canvas.nextTransition()
+        return false
+    } else if (line.group.style("opacity") == 0) {
+        updateLineChart(line)
+        line.canvas.nextTransition()
+        return false
+    }
+
+    lineTransition(line)
+    axisGroupTransition(line)
+    lineGroupTransition(line)
+    line.canvas.nextTransition()
+}
+
+function lineGroupTransition(line) {
+    line.group
+        .transition()
+        .duration(500)
+        .attr("transform", line.transform)
+}
+
+function lineTransition(line) {
+    line.path
+    .transition()
+    .duration(500)
+    .attr("d", line.line(line.data))
+}
+
+function axisGroupTransition(line) {
+    xAxisGroupTransition(line)
+    yAxisGroupTransition(line)
+}
+
+function xAxisGroupTransition(line) {
+    line.xAxisGroup
+    .transition()
+    .duration(250)
+        .style("opacity", 0)
+    .transition()
+    .duration(0)
+        .call(line.xAxis)
+        .attr("transform", "translate(0, "+ line.height +")")
+        
+    .transition()
+    .duration(250)
+        .style("opacity", 1)
+        
+}
+
+function yAxisGroupTransition(line) {
+
+    line.yAxisGroup
+    .transition()
+    .duration(250)
+        .style("opacity", 0)
+    .transition()
+    .duration(0)
+        .attr("transform", "translate(" + (line.drawAxisLeft ? 0 : line.width) +",0)") 
+        .call(line.yAxis)
+    .transition()
+    .duration(250)
+        .style("opacity", 1)
+}
+
+
+/*
+    |**|**|                                 |**|**|
+    |**|**|    LineChart zoom Functions     |**|**|
+    |**|**|                                 |**|**|
+ */
+
+function setZoom(line) {
     line.zoom = d3.zoom()
-        .scaleExtent([0.5, 40])
-        .translateExtent([[0, 0], [line.width, line.height]])
-        .extent([[0, 0], [line.width, line.height]])
-        .on("zoom", updateChart.bind(null, line));
+        .scaleExtent([1, 2000])
+        .on("zoom", zoomChart.bind(null, line))
+        .on("end", zoomEnd.bind(null, line))
 
     line.zoom_rect = line.group.append("rect")
-    // This add an invisible rect on top of the chart area. This rect can recover pointer events: necessary to understand when the user zoom
         .style("pointer-events", "all")
         .call(line.zoom);
+}
 
-    updateZoom(line)
-// now the user can zoom and it will trigger the function called updateChart
+function zoomEnd(line) {
+    var t = d3.event.transform
+
+    if (t.line == line) {
+        console.log("end")
+    }
 }
 
 function updateZoom(line) {
+    line.zoom
+        .translateExtent([[0, 0], [line.width, line.height]])
+        .extent([[0, 0], [line.width, line.height]])
+            
     line.zoom_rect
         .attr("width", line.width)
         .attr("height",line.height)
         .style("fill", "none")
 }
 
-// A function that updates the chart when the user zoom and thus new boundaries are available
-function updateChart(line) {
+function zoomChart(line) {
     var t = d3.event.transform
+    if (t.line && t.line != line) return false
+    t.line = line
 
-    var scale = t.rescaleX(line.xScaleBase);
+    var i = line.canvas.lines.indexOf(line)
+    var other_lines = line.canvas.lines.slice()
+    other_lines.splice(i, 1)
 
-    var one_day=1000*60*60*24;
-    var start = parseInt((scale.domain()[0].getTime() - parse(line.raw_data.all_data[0]["time"]).getTime()) / one_day)
-    var width = parseInt((scale.domain()[1].getTime() - scale.domain()[0].getTime()) / one_day) + 2
-    var options = new Options(null, width, 0, start)
-
-    var data = filterData(line.raw_data.all_data, options)
-    
-    for (line of line.canvas.lines) {
-        line.raw_data.data = data
-        dataAnalysis(line)
-        line.xScale = scale
+    for (l of other_lines) {
+        l.zoom_rect.call(l.zoom.transform, t)
     }
-    if (line.canvas.together) calculateLineScale(line.canvas)
-
-    for (line of line.canvas.lines) {
-        setScales(line)
-        updateAxis(line);
-        setLine(line);
-        updateLine(line);
-    }
+    zoomLines(line, line.canvas,t)
 }
 
-function Canvas(together, width, height, margin, padding) {
+function zoomLines(line, canvas, transform) {
+
+    var scale = transform.rescaleX(line.xScaleBase)
+
+    var start = format(scale.domain()[0])
+    var end = format(scale.domain()[1])
+
+    canvas.options.start = start 
+    canvas.options.end = end
+
+    line.raw_data.data = filterData(line.raw_data, canvas.options)
+    for (l of canvas.lines) {
+        l.raw_data.data = line.raw_data.data
+        l.xScale = scale
+        dataAnalysis(l)
+    }
+    if (line.canvas.together) calculateLineScale(canvas)
+
+    for (l of canvas.lines) {
+        setScales(l)
+        setLine(l)
+        updateAxis(l)
+        updateAxisGroup(l)
+        updateLineGroup(l)
+        updatePath(l)
+    }
+
+}
+
+function calculateZoom(canvas) {
+
+    var start_pos = canvas.xScaleBase(parse(canvas.options.start))
+    var end_pos = canvas.xScaleBase(parse(canvas.options.end))
+    var scaleTo = canvas.line_width / (end_pos - start_pos)
+
+    // for (l of canvas.lines) {
+    //     l.zoom_rect
+    //         .transition()
+    //         .duration(1000)
+    //         .call(l.zoom.transform, d3.zoomIdentity
+    //             .scale(scaleTo)
+    //             .translate(-start_pos, 0)
+    //         )
+    // }
+}
+
+
+/*
+    |**|**|                         |**|**|
+    |**|**|    Canvas Object and    |**|**|
+    |**|**|                         |**|**|
+    |**|**|         Functions       |**|**|
+    |**|**|                         |**|**|
+ */
+
+function Canvas(options, together, width, height, margin, padding) {
     
+    this.options = options
     this.together = together
     this.width = width
     this.height = height
@@ -278,19 +409,18 @@ function Canvas(together, width, height, margin, padding) {
             t.transitionFn(t.line)
         }
     }
+    this.options.zoomLevel = 4
 
-    this.addLine = function(line) { line.canvas = this; this.lines.push(line);}
+    this.addLine = function(line) { line.canvas = this; this.lines.push(line)}
     this.removeLine = function(line) {
         this.lines = this.lines.filter(d => d != line);
-        line.canvas.transitions.push(new LineTransition(line, opacityTransition))
+        line.canvas.transitions.push(new ChartTransition(line, opacityTransition))
         }
-    setup(this)
-    //this.removeLine = function(line) { line.canvas = null; this.lines.remove(line)}
+    setupCanvas(this)
 }
 
-function setup(canvas) {
-    clear()
-    svg = d3.select("#chart")
+function setupCanvas(canvas) {
+    canvas.group = d3.select("#chart")
         .attr("align", "center")
         .append("svg")
         .style("height", canvas.height)
@@ -298,9 +428,22 @@ function setup(canvas) {
             .append("g")
 }
 
+function removeCanvas(canvas) {
+    canvas.group
+        .transition()
+        .duration(500)
+            .style("opacity", 0)
+            .remove()
+}
+
 function drawCanvas(canvas) {
     updateCanvas(canvas)
     canvas.nextTransition()
+    if (!canvas.drawn) {
+        calculateZoom(canvas)
+        canvas.drawn = true
+    }
+    
 }
 
 function updateCanvas(canvas) {
@@ -320,9 +463,10 @@ function updateCanvas(canvas) {
             updateAxis(line)
             updateClip(line)
             updateZoom(line)
-            canvas.transitions.unshift(new LineTransition(line, translateTransition))
+            canvas.transitions.unshift(new ChartTransition(line, translateTransition))
         } else {
             setupLine(line)
+            updateZoom(line)
         }
     }
 }
@@ -341,11 +485,13 @@ function calculateLinePosition(canvas) {
 function calculateLineSize(canvas) {
     var line_count = canvas.lines.length;
 
-    for (line of canvas.lines) {
-        line.width = canvas.width - (canvas.margin[1] + canvas.margin[3] + canvas.padding[1] + canvas.padding[3])
+    canvas.line_width = canvas.width - (canvas.margin[1] + canvas.margin[3] + canvas.padding[1] + canvas.padding[3])
+    var height = canvas.height - (canvas.margin[0] + canvas.margin[2])
+    canvas.line_height = canvas.together ? canvas.height - (canvas.margin[0] + canvas.margin[2] + canvas.padding[0] + canvas.padding[2]) : (height / line_count) - (canvas.padding[0] + canvas.padding[2])
 
-        var height = canvas.height - (canvas.margin[0] + canvas.margin[2])
-        line.height = canvas.together ? canvas.height - (canvas.margin[0] + canvas.margin[2] + canvas.padding[0] + canvas.padding[2]) : (height / line_count) - (canvas.padding[0] + canvas.padding[2])
+    for (line of canvas.lines) {
+        line.width = canvas.line_width
+        line.height = canvas.line_height
     }
 }
 
@@ -356,7 +502,7 @@ function calculateLineScale(canvas) {
 
     for (line of canvas.lines) {
 
-        if (line.left) {
+        if (line.axisLeft) {
             lmax = lmax > line.ymax ? lmax : line.ymax
             lmin = lmin < line.ymin ? lmin : line.ymin
 
@@ -367,7 +513,7 @@ function calculateLineScale(canvas) {
     }
 
     for (line of canvas.lines) {
-        if (line.left) {
+        if (line.axisLeft) {
             line.ymax = lmax;
             line.ymin = lmin;
         } else {
@@ -377,11 +523,76 @@ function calculateLineScale(canvas) {
     }
 }
 
-function LineTransition(line, transitionFn) {
+function ChartTransition(line, transitionFn) {
     this.line = line
     this.transitionFn = transitionFn
 }
 
+
+function setCaptureJerry(line) {
+
+    line.zoom_rect.on("mousemove", findPoint.bind(line.zoom_rect.node(), line))
+
+}
+
+function findPoint(line) {
+    
+    var coord = d3.mouse(this)
+
+    var x = line.xScale.invert(coord[0])
+
+    var y = line.yScale.invert(coord[1])
+
+    var index = findDateIndex(line.raw_data.data, format(x))
+    console.log(format(x), line.raw_data.data[index])
+    // var pathEl = line.path.node()
+    // var pathLength = pathEl.getTotalLength()
+    // var BBox = pathEl.getBBox()
+    // var scale = pathLength / BBox.width
+
+    // var _x = d3.mouse(this)[0]
+    // var beginning = _x
+    // var end = pathLength 
+    // var target
+
+    // while(true) {
+    //     target = Math.floor((beginning + end) / 2)
+    //     pos 
+    // }
+
+}
+
+
+
+
+
+function point(){
+    // var pathEl = path.node();
+    // var pathLength = pathEl.getTotalLength();
+    // var BBox = pathEl.getBBox();
+    // var scale = pathLength/BBox.width;
+    // var offsetLeft = document.getElementById("line").offsetLeft;
+    // var _x = d3.mouse(this)[0];
+    // var beginning = _x , end = pathLength, target;
+    // while (true) {
+    //     target = Math.floor((beginning + end) / 2);
+    //     pos = pathEl.getPointAtLength(target);
+    //     if ((target === end || target === beginning) && pos.x !== _x) {
+    //         break;
+    //     }
+    //     if (pos.x > _x){
+    //         end = target;
+    //     }else if(pos.x < _x){
+    //         beginning = target;
+    //     }else{
+    //         break; //position found
+    //     }
+    // }
+    // circle
+    // .attr("opacity", 1)
+    // .attr("cx", _x+ trans)
+    // .attr("cy", pos.y);
+}
 
 
 
@@ -398,29 +609,10 @@ function startUp() {
     prepareScale()
 
     var four = show3D(niederschlag)
-    // var one = show3D(params[0])
-    // var two = show3D(params[1])
-    
-    // var three = show3D(params[2])
     
 
     var graph_size = win_width;
 
-    // scale = 0.8
-    // off_center = win_x_scale((1-scale) * 0.5)
-    // off_top = win_y_scale(0.0)
-
-    // one.attr("transform", "translate("+ off_center +"," + off_top + ") scale(" + scale + ")" )
-
-    // scale = 0.8
-    // off_center = win_x_scale((1-scale) * 0.5)
-    // off_top = win_y_scale(0.2)
-    // two.attr("transform", "translate("+ off_center +"," + off_top + ") scale(" + scale + ")" )
-
-    // scale = 0.8
-    // off_center = win_x_scale((1-scale) * 0.5)
-    // off_top = win_y_scale(0.4)
-    // three.attr("transform", "translate("+ off_center +"," + off_top + ") scale(" + scale + ")" )
 
     scale = 0.8
     off_center = win_x_scale((1-scale) * 0.5)

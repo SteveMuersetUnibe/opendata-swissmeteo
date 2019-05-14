@@ -1,11 +1,16 @@
-var options = new Options(BER, 1000,0, 0, 0, 0)
+
+
+var x = "19990101"
+var y = "20010505"
+
+var options = new Options(BER, x, y, 0, 0)
 var colors = ["#85f441", "#4286f4", "#f44141", "#2c10cc"]
 var canvas;
 
 var lines;
 var promise = onChangeOptions(options).then(d => {
 
-    canvas = new Canvas(true, win_width * 0.8, win_height * 0.8, [50, 100, 50, 100], [0, 10, 50, 10])
+    canvas = new Canvas(options, true, win_width * 0.8, win_height * 0.8, [150, 100, 150, 300], [0, 10, 50, 10])
 
     lines = [
         new LineParameter(params[0], current_data, colors[0], true),
@@ -23,11 +28,8 @@ var promise = onChangeOptions(options).then(d => {
 })
 
 function remove () {
-
-
     canvas.removeLine(lines[0])
     drawCanvas(canvas)
-
 }
 
 function add() {
