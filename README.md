@@ -22,6 +22,7 @@ TO DO:
 - Datepicker für 1 Tag über alle Jahre
 - Trendlinie
 - Einklappbares Seitenmenu
+- Livedaten
 
 
 Eine Arbeit von
