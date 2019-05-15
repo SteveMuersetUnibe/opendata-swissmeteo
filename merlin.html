@@ -52,11 +52,25 @@
         </div>
 
         <div class="chckbx"> 
-            <button class="checkbox" value="Maximaltemperatur (�C)" > Höchsttemperatur </button>
-            <button class="checkbox" value="Durchschnittstemperatur (�C" checked> Durchschnittstemperatur </button>
-            <button class="checkbox" value="Tiefsttemperatur (�C)" checked> Tiefsttemperatur </button>
-            <button class="checkbox" value="Niederschlag (mm)" checked> Niederschlag </button>
-            <button class="checkbox" value="Durchschnittslinien" checked> Durchschnittslinien </button> 
+            <input class="cbx" type="checkbox" id="Mxtemp" value="Mxtemp">
+            <button class="checkbox" onclick="document.getElementById('Mxtemp').checked=!document.getElementById('Mxtemp').checked;" 
+            value="Maximaltemperatur (�C)" > Höchsttemperatur </button>
+
+            <input class="cbx" type="checkbox" id="Dtemp" value="Dtemp">
+            <button class="checkbox" onclick="document.getElementById('Dtemp').checked=!document.getElementById('Dtemp').checked;"
+            value="Durchschnittstemperatur (�C" > Durchschnittstemperatur </button>
+
+            <input class="cbx" type="checkbox" id="Ttemp" value="Ttemp">
+            <button class="checkbox" onclick="document.getElementById('Ttemp').checked=!document.getElementById('Ttemp').checked;"
+            value="Tiefsttemperatur (�C)" > Tiefsttemperatur </button>
+
+            <input class="cbx" type="checkbox" id="Ndschl" value="Ndschl">
+            <button class="checkbox" onclick="document.getElementById('Ndschl').checked=!document.getElementById('Ndschl').checked;"
+            value="Niederschlag (mm)" > Niederschlag </button>
+
+            <input class="cbx" type="checkbox" id="Dlin" value="Dlin">
+            <button class="checkbox" onclick="document.getElementById('Dlin').checked=!document.getElementById('Dlin').checked;"
+            value="Durchschnittslinien" > Durchschnittslinien </button> 
         </div>
 
     <div id="chart"></div>
