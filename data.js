@@ -1,46 +1,44 @@
-var ALT = "Standorte/ALT.csv"; 
-var ANT = "Standorte/ANT.csv"; 
-var BAS = "Standorte/BAS.csv"; 
-var BER = "Standorte/BER.csv"; 
-var CDF = "Standorte/CDF.csv"; 
-var CHD = "Standorte/CHD.csv"; 
-var CHM = "Standorte/CHM.csv"; 
-var DAV = "Standorte/DAV.csv";
-var ELM = "Standorte/ELM.csv"; 
-var ENG = "Standorte/ENG.csv"; 
-var GRC = "Standorte/GRC.csv"; 
-var GRH = "Standorte/GRH.csv"; 
-var GSB = "Standorte/GSB.csv";
-var GVE = "Standorte/GVE.csv"; 
-var JUN = "Standorte/JUN.csv"; 
-var LUG = "Standorte/LUG.csv"; 
-var LUZ = "Standorte/LUZ.csv"; 
-var MER = "Standorte/MER.csv"; 
-var NEU = "Standorte/NEU.csv"; 
-var OTL = "Standorte/OTL.csv"; 
-var PAY = "Standorte/PAY.csv"; 
-var RAG = "Standorte/RAG.csv"; 
-var SAE = "Standorte/SAE.csv"; 
-var SAM = "Standorte/SAM.csv"; 
-var SBE = "Standorte/SBE.csv"; 
-var SIA = "Standorte/SIA.csv"; 
-var SIO = "Standorte/SIO.csv"; 
-var SMA = "Standorte/SMA.csv"; 
-var STG = "Standorte/STG.csv";
+var ALT = { file : "Standorte/ALT.csv", name : "Altdorf" }; 
+var ANT = { file : "Standorte/ANT.csv", name : "Andermatt" }; 
+var BAS = { file : "Standorte/BAS.csv", name : "Basel" }; 
+var BER = { file : "Standorte/BER.csv", name : "Bern" }; 
+var CDF = { file : "Standorte/CDF.csv", name : "La Chaux de Fonds" }; 
+var CHD = { file : "Standorte/CHD.csv", name : "La Chateau-d'Oex" }; 
+var CHM = { file : "Standorte/CHM.csv", name : "Chaumont" }; 
+var DAV = { file : "Standorte/DAV.csv", name : "Davos" };
+var ELM = { file : "Standorte/ELM.csv", name : "Elm" }; 
+var ENG = { file : "Standorte/ENG.csv", name : "Engelberg" }; 
+var GRC = { file : "Standorte/GRC.csv", name : "Gränchen" }; 
+var GRH = { file : "Standorte/GRH.csv", name : "Grimsel Hospiz" }; 
+var GSB = { file : "Standorte/GSB.csv", name : "Col du Grand St-Bernard" };
+var GVE = { file : "Standorte/GVE.csv", name : "Geneve" }; 
+var JUN = { file : "Standorte/JUN.csv", name : "Jungfraujoch" }; 
+var LUG = { file : "Standorte/LUG.csv", name : "Lugano" }; 
+var LUZ = { file : "Standorte/LUZ.csv", name : "Luzern" }; 
+var MER = { file : "Standorte/MER.csv", name : "Meiringen" }; 
+var NEU = { file : "Standorte/NEU.csv", name : "Neuchatel" }; 
+var OTL = { file : "Standorte/OTL.csv", name : "Lugano" }; 
+var PAY = { file : "Standorte/PAY.csv", name : "Payerne" }; 
+var RAG = { file : "Standorte/RAG.csv", name : "Bad Ragaz" }; 
+var SAE = { file : "Standorte/SAE.csv", name : "Saenti" }; 
+var SAM = { file : "Standorte/SAM.csv", name : "Samedan" }; 
+var SBE = { file : "Standorte/SBE.csv", name : "S. Bernardino" }; 
+var SIA = { file : "Standorte/SIA.csv", name : "Segl-Maria" }; 
+var SIO = { file : "Standorte/SIO.csv", name : "Sion" }; 
+var SMA = { file : "Standorte/SMA.csv", name : "Zuerich" }; 
+var STG = { file : "Standorte/STG.csv", name : "St. Gallen" };
 
 var data_list = new Array();
-var current_data;
-var options;
 
 var parse = d3.timeParse("%Y%m%d");
 var format = d3.timeFormat("%Y%m%d")
-
+var colors = ["#85f441", "#4286f4", "#f44141", "#2c10cc"]
 
 var params = [ 
-    new Parameter("Maximaltemperatur", d3.max, "MaxTemp"),
-    new Parameter("Durchschnittstemperatur", d3.mean, "MeanTemp"),
-    new Parameter("Tiefsttemperatur", d3.min, "MinTemp"),
-    new Parameter("Niederschlag (mm)", d3.sum, "Rain")]
+    new Parameter("Maximaltemperatur", d3.max, "MaxTemp", colors[0], true),
+    new Parameter("Durchschnittstemperatur", d3.mean, "MeanTemp", colors[1], true),
+    new Parameter("Tiefsttemperatur", d3.min, "MinTemp", colors[2], true),
+    new Parameter("Niederschlag (mm)", d3.sum, "Rain", colors[3], false)]
 
 //Options Object Constructor
 function Options(data_path, start_date, end_date, date, param) {
@@ -59,23 +57,26 @@ function Data(all_data) {
     this.margin = 50
     this.zoomLevel = new Array()
 
-    this.zoomLevel.push(agregate(this.all_data, null, params))
-    this.zoomLevel.push(agregate(this.zoomLevel[0], 0, params))
-    this.zoomLevel.push(agregate(this.zoomLevel[1], 1, params))
-    this.zoomLevel.push(agregate(this.zoomLevel[2], 2, params))
-    this.zoomLevel.push(agregate(this.zoomLevel[3], 3, params))
+    this.zoomLevel.push(agregate(this.all_data, 0, params))
+    this.zoomLevel.push(agregate(this.zoomLevel[0], 1, params))
+    this.zoomLevel.push(agregate(this.zoomLevel[1], 2, params))
+    this.zoomLevel.push(agregate(this.zoomLevel[2], 3, params))
 
-    this.data = this.zoomLevel[4]
+    this.data = this.zoomLevel[3]
 
+    //linearTrendLine(this.zoomLevel[4], params[1].name)
     
     current_data = this
     data_list.push(this)
 }
 
-function Parameter(name, agregateFn, short) {
+function Parameter(name, agregateFn, short, color, left) {
     this.name = name
     this.agregateFn = agregateFn
     this.short = short
+    this.color = color
+    this.left = left
+
 }
 
 //Load and filter data from CSV file
@@ -84,7 +85,7 @@ async function onChangeOptions(options) {
     return d3.dsv(";", 
         String(options.data_path),
         (d, e) => all_data.push(d)
-    ).then(d => new Data(all_data))
+    ).then(d => options.data = new Data(all_data))
 }
 
 function changeLocation(){
@@ -107,7 +108,7 @@ function filterData(data, options) {
     if (options.zoomLevelChanged) {
         data.data = data.zoomLevel[options.zoomLevel]
         options.zoomLevelChanged = false
-        console.log("level changed", data.data.length)
+        options.newZoomLevel = true
 
         data.start_index = findDateIndex(data_focus, options.start)
         data.end_index = findDateIndex(data_focus, options.end)
@@ -126,28 +127,26 @@ function filterData(data, options) {
     var data_focus_big_enough = data_focus.length > data.end_index - data.start_index
     var close_left = begin_index < data.margin 
     var close_right = data.data.length - finish_index < data.margin 
-    var far_left = begin_index > 3 * data.margin 
-    var far_right = data.data.length - finish_index > 3 * data.margin
+    var far_left = begin_index > 2 * data.margin 
+    var far_right = data.data.length - finish_index > 2 * data.margin
     var data 
     
+    if (close_left && close_right && data_focus_big_enough) {
+        data.start_index -= data.margin
+        data.end_index += data.margin
+        change_data = true
+    } else if (close_left && data_focus_big_enough) {
+        data.start_index -= data.margin
+        data.end_index -= data.margin
+        change_data = true
+    } else if (far_left && data_focus_big_enough) {
+        data.start_index += data.margin
+        data.end_index += data.margin
+        change_data = true
 
-    if (close_left && !close_right && data_focus_big_enough) {
-        data.start_index = data.start_index - data.margin
-        change_data = true
-    } else if (close_right && !close_left && data_focus_big_enough) {
-        data.start_index = data.start_index + data.margin
-        change_data = true
-    } else if (close_left && close_right && data_focus_big_enough) {
-        data.start_index = data.start_index - data.margin
-        data.end_index = data.end_index + data.margin
-        change_data = true
-    }
-    if (far_left) {
-        data.start_index = data.start_index + data.margin
-        change_data = true
-    }
-    if (far_right) {
-        data.end_index = data.end_index - data.margin
+    } else if (far_left && far_right) {
+        data.start_index += data.margin
+        data.end_index -= data.margin
         change_data = true
     }
 
@@ -155,8 +154,7 @@ function filterData(data, options) {
         data.start_index = data.start_index > 0 ? data.start_index : 0
         data.end_index = data.end_index > 0 ? data.end_index : data_focus.length - 1
         var d = data_focus.slice(data.start_index, data.end_index)
-
-        if (d.length < 500) return d
+        if (d.length < 500 && d.length > 0) return d
     }
 
     if (finish_index - begin_index > 250) {
@@ -246,6 +244,30 @@ function agregateHelper(date, i) {
             this.end = this.start + 1
             break;
     }
+}
+
+
+function linearTrendLine(data, param) {
+
+    var sum = 0, error = 0
+    var mean_x = (data.length - 1) / 2
+    var mean_y = d3.mean(data, d => d[param])
+
+    for (index in data){
+
+        var y = data[index][param] - mean_y
+        var x = index - mean_x
+
+        sum += y * x
+        error += x * x
+
+    }
+
+    var slope = sum / error
+    var b = mean_y - (slope * mean_x)
+
+    console.log(sum, error, mean_x, mean_y, slope, b)
+
 }
 
 /**

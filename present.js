@@ -1,17 +1,17 @@
-
-
 var x = "19800101"
 var y = "20010505"
 
-var options = new Options(BER, x, y, 0, 0)
-var colors = ["#85f441", "#4286f4", "#f44141", "#2c10cc"]
+var options = new Options(BER.file, x, y, 0, 0)
+var options2 = new Options(BER.file, x, y, 0, 0)
+
+
 var canvas;
+var canvas2;
 
 var lines;
 var promise = onChangeOptions(options).then(d => {
 
-    var settings = new Settings(600, 1000, 100, 500)
-    canvas = new Canvas(options, true, win_width * 0.7, win_height * 0.5, [50, 50, 50, 50], [50, 10, 50, 10], settings)
+    canvas = new Canvas(options, true, [100, 100, 50, 100], [30, 10, 30, 10])
 
     lines = [
         new LineParameter(params[0], current_data, colors[0], true),
@@ -28,14 +28,32 @@ var promise = onChangeOptions(options).then(d => {
     drawCanvas(canvas)
 })
 
-function remove () {
-    canvas.removeLine(lines[0])
+// var promise2 = onChangeOptions(options2).then(d => {
+
+//     canvas2 = new Canvas(options2, false, [50, 100, 50, 100], [30, 10, 30, 10])
+
+//     var lines2 = [
+//         new LineParameter(params[0], options2.data, colors[0], true),
+//         new LineParameter(params[1], options2.data, colors[1], true),
+//         new LineParameter(params[2], options2.data, colors[2], true),
+//         new LineParameter(params[3], options2.data, colors[3], false)
+//     ]
+
+//     canvas2.addLine(lines2[0])
+//     canvas2.addLine(lines2[1])    
+//     canvas2.addLine(lines2[2])    
+//     canvas2.addLine(lines2[3])    
+
+//     drawCanvas(canvas2)
+// })
+
+function remove (num) {
+    removeLine(lines[num])
     drawCanvas(canvas)
 }
 
-function add() {
-
-    canvas.addLine(lines[0])
+function add(num) {
+    canvas.addLine(new LineParameter(params[num], current_data, colors[num], true))
     drawCanvas(canvas)
 }
 
