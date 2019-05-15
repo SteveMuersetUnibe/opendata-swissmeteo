@@ -306,16 +306,18 @@ Date.prototype.getWeek = function() {
     return date.getFullYear();
   }
 
-  var x = document.getElementById("demo");
-  function getLocation() {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(showPosition);
-    } else {
-      x.innerHTML = "Geolocation is not supported by this browser.";
-    }
+  function success(pos) {
+    var crd = pos.coords;
+  
+  
+    console.log(`Latitude : ${crd.latitude}`);
+    console.log(`Longitude: ${crd.longitude}`);
   }
   
-  function showPosition(position) {
-    x.innerHTML = "Latitude: " + position.coords.latitude + 
-    "<br>Longitude: " + position.coords.longitude; 
+  function error(err) {
+    console.warn(`ERROR(${err.code}): ${err.message}`);
   }
+  
+  
+  
+  navigator.geolocation.getCurrentPosition(success, error);
