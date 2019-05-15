@@ -1,8 +1,9 @@
 <!doctype html>
 <html> 
     <head>
-    
+        <title>Wetterdaten 1860 - Heute Schweiz</title>
         <script src="d3/d3.js"></script>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" type="text/css" href="merlin.css">
 
     </head>
@@ -12,7 +13,7 @@
 
 
         <div class="dropdown">
-            <button class="dropbtn" onclick="getLocation()"> Standort </button>
+            <button class="dropbtn"> Standort </button>
                 <div id="Location" class="dropdown-content">
                     <a onclick="changeLocation(this)" href="#" value="live_data_base_url" > Mein Standort </a>
                     <a onclick="changeLocation(this)" href="#" value="ALT" > Altdorf</a>
@@ -81,22 +82,9 @@
         </div>
 
 
-        <p id="demo"></p>
 
 
-<!-- Trigger/Open The Modal -->
-<button id="myBtn">Open Modal</button>
 
-<!-- The Modal -->
-<div id="myModal" class="modal">
-
-  <!-- Modal content -->
-  <div class="modal-content">
-    <span class="close">&times;</span>
-    <p>Some text in the Modal..</p>
-  </div>
-
-</div>
 
 
 

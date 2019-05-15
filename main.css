@@ -122,3 +122,4 @@ body {
 .test input:checked ~ .checkbx:hover {
     background: rgb(110, 107, 107);
     box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+}
