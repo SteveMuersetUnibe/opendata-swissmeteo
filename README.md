@@ -5,23 +5,21 @@
 To Do Liste
 
 Steve:
-- 
+
 
 
 Merlin:
 - Websiten Design
 - Aktueller Standort
+- Legende mit Parametern
+- checkboxes mit Paras & Trendlinie F
+- Einklappbares Seitenmenu
 
 TO DO:
-- Websiten Design
 - Feldchen neben/unter der Grafik
-- Aktueller Standort
 - Feldchen um Zeitspanne anzugeben / Slider
-- Legende mit Parametern
-- checkboxes mit Paras & Trendlinie
 - Datepicker für 1 Tag über alle Jahre
 - Trendlinie
-- Einklappbares Seitenmenu
 - Livedaten
 
 
