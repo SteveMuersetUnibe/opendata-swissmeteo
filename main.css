@@ -2,13 +2,8 @@ body {
     margin: 10px;
     padding: 10px;
     background: rgb(110, 106, 106);
-<<<<<<< HEAD
-    font-family: 'Fresh Marker', Arial, Helvetica, sans-serif;
-    font-size: 30;
-=======
     font-family: Arial, Helvetica, sans-serif;
     font-size: 16;
->>>>>>> 7b9c1a099524051841bbb26bfece284cebaf7485
 }
   
 .dropdown {
