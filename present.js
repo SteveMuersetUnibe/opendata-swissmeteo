@@ -11,8 +11,7 @@ var canvas2;
 var lines;
 var promise = onChangeOptions(options).then(d => {
 
-    canvas = new Canvas(options, true, [100, 100, 50, 100], [30, 10, 30, 10])
-
+    canvas = new Canvas("first", options, true, [100, 100, 50, 100], [30, 10, 30, 10])
     lines = [
         new LineParameter(params[0], current_data, colors[0], true),
         new LineParameter(params[1], current_data, colors[1], true),
@@ -28,24 +27,23 @@ var promise = onChangeOptions(options).then(d => {
     drawCanvas(canvas)
 })
 
-// var promise2 = onChangeOptions(options2).then(d => {
+var promise2 = onChangeOptions(options2).then(d => {
 
-//     canvas2 = new Canvas(options2, false, [50, 100, 50, 100], [30, 10, 30, 10])
+    canvas2 = new Canvas("second", options2, false, [100, 100, 50, 100], [30, 10, 30, 10])
+    var lines2 = [
+        new LineParameter(params[0], options2.data, colors[0], true),
+        new LineParameter(params[1], options2.data, colors[1], true),
+        new LineParameter(params[2], options2.data, colors[2], true),
+        new LineParameter(params[3], options2.data, colors[3], false)
+    ]
 
-//     var lines2 = [
-//         new LineParameter(params[0], options2.data, colors[0], true),
-//         new LineParameter(params[1], options2.data, colors[1], true),
-//         new LineParameter(params[2], options2.data, colors[2], true),
-//         new LineParameter(params[3], options2.data, colors[3], false)
-//     ]
+    canvas2.addLine(lines2[0])
+    canvas2.addLine(lines2[1])    
+    canvas2.addLine(lines2[2])    
+    canvas2.addLine(lines2[3])    
 
-//     canvas2.addLine(lines2[0])
-//     canvas2.addLine(lines2[1])    
-//     canvas2.addLine(lines2[2])    
-//     canvas2.addLine(lines2[3])    
-
-//     drawCanvas(canvas2)
-// })
+    drawCanvas(canvas2)
+})
 
 function remove (num) {
     removeLine(lines[num])
@@ -54,12 +52,6 @@ function remove (num) {
 
 function add(num) {
     canvas.addLine(new LineParameter(params[num], current_data, colors[num], true))
-    drawCanvas(canvas)
-}
-
-function spread() {
-
-    canvas.together = !canvas.together
     drawCanvas(canvas)
 }
 

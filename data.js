@@ -64,7 +64,7 @@ function Data(all_data) {
 
     this.data = this.zoomLevel[3]
 
-    //linearTrendLine(this.zoomLevel[4], params[1].name)
+    linearTrendLine(this.zoomLevel[0], params[1].name)
     
     current_data = this
     data_list.push(this)
@@ -196,9 +196,7 @@ function filterDate(data, time) {
 function agregate(data, timespan, params){
 
     var new_data = new Array()
-    
     var time = new agregateHelper(parse(data[0]["time"]), timespan)
-
     var holder = new Array()
 
     for (d of data) {
@@ -246,37 +244,29 @@ function agregateHelper(date, i) {
     }
 }
 
-
 function linearTrendLine(data, param) {
-
     var sum = 0, error = 0
     var mean_x = (data.length - 1) / 2
     var mean_y = d3.mean(data, d => d[param])
 
     for (index in data){
-
         var y = data[index][param] - mean_y
         var x = index - mean_x
-
         sum += y * x
         error += x * x
-
     }
-
     var slope = sum / error
     var b = mean_y - (slope * mean_x)
 
-    console.log(sum, error, mean_x, mean_y, slope, b)
-
+    return d => slope(d) + b
 }
 
-/**
- * 
- * draw plot line through data 
- * 
- * Add pointer extractor
- * 
- */
+
+function findSpecial(fn, ){
+
+
+    
+}
 
 
 
