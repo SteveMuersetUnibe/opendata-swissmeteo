@@ -294,18 +294,23 @@ Date.prototype.getWeek = function() {
     return date.getFullYear();
   }
 
+
+
   function success(pos) {
     var crd = pos.coords;
   
   
     console.log(`Latitude : ${crd.latitude}`);
     console.log(`Longitude: ${crd.longitude}`);
+
   }
+
+    var lat = success() crd ;
+    var lng = crd.longitude;
   
   function error(err) {
     console.warn(`ERROR(${err.code}): ${err.message}`);
   }
-  
-  
+
   
   navigator.geolocation.getCurrentPosition(success, error);
