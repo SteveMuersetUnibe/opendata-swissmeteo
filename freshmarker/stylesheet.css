@@ -1,0 +1,8 @@
+@font-face {
+    font-family: 'Fresh Marker';
+    src: url('FreshMarker.woff2') format('woff2'),
+        url('FreshMarker.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+

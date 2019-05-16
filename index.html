@@ -3,12 +3,13 @@
     <head>
     
         <script src="d3/d3.js"></script>
+        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" type="text/css">
         <link rel="stylesheet" type="text/css" href="main.css">
+        <!-- <link rel="stylesheet" type="text/css" href="freshmarker/stylesheet.css"> -->
 
     </head>
 
     <body>
-        <svg></svg>
 
         <div class="dropdown">
             <button class="dropbtn"> Standort </button>
@@ -79,7 +80,23 @@
             </div>
         </div>
 
-    <div id="chart"></div>
+    <div id="content">
+        <div class="row">
+            <div id="currentWeather" class="container col-8">
+                <div class="card">
+
+                </div>
+            </div>
+            <div id="walkthrough" class="container col-4">
+                <div class="card">
+                </div>
+            </div>
+        </div>
+       
+    </div>
+    
+   
+    
 
     <script src="data.js"></script>
     <script src="d3.js"></script>

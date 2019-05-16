@@ -1,4 +1,4 @@
-stn;time;" Globalstrahlung (W/m); Tagesmittel";Gesamtschneehoehe (cm);Gesamtbewoelkung (min);Luftdruck auf Stationshoehe (hpa);Niederschlag (mm);Durchschnittstemperatur (¡C);Tiefsttemperatur (¡C);Maximaltemperatur (¡C);Sonnenscheindauer (min);Relative Luftfeuchtigkeit (%)
+stn;time;" Globalstrahlung (W/m); Tagesmittel";Gesamtschneehoehe (cm);Gesamtbewoelkung (min);Luftdruck auf Stationshoehe (hpa);Niederschlag (mm);Durchschnittstemperatur;Tiefsttemperatur;Maximaltemperatur;Sonnenscheindauer (min);Relative Luftfeuchtigkeit (%)
 BER;18640101;-;-;100;939.6;4.7;-1.3;-5.7;0.7;-;95.3
 BER;18640102;-;-;63;949.2;4.9;-10.3;-12.8;-5.7;-;91
 BER;18640103;-;-;63;951;0.4;-12.2;-13.6;-10.2;-;92
