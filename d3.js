@@ -41,6 +41,7 @@ function setLine(line){
     setHelpLine(line)
     setHelpPath(line)
     setParamInfo(line)
+    
 }
 
 function updateLine(line){
@@ -55,11 +56,13 @@ function updateLine(line){
     updateZoomRect(line)
     updateHelpPath(line)
     updateParamInfo(line)
+   
 }
 
 function removeLine(line){
     line.canvas.removeLine(line)
     line.group.remove()
+    line.chart.remove()
 }
 
 function dataAnalysis(line) {
@@ -103,7 +106,7 @@ function setScales(line) {
     line.canvas.xScaleBase = line.xScaleBase
     line.canvas.xScale = line.xScaleBase
 
-    line.yScale = d3.scaleLinear().nice().clamp(true)
+    line.yScale = d3.scaleLinear().clamp(true)
 }
 
 function updateScales(line) {
@@ -190,10 +193,10 @@ function yAxisGroupTransition(line) {
 }
 
 function setArea(line) {
-    line.area = d3.area()
+    line.area = d3.line()
         .x(d => line.xScale(d.x))
         .y(d => line.yScale(d.y))
-        .defined(d => !isNaN(d.y))
+        .defined(d => !isNaN(parseFloat(d.y)))
 }
 
 function updateArea(line){
@@ -206,7 +209,7 @@ function setPath(line) {
 
 function updatePath(line) {
     line.path
-        .attr("fill", line.color)
+        .attr("fill", "none")
         .attr("stroke", line.color)
         .attr("stroke-width", 1)
         .attr("d", line.area(line.data))
@@ -222,12 +225,11 @@ function pathTransition(line){
 }
 
 function setClip(line) {
-    line.clip_id = "clip" + line.param.short
+    line.clip_id = "clip" + line.param.short + line.canvas.id
     line.clip = line.group
         .append("clipPath")
         .attr("id", line.clip_id)
         .append("rect")
-        
 
     line.path
         .attr("clip-path", "url(#" + line.clip_id + ")")
@@ -302,6 +304,8 @@ function updateParamInfo(line) {
         .attr("fill", line.color)
         .attr("height", 10)
         .attr("width", 10)
+        .on("mouseenter", highlightLine.bind(null, line, true))
+        .on("mouseleave", highlightLine.bind(null, line, false))
     
     line.paramInfoText
         .attr("x", 15)
@@ -309,7 +313,13 @@ function updateParamInfo(line) {
         .attr("height", 10)
         .style("font-size", 12)
         .text(line.param.name)
+        .on("mouseenter", highlightLine.bind(null, line, true))
+        .on("mouseleave", highlightLine.bind(null, line, false))
+}
 
+function highlightLine(line, highlight){
+    line.path
+        .attr("stroke-width", highlight ? 2 : 1)
 }
 
 function setZoom(line) {
@@ -475,7 +485,8 @@ function removePoint(line){
     |**|**|                         |**|**|
  */
 
-function Canvas(options, together, margin, padding) {
+function Canvas(id, options, together, margin, padding) {
+    this.id = id
     this.options = options
     this.together = together
     this.lines = new Array()
@@ -516,7 +527,7 @@ function setCanvas(canvas) {
     setInfoBox(canvas.infoBox)
 
     var dom = canvas.chart.node().getBoundingClientRect()
-    canvas.width = dom.width - (2 * parseInt(canvas.chart.style("margin")))
+    canvas.width = dom.width
     canvas.height = win_height / 2
     canvas.group = canvas.chart
         .append("svg")
@@ -588,8 +599,10 @@ function calculateLineSize(canvas) {
     var svg_height = (times * (canvas.line_height + canvas.padding[0] + canvas.padding[2])) + canvas.margin[0] + canvas.margin[2]
     var svg_width = canvas.line_width + canvas.padding[1] + canvas.padding[3] + canvas.margin[1] + canvas.margin[3]
 
-    canvas.group.style("height", svg_height)
-    canvas.group.style("widht", svg_width)
+    
+    canvas.group.style("height", svg_height + "px")
+    canvas.group.style("width", svg_width + "px")
+    console.log(canvas.group)
 }
 
 function calculateLineScale(canvas) {
@@ -620,27 +633,27 @@ function calculateLineScale(canvas) {
     }
 }
 
-
 function InfoBox(canvas, element) {
     this.canvas = canvas
     this.element = element
 } 
 
 function setInfoBox(box) {
-
     box.header = box.element.append("div").classed("card-header", true)
     box.body = box.element.append("div").classed("text-center", true)
     box.footer = box.element.append("div").classed("card-footer", true)
 
     box.body.classed("text-center", true).style("margin", "auto")
-
     box.location = box.body.append("label")
     box.timespan = box.body.append("p")
-
     box.meanTemp = box.body.append("h1")
-
     box.maxminTemp = box.body.append("label")
 
+    box.spread = box.header.append("button")
+    box.spread
+        .classed("spread", true)
+        .on("click", spread.bind(null, box.canvas))
+    
     var checkboxes = box.footer.append("div")
     for (param of params) {
         var checkbox = checkboxes.append("button")
@@ -657,6 +670,7 @@ function onCheckBoxClick(box, checkbox, param) {
     if (active) {
         var x = box.canvas.lines.filter(d => d.param == param)
         removeLine(x[0])
+        drawCanvas(box.canvas)
     } else {
         var data = box.canvas.options.data
         console.log(data)
@@ -664,7 +678,6 @@ function onCheckBoxClick(box, checkbox, param) {
         box.canvas.addLine(line)
         drawCanvas(box.canvas)
     }
-
     checkbox.classed("active", !active)
 }
 
@@ -687,7 +700,6 @@ function updateInfoBox(box) {
     var max =   tempFormat(d[params[0].name])
     var min =   tempFormat(d[params[2].name])
     var rain =  rainFormat(d[params[3].name])
-    //console.log(from, to, mean, max, min, rain)
 
     box.location.html("Bern")
     box.timespan.html(date)
@@ -722,6 +734,11 @@ function weekFormat(date) {
 
 
 
+
+function spread(canvas) {
+    canvas.together = !canvas.together
+    drawCanvas(canvas)
+}
 
 
 
