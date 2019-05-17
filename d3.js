@@ -645,6 +645,7 @@ function setInfoBox(box) {
     box.footer = box.element.append("div").classed("card-footer", true)
 
     box.body.classed("text-center", true).style("margin", "auto")
+
     box.location = box.body.append("label")
     box.timespan = box.body.append("p")
     box.meanTemp = box.body.append("h1")
@@ -653,13 +654,14 @@ function setInfoBox(box) {
     box.spread = box.header.append("button")
     box.spread
         .classed("spread", true)
+        .classed("bttn", true)
         .on("click", spread.bind(null, box.canvas))
     
-    var checkboxes = box.footer.append("div")
+    var checkboxes = box.header.append("div").classed("chckbx", true)
     for (param of params) {
         var checkbox = checkboxes.append("button")
         checkbox
-            .classed("param-checkbox active", true)
+            .classed("checkbx active", true)
             .html(param.name)
             .on("click", onCheckBoxClick.bind(null,box, checkbox, param))
         checkboxes.append("br")
