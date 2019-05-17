@@ -1,4 +1,4 @@
-stn;time;" Globalstrahlung (W/m); Tagesmittel";Gesamtschneehoehe (cm);Gesamtbewoelkung (min);Sonnenscheindauer (min);Luftdruck auf Stationshoehe (hpa);Niederschlag (mm);Durchschnittstemperatur (¡C);Tiefsttemperatur (¡C);Maximaltemperatur (¡C);Relative Luftfeuchtigkeit (%)
+stn;time;" Globalstrahlung (W/m); Tagesmittel";Gesamtschneehoehe (cm);Gesamtbewoelkung (min);Sonnenscheindauer (min);Luftdruck auf Stationshoehe (hpa);Niederschlag (mm);Durchschnittstemperatur;Tiefsttemperatur;Maximaltemperatur;Relative Luftfeuchtigkeit (%)
 GVE;19500101;-;-;-;-;974.2;0;-;-;-;-
 GVE;19500102;-;-;-;-;976.8;0;-;-;-;-
 GVE;19500103;-;-;-;-;966.8;37;-;-;-;-

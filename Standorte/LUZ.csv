@@ -1,4 +1,4 @@
-stn;time;" Globalstrahlung (W/m); Tagesmittel";Gesamtschneehoehe (cm);Gesamtbewoelkung (min);Luftdruck auf Stationshoehe (hpa);Niederschlag (mm);Durchschnittstemperatur (¡C);Sonnenscheindauer (min);Tiefsttemperatur (¡C);Maximaltemperatur (¡C);Relative Luftfeuchtigkeit (%)
+stn;time;" Globalstrahlung (W/m); Tagesmittel";Gesamtschneehoehe (cm);Gesamtbewoelkung (min);Luftdruck auf Stationshoehe (hpa);Niederschlag (mm);Durchschnittstemperatur;Sonnenscheindauer (min);Tiefsttemperatur;Maximaltemperatur;Relative Luftfeuchtigkeit (%)
 LUZ;18800713;-;-;-;970.6;2.6;17.1;-;-;-;-
 LUZ;18800714;-;-;-;968.9;0;18.3;-;-;-;-
 LUZ;18800715;-;-;-;968.4;0;20.9;-;-;-;-

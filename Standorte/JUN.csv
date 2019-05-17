@@ -1,4 +1,4 @@
-stn;time;" Globalstrahlung (W/m); Tagesmittel";Gesamtbewoelkung (min);Luftdruck auf Stationshoehe (hpa);Durchschnittstemperatur (¡C);Relative Luftfeuchtigkeit (%);Sonnenscheindauer (min);Tiefsttemperatur (¡C);Maximaltemperatur (¡C)
+stn;time;" Globalstrahlung (W/m); Tagesmittel";Gesamtbewoelkung (min);Luftdruck auf Stationshoehe (hpa);Durchschnittstemperatur;Relative Luftfeuchtigkeit (%);Sonnenscheindauer (min);Tiefsttemperatur;Maximaltemperatur
 JUN;19330101;-;47;656.1;-10.9;71.3;-;-;-
 JUN;19330102;-;53;658.3;-9.6;32;-;-;-
 JUN;19330103;-;67;659.4;-9;78.7;-;-;-

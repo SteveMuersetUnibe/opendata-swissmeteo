@@ -1,4 +1,4 @@
-stn;time;" Globalstrahlung (W/m); Tagesmittel";Gesamtbewoelkung (min);Relative Luftfeuchtigkeit (%);Luftdruck auf Stationshoehe (hpa);Durchschnittstemperatur (¡C);Niederschlag (mm);Sonnenscheindauer (min);Tiefsttemperatur (¡C);Maximaltemperatur (¡C)
+stn;time;" Globalstrahlung (W/m); Tagesmittel";Gesamtbewoelkung (min);Relative Luftfeuchtigkeit (%);Luftdruck auf Stationshoehe (hpa);Durchschnittstemperatur;Niederschlag (mm);Sonnenscheindauer (min);Tiefsttemperatur;Maximaltemperatur
 GSB;18640101;-;-;-;-;-10.5;-;-;-12;-8.2
 GSB;18640102;-;-;-;-;-15.7;-;-;-21.4;-10.7
 GSB;18640103;-;-;-;-;-20.3;-;-;-23.8;-16.5

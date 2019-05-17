@@ -1,4 +1,4 @@
-stn;time;" Globalstrahlung (W/m); Tagesmittel";Luftdruck auf Stationshoehe (hpa);Sonnenscheindauer (min);Gesamtschneehoehe (cm);Gesamtbewoelkung (min);Relative Luftfeuchtigkeit (%);Durchschnittstemperatur (¡C);Tiefsttemperatur (¡C);Maximaltemperatur (¡C);Niederschlag (mm)
+stn;time;" Globalstrahlung (W/m); Tagesmittel";Luftdruck auf Stationshoehe (hpa);Sonnenscheindauer (min);Gesamtschneehoehe (cm);Gesamtbewoelkung (min);Relative Luftfeuchtigkeit (%);Durchschnittstemperatur;Tiefsttemperatur;Maximaltemperatur;Niederschlag (mm)
 SIA;18631201;-;-;-;-;-;-;-6.1;-;-;0
 SIA;18631202;-;-;-;-;-;-;-6.4;-;-;0
 SIA;18631203;-;-;-;-;-;-;-4.8;-;-;0.8
