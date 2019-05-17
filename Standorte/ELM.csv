@@ -1,4 +1,4 @@
-stn;time;" Globalstrahlung (W/m); Tagesmittel";Luftdruck auf Stationshoehe (hpa);Sonnenscheindauer (min);Gesamtschneehoehe (cm);Gesamtbewoelkung (min);Niederschlag (mm);Durchschnittstemperatur (¡C);Tiefsttemperatur (¡C);Maximaltemperatur (¡C);Relative Luftfeuchtigkeit (%)
+stn;time;" Globalstrahlung (W/m); Tagesmittel";Luftdruck auf Stationshoehe (hpa);Sonnenscheindauer (min);Gesamtschneehoehe (cm);Gesamtbewoelkung (min);Niederschlag (mm);Durchschnittstemperatur;Tiefsttemperatur;Maximaltemperatur;Relative Luftfeuchtigkeit (%)
 ELM;18780201;-;-;-;-;-;0;-9.3;-;-;-
 ELM;18780202;-;-;-;-;-;0;-5.3;-;-;-
 ELM;18780203;-;-;-;-;-;0;-4.3;-;-;-

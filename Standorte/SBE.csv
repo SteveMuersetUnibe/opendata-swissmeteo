@@ -1,4 +1,4 @@
-stn;time;" Globalstrahlung (W/m); Tagesmittel";Gesamtschneehoehe (cm);Gesamtbewoelkung (min);Luftdruck auf Stationshoehe (hpa);Niederschlag (mm);Durchschnittstemperatur (¡C);Tiefsttemperatur (¡C);Maximaltemperatur (¡C);Relative Luftfeuchtigkeit (%);Sonnenscheindauer (min)
+stn;time;" Globalstrahlung (W/m); Tagesmittel";Gesamtschneehoehe (cm);Gesamtbewoelkung (min);Luftdruck auf Stationshoehe (hpa);Niederschlag (mm);Durchschnittstemperatur;Tiefsttemperatur;Maximaltemperatur;Relative Luftfeuchtigkeit (%);Sonnenscheindauer (min)
 SBE;19680101;-;55;67;819;1.8;-8.5;-13;-4;72.3;-
 SBE;19680102;-;53;93;816;0;-8.7;-12.1;-4.5;68.7;-
 SBE;19680103;-;53;83;822.6;1.4;-9.9;-12;-7.5;60.7;-

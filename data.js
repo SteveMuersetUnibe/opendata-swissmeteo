@@ -298,6 +298,8 @@ Date.prototype.getWeek = function() {
   }
 
 
+var lat =  0;
+var lng = 0;
 
     function success(pos) {
     var crd = pos.coords;
@@ -305,11 +307,10 @@ Date.prototype.getWeek = function() {
 
     console.log(`Latitude : ${crd.latitude}`);
     console.log(`Longitude: ${crd.longitude}`);
-
+    lat = pos.coords.latitude;
+    lng = pos.coords.longitude;
     }
 
-    // var lat = success() crd ;
-    // var lng = crd.longitude;
 
     function error(err) {
     console.warn(`ERROR(${err.code}): ${err.message}`);

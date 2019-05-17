@@ -1,4 +1,4 @@
-stn;time;" Globalstrahlung (W/m); Tagesmittel";Sonnenscheindauer (min);Gesamtschneehoehe (cm);Gesamtbewoelkung (min);Luftdruck auf Stationshoehe (hpa);Niederschlag (mm);Durchschnittstemperatur (¡C);Tiefsttemperatur (¡C);Maximaltemperatur (¡C);Relative Luftfeuchtigkeit (%)
+stn;time;" Globalstrahlung (W/m); Tagesmittel";Sonnenscheindauer (min);Gesamtschneehoehe (cm);Gesamtbewoelkung (min);Luftdruck auf Stationshoehe (hpa);Niederschlag (mm);Durchschnittstemperatur;Tiefsttemperatur;Maximaltemperatur;Relative Luftfeuchtigkeit (%)
 RAG;18700601;-;-;-;-;954.5;0;14.5;-;-;-
 RAG;18700602;-;-;-;-;956.3;0;14.3;-;-;-
 RAG;18700603;-;-;-;-;958.6;0;16.9;-;-;-

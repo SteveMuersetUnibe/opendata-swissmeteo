@@ -1,4 +1,4 @@
-stn;time;" Globalstrahlung (W/m); Tagesmittel";Luftdruck auf Stationshoehe (hpa);Sonnenscheindauer (min);Gesamtschneehoehe (cm);Gesamtbewoelkung (min);Tiefsttemperatur (¡C);Maximaltemperatur (¡C);Relative Luftfeuchtigkeit (%);Niederschlag (mm);Durchschnittstemperatur (¡C)
+stn;time;" Globalstrahlung (W/m); Tagesmittel";Luftdruck auf Stationshoehe (hpa);Sonnenscheindauer (min);Gesamtschneehoehe (cm);Gesamtbewoelkung (min);Tiefsttemperatur;Maximaltemperatur;Relative Luftfeuchtigkeit (%);Niederschlag (mm);Durchschnittstemperatur
 GRC;18640101;-;-;-;-;-;-;-;-;0;-5.5
 GRC;18640102;-;-;-;-;-;-;-;-;0.7;-11.6
 GRC;18640103;-;-;-;-;-;-;-;-;0;-16.6

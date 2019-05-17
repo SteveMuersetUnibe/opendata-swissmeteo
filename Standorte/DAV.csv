@@ -1,4 +1,4 @@
-stn;time;" Globalstrahlung (W/m); Tagesmittel";Gesamtschneehoehe (cm);Gesamtbewoelkung (min);Luftdruck auf Stationshoehe (hpa);Niederschlag (mm);Durchschnittstemperatur (¡C);Sonnenscheindauer (min);Tiefsttemperatur (¡C);Maximaltemperatur (¡C);Relative Luftfeuchtigkeit (%)
+stn;time;" Globalstrahlung (W/m); Tagesmittel";Gesamtschneehoehe (cm);Gesamtbewoelkung (min);Luftdruck auf Stationshoehe (hpa);Niederschlag (mm);Durchschnittstemperatur;Sonnenscheindauer (min);Tiefsttemperatur;Maximaltemperatur;Relative Luftfeuchtigkeit (%)
 DAV;18670101;-;-;-;812.1;4.7;-7.7;-;-;-;-
 DAV;18670102;-;-;-;813;0.1;-11.3;-;-;-;-
 DAV;18670103;-;-;-;819;0.3;-14.7;-;-;-;-

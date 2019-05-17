@@ -1,4 +1,4 @@
-stn;time;" Globalstrahlung (W/m); Tagesmittel";Gesamtschneehoehe (cm);Gesamtbewoelkung (min);Luftdruck auf Stationshoehe (hpa);Niederschlag (mm);Durchschnittstemperatur (¡C);Relative Luftfeuchtigkeit (%);Sonnenscheindauer (min);Tiefsttemperatur (¡C);Maximaltemperatur (¡C)
+stn;time;" Globalstrahlung (W/m); Tagesmittel";Gesamtschneehoehe (cm);Gesamtbewoelkung (min);Luftdruck auf Stationshoehe (hpa);Niederschlag (mm);Durchschnittstemperatur;Relative Luftfeuchtigkeit (%);Sonnenscheindauer (min);Tiefsttemperatur;Maximaltemperatur
 SAE;18820901;-;-;70;755.1;3.2;1.6;99.3;-;-0.5;5.5
 SAE;18820902;-;-;3;759.1;0;8.7;68.7;-;6.5;14.5
 SAE;18820903;-;-;50;761.4;2;10.4;78.7;-;5.7;15.7
