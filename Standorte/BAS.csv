@@ -1,4 +1,4 @@
-stn;time;" Globalstrahlung (W/m); Tagesmittel";Gesamtschneehoehe (cm);Gesamtbewoelkung (min);Luftdruck auf Stationshoehe (hpa);Niederschlag (mm);Durchschnittstemperatur (¡C);Sonnenscheindauer (min);Tiefsttemperatur (¡C);Maximaltemperatur (¡C);Relative Luftfeuchtigkeit (%)
+stn;time;" Globalstrahlung (W/m); Tagesmittel";Gesamtschneehoehe (cm);Gesamtbewoelkung (min);Luftdruck auf Stationshoehe (hpa);Niederschlag (mm);Durchschnittstemperatur;Sonnenscheindauer (min);Tiefsttemperatur;Maximaltemperatur;Relative Luftfeuchtigkeit (%)
 BAS;18640101;-;-;100;975.3;5;-1.6;-;-;-;94.3
 BAS;18640102;-;-;53;987.5;6.8;-8.9;-;-;-;86.3
 BAS;18640103;-;-;43;990.7;0;-10.2;-;-;-;76.7

@@ -1,4 +1,4 @@
-stn;time;" Globalstrahlung (W/m); Tagesmittel";Gesamtschneehoehe (cm);Gesamtbewoelkung (min);Luftdruck auf Stationshoehe (hpa);Durchschnittstemperatur (¡C);Tiefsttemperatur (¡C);Relative Luftfeuchtigkeit (%);Niederschlag (mm);Sonnenscheindauer (min);Maximaltemperatur (¡C)
+stn;time;" Globalstrahlung (W/m); Tagesmittel";Gesamtschneehoehe (cm);Gesamtbewoelkung (min);Luftdruck auf Stationshoehe (hpa);Durchschnittstemperatur;Tiefsttemperatur;Relative Luftfeuchtigkeit (%);Niederschlag (mm);Sonnenscheindauer (min);Maximaltemperatur
 CDF;19000101;-;-;-;-;-;-;-;1.2;-;-
 CDF;19000102;-;-;-;-;-;-;-;0;-;-
 CDF;19000103;-;-;-;-;-;-;-;27.4;-;-
