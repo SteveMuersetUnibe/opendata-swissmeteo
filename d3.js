@@ -668,6 +668,10 @@ function setInfoBox(box) {
     }
 }
 
+function setLocationDropDown() {
+    
+}
+
 function onCheckBoxClick(box, checkbox, param) {
     var active = checkbox.classed("active")
     if (active) {

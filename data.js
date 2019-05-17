@@ -28,6 +28,13 @@ var SIO = { file : "Standorte/SIO.csv", name : "Sion" };
 var SMA = { file : "Standorte/SMA.csv", name : "Zuerich" }; 
 var STG = { file : "Standorte/STG.csv", name : "St. Gallen" };
 
+var locations = [
+    ALT, ANT, BAS, BER, CDF, CHD, 
+    CHM, DAV, ELM, ENG, GRC, GRH, 
+    GSB, GVE, JUN, LUG, LUZ, MER, 
+    NEU, OTL, PAY, RAG, SAE, SAM, 
+    SBE, SIA, SIO, SMA, STG]
+
 var data_list = new Array();
 
 var parse = d3.timeParse("%Y%m%d");
@@ -168,7 +175,7 @@ function filterData(data, options) {
 }
 
 function findDateIndex(data, date){
-    if (!data) console.log("something went wrong")
+    if (!data) console.log("something went wrong");
     var d = data.map((value) => { return parseInt(value["time"])})
     var index = d.indexOf(parseInt(date));
     if (index == -1) {
@@ -264,13 +271,7 @@ function linearTrendLine(data, param) {
 
 
 function findSpecial(fn, ){
-
-
-    
 }
-
-
-
 
 
  // This script is released to the public domain and may be used, modified and
