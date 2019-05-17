@@ -168,6 +168,7 @@ function filterData(data, options) {
 }
 
 function findDateIndex(data, date){
+    if (!data) console.log("something went wrong")
     var d = data.map((value) => { return parseInt(value["time"])})
     var index = d.indexOf(parseInt(date));
     if (index == -1) {

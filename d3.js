@@ -197,6 +197,7 @@ function setArea(line) {
         .x(d => line.xScale(d.x))
         .y(d => line.yScale(d.y))
         .defined(d => !isNaN(parseFloat(d.y)))
+        .curve(d3.curveMonotoneX)
 }
 
 function updateArea(line){
