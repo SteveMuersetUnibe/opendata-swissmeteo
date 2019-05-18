@@ -325,3 +325,5 @@ Date.prototype.getWeek = function() {
   function naheStation(){
 
   }
+
+  
