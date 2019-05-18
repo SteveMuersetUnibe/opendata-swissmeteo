@@ -642,7 +642,7 @@ function InfoBox(canvas, element) {
 function setInfoBox(box) {
     box.header = box.element.append("div").classed("card-header", true)
     box.body = box.element.append("div").classed("text-center", true)
-    box.footer = box.element.append("div").classed("card-footer", true)
+    box.footer = box.element.append("div").classed("card-footer dropdown", true)
 
     box.body.classed("text-center", true).style("margin", "auto")
 
@@ -666,10 +666,21 @@ function setInfoBox(box) {
             .on("click", onCheckBoxClick.bind(null,box, checkbox, param))
         checkboxes.append("br")
     }
+    setLocationDropDown(box)
 }
 
-function setLocationDropDown() {
-    
+function setLocationDropDown(box) {
+    box.footer.append("button").classed("dropbtn", true).html("Standorte")
+    box.locationList = box.footer.append("div").classed("dropdown-content", true)
+    for (loc of locations) {
+
+        box.locationList.append("a")
+            .classed("", true)
+                .html(loc.name)
+            
+
+    }
+
 }
 
 function onCheckBoxClick(box, checkbox, param) {
@@ -738,20 +749,10 @@ function weekFormat(date) {
 }
 
 
-
-
-
-
 function spread(canvas) {
     canvas.together = !canvas.together
     drawCanvas(canvas)
 }
-
-
-
-
-
-
 
 
 
