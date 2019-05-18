@@ -327,27 +327,28 @@ Date.prototype.getWeek = function() {
     var MeinY = 0;
     var Abstand;
 
-  var closest_location = BER;
+  var closest_location;
   var distance;
 
   
 function closestLocation() {
     for (loc of locations) {
 
-        if (distance) {
-            x = ALT.latitude;
-            y = ALT.longitude; 
-            MeinX = Math.sqrt((lat - x) * (lat - x));
-            MeinY = Math.sqrt((lng - y) * (lng - y));
+        x = loc.latitude;
+        y = loc.longitude; 
+        MeinX = Math.sqrt((lat - x) * (lat - x));
+        MeinY = Math.sqrt((lng - y) * (lng - y));
 
+        if (distance) {
             if (distance > MeinX + MeinY ) {
-                closest_location = loc;
+                closest_location = loc
                 distance = MeinX + MeinY 
             }
         } else {
             distance = MeinX + MeinY 
             closest_location = loc
         }
+        console.log(distance);
     }
 
     return closest_location;
