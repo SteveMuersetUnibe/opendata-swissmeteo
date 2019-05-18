@@ -340,12 +340,12 @@ function closestLocation() {
         MeinY = Math.sqrt((lng - y) * (lng - y));
 
         if (distance) {
-            if (distance > MeinX + MeinY ) {
+            if (distance > Math.sqrt(MeinX * MeinX + MeinY * MeinY) ) {
                 closest_location = loc
-                distance = MeinX + MeinY 
+                distance = Math.sqrt(MeinX * MeinX + MeinY * MeinY)
             }
         } else {
-            distance = MeinX + MeinY 
+            distance = Math.sqrt(MeinX * MeinX + MeinY * MeinY)
             closest_location = loc
         }
         console.log(distance);
