@@ -5,21 +5,18 @@
 To Do Liste
 
 Steve:
-- Feldchen neben/unter der Grafik
-- Feldchen um Zeitspanne anzugeben / Slider
-- Datepicker für 1 Tag über alle Jahre
-- Trendlinie
-- Livedaten
+- Dropdownliste einfügen
+- Story
+- Standorte verküpfung
 
 
 Merlin:
-- Websiten Design ~
-- Aktueller Standort ~
-- Legende mit Parametern
-- checkboxes mit Paras & Trendlinie F
-- Einklappbares Seitenmenu
-
-TO DO:
+- Design
+    - Buttons anordnen
+    - Hindergrund
+    - Farben
+- Standort abgleichen und nächst gelegener aussuchen
+- 
 
 
 

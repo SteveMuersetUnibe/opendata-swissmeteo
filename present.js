@@ -1,5 +1,5 @@
-var x = "19800101"
-var y = "20010505"
+var x;
+var y;
 
 var options = new Options(BER.file, x, y, 0, 0)
 var options2 = new Options(BER.file, x, y, 0, 0)
