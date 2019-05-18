@@ -330,8 +330,8 @@ Date.prototype.getWeek = function() {
     var Abstand;
 
   function naheStation(){  
-        x = ALT.latitude ;
-        y = ALT.longitude ; 
+        x = locations[0].latitude ;
+        y = locations[0].longitude ; 
         MeinX = Math.sqrt((lat - x) * (lat - x));
         MeinY = Math.sqrt((lng - y) * (lng - y));
         Abstand = MeinX + MeinY;
