@@ -651,7 +651,7 @@ function setInfoBox(box) {
     box.meanTemp = box.body.append("h1")
     box.maxminTemp = box.body.append("label")
 
-    box.spread = box.header.append("button").html("Aufteilen")
+    box.spread = box.footer.append("button")
     box.spread
         .classed("spread", true)
         .classed("bttn", true)
@@ -670,8 +670,8 @@ function setInfoBox(box) {
 }
 
 function setLocationDropDown(box) {
-    box.footer.append("button").classed("dropbtn", true).html("Standorte")
-    box.locationList = box.footer.append("div").classed("dropdown-content", true)
+    box.header.append("button").classed("dropbtn", true).html("Standorte")
+    box.locationList = box.header.append("div").classed("dropdown-content", true)
     for (loc of locations) {
 
         box.locationList.append("a")
