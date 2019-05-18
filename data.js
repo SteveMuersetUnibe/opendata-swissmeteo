@@ -32,7 +32,7 @@ var data_list = new Array();
 
 var parse = d3.timeParse("%Y%m%d");
 var format = d3.timeFormat("%Y%m%d")
-var colors = ["rgb(", "#4286f4", "#f44141", "#2c10cc"]
+var colors = ["rgb(255, 0, 0)", "rgb(0, 0, 0)", "rgb(65, 102, 253)", "#2c10cc"]
 
 var params = [ 
     new Parameter("Maximaltemperatur", d3.max, "MaxTemp", colors[0], true),
@@ -298,8 +298,9 @@ Date.prototype.getWeek = function() {
   }
 
 
-var lat =  0;
-var lng = 0;
+  // Position wird gemessen
+    var lat =  0;
+    var lng = 0;
 
     function success(pos) {
     var crd = pos.coords;
