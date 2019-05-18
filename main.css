@@ -133,14 +133,15 @@ body {
 
 
 .start_circle {
-
+    
     background-color: white;
-    width: 30vw;
-    height: 30vw;
+    width: 80vh;
+    height: 40vh;
     margin: auto;
-    border-radius: 50%;
+    border-radius: 25%;
     vertical-align: middle;
     box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.3); 
+    margin-top: 5vh;
 
 
 }
@@ -149,13 +150,35 @@ body {
     text-align: center;
 }
 
-.start_circle div p {
+.start_circle div h3 {
     text-align: center;
-    line-height: 30vw;
+    line-height: 40vh;
     position: relative;
     top: 5px;
-    display: inline;
+    display: inline-block;
     margin-right: 5px;
     opacity: 0;
     text-decoration: underline
+}
+
+.submit_circle {
+    background-color: white;
+    width: 15vh;
+    height: 15vh;
+    margin: auto;
+    margin-top: 5vh;
+    border-radius: 50%;
+    vertical-align: middle;
+    box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.3); 
+}
+
+.submit_circle div {
+    text-align: center
+}
+
+.submit_circle div h3 {
+    display: inline;
+    position: relative;
+    text-align: center;
+    line-height: 15vh;
 }
