@@ -5,15 +5,18 @@ body {
     font-family: Arial, Helvetica, sans-serif;
     font-size: 16;
 }
+  
 
+/* Dropdown Liste */
 .dropdown {
-
-}
+    position: absolute;
+    display: inline-block;
+  }
 
 .dropbtn {
     text-align: center;
     font-size: 16px;
-    background: rgb(65, 62, 62);
+    background: rgb(110, 106, 106);
     color: #fff;
     padding: 10 px;
     left: 20px;
@@ -22,14 +25,10 @@ body {
     border: none;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.5);
 }
-
-.dropbtn:hover{
-    background: rgb(141, 138, 138);
-    box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
-}
   
 .dropdown-content {
     display: none;
+    position: absolute;
     background-color: rgb(110, 106, 106);
     width: 150px;
     font-size: 10px;
@@ -44,7 +43,7 @@ body {
 }
   
 .dropdown-content a:hover {
-    background-color: rgb(141, 138, 138);
+    background-color: rgb(110, 106, 106);
     box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
 }
   
@@ -53,132 +52,108 @@ body {
 }
 
 .dropdown:hover .dropbtn {
-    background-color: rgb(141, 138, 138);
+    background-color: rgb(110, 106, 106);
     box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
 }
 
-.bttn {
+/* Aufteilen Button */
+.spread {
     position: absolute;
-    margin-left: 170px;
-    font-size: 16px;
     text-align: center;
-    background: rgb(65, 62, 62);
+    margin-left: 170px;
+    background: rgb(110, 106, 106);
     color: #fff;
     padding: 10 px;
     left: 20px;
     width: 150px;
     height: 50px;
-    border: none;
+    border : none;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.5);
 }
-.bttn:hover{
-    background: rgb(141, 138, 138);
+.spread:hover{
+    background: rgb(143, 136, 136);
     box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
 }
 
+.spread.active{
+    background: rgb(110, 106, 106);
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+}
+
+.spread.active:hover{
+    background: rgb(143, 136, 136);
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.5)
+}
+
+/* Checkboxen */
 .chckbx{
     position: absolute;
     display: inline-block;
-    
 }
 
 .checkbx{
-    background: rgb(65, 62, 62);
+    background: rgb(110, 106, 106);
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.5);
     border: none;
     width: 170px;
     height: 25px;
     text-align: center;
     color: #fff;
-    font-size: 15px;
+    font-size: 14px;
+    border-radius: 5px;
+    margin : 5px;
 }
 
-.checkbx:hover {
-    background: rgb(110, 107, 107);
+.checkbx:hover{
+    background: rgb(143, 136, 136);
     box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
 }
 
-.cbx{
+.checkbx.active {
+    background: rgb(110, 106, 106);
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+}
+
+.checkbx.active:hover {
+    background: rgb(143, 136, 136);
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+}
+
+/* kann gelöscht werden */
+
+.grafik {
+    margin-top:100px;
+    background: rgb(110, 106, 106);
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 16;
+    /* display: inline-block; */
+}
+
+/* In Box */
+.card{
+    border: none;
+    background: rgb(110, 106, 106);
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 16;
+}
+
+.card-header{
     position: absolute;
-    opacity: 0;
-    cursor: pointer;
-    height: 0;
-    width: 0;;
+    height: 100px;
+    background: rgb(110, 106, 106);
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 16;
+    border: none;
 }
 
-.test {
-    display:inline-block;
-}
-
-.test input:checked ~ .checkbx {
-    background: rgb(141, 138, 138);
-    box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
-}
-
-.test input:checked ~ .checkbx:hover {
-    background: rgb(110, 107, 107);
-    box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
-}
-
-
-.param-checkbox {
-    background-color: red;
-}
-
-.param-checkbox.active {
-    background-color: blue;
-}
-
-
-
-
-.start_circle {
-    
-    background-color: white;
-    width: 80vh;
-    height: 40vh;
-    margin: auto;
-    border-radius: 10px;
-    vertical-align: middle;
-    box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.3); 
-    margin-top: 5vh;
-
-
-}
-
-.start_circle div {
+.text-center{
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 16;
     text-align: center;
+    color: #fff;
 }
 
-.start_circle div h3 {
-    text-align: center;
-    line-height: 40vh;
-    position: relative;
-    top: 5px;
-    display: inline-block;
-    margin-right: 5px;
-    opacity: 0;
-    text-decoration: underline
-}
-
-.submit_circle {
-    background-color: white;
-    width: 15vh;
-    height: 15vh;
-    margin: auto;
-    margin-top: 5vh;
-    border-radius: 50%;
-    vertical-align: middle;
-    box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.3); 
-}
-
-.submit_circle div {
-    text-align: center
-}
-
-.submit_circle div h3 {
-    display: inline;
-    position: relative;
-    text-align: center;
-    line-height: 15vh;
+.card-footer{
+    border: none;
+    background: rgb(110, 106, 106);
 }

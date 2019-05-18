@@ -12,76 +12,8 @@
 
     <body>
 
-        <div class="dropdown">
-            <button class="dropbtn"> Standort </button>
-                <div id="Location" class="dropdown-content">
-                    <a onclick="changeLocation(this)" href="#" value="live_data_base_url" > Mein Standort </a>
-                    <a onclick="changeLocation(this)" href="#" value="ALT" > Altdorf</a>
-                    <a onclick="changeLocation(this)" href="#" value="ANT" > Andermatt</a>
-                    <a onclick="changeLocation(this)" href="#" value="BAS" > Basel</a>
-                    <a onclick="changeLocation(this)" href="#" value="BER" > Bern</a>
-                    <a onclick="changeLocation(this)" href="#" value="CDF" > La Chaux de Fonds</a>
-                    <a onclick="changeLocation(this)" href="#" value="CHD" > La Chateau-d'Oex</a>
-                    <a onclick="changeLocation(this)" href="#" value="CHM" > Chaumont</a>
-                    <a onclick="changeLocation(this)" href="#" value="DAV" > Davos</a>
-                    <a onclick="changeLocation(this)" href="#" value="ELM" > Elm</a>
-                    <a onclick="changeLocation(this)" href="#" value="ENG" > Engelberg</a>
-                    <a onclick="changeLocation(this)" href="#" value="GRC" > Gränchen</a>
-                    <a onclick="changeLocation(this)" href="#" value="GRH" > Grimsel Hospiz</a>
-                    <a onclick="changeLocation(this)" href="#" value="GSB" > Col du Grand St-Bernard</a>
-                    <a onclick="changeLocation(this)" href="#" value="GVE" > Geneve</a>
-                    <a onclick="changeLocation(this)" href="#" value="JUN" > Jungfraujoch</a>
-                    <a onclick="changeLocation(this)" href="#" value="LUG" > Lugano</a>
-                    <a onclick="changeLocation(this)" href="#" value="LUZ" > Luzern</a>
-                    <a onclick="changeLocation(this)" href="#" value="MER" > Meiringen</a>
-                    <a onclick="changeLocation(this)" href="#" value="NEU" > Neuchatel</a>
-                    <a onclick="changeLocation(this)" href="#" value="OTL" > Lugano</a>
-                    <a onclick="changeLocation(this)" href="#" value="PAY" > Payerne</a>
-                    <a onclick="changeLocation(this)" href="#" value="RAG" > Bad Ragaz</a>
-                    <a onclick="changeLocation(this)" href="#" value="SAE" > Saenti</a>
-                    <a onclick="changeLocation(this)" href="#" value="SAM" > Samedan</a>
-                    <a onclick="changeLocation(this)" href="#" value="SBE" > S. Bernardino</a>
-                    <a onclick="changeLocation(this)" href="#" value="SIA" > Segl-Maria</a>
-                    <a onclick="changeLocation(this)" href="#" value="SIO" > Sion</a>
-                    <a onclick="changeLocation(this)" href="#" value="SMA" > Zuerich</a>
-                    <a onclick="changeLocation(this)" href="#" value="STG" > St. Gallen</a>
-                </div>
 
-            </div>
-            
-            <button class="bttn" onclick="spread()">Aufteilen</button>
-        
-        </div>
-
-        <div class="chckbx"> 
-            <div class="test"> 
-                <input class="cbx" type="checkbox" id="Mxtemp" value="Maximaltemperatur (�C)" checked>
-                <button class="checkbx" onclick="document.getElementById('Mxtemp').checked=!document.getElementById('Mxtemp').checked;" 
-                value="Maximaltemperatur (�C)" > Höchsttemperatur </button>
-            </div>
-            <div class="test">
-                <input class="cbx" type="checkbox" id="Dtemp" value="Durchschnittstemperatur (�C)"checked>
-                <button class="checkbx" onclick="document.getElementById('Dtemp').checked=!document.getElementById('Dtemp').checked;"
-                value="Durchschnittstemperatur (�C" > Durchschnittstemperatur </button>
-            </div>
-            <div class="test"> 
-                <input class="cbx" type="checkbox" id="Ttemp" value="Tiefsttemperatur (�C)"checked>
-                <button class="checkbx" onclick="document.getElementById('Ttemp').checked=!document.getElementById('Ttemp').checked;"
-                value="Tiefsttemperatur (�C)" > Tiefsttemperatur </button>
-            </div>
-            <div class="test"> 
-                <input class="cbx" type="checkbox" id="Ndschl" value="Niederschlag (mm)"checked>
-                <button class="checkbx" onclick="document.getElementById('Ndschl').checked=!document.getElementById('Ndschl').checked;"
-                value="Niederschlag (mm)" > Niederschlag </button>
-            </div>
-            <div class="test"> 
-                <input class="cbx" type="checkbox" id="Dlin" value="Durchschnittslinien"checked>
-                <button class="checkbx" onclick="document.getElementById('Dlin').checked=!document.getElementById('Dlin').checked;"
-                value="Durchschnittslinien" > Durchschnittslinien </button> 
-            </div>
-        </div>
-
-    <div id="content">
+    <div class="grafik" id="content">
         <div class="row">
             <div id="currentWeather" class="container col-8">
                 <div class="card">
