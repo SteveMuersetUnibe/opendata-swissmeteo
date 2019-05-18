@@ -349,6 +349,4 @@ Date.prototype.getWeek = function() {
 
     }
 
-
-
   }
