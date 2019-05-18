@@ -313,11 +313,9 @@ Date.prototype.getWeek = function() {
     lng = pos.coords.longitude;
     }
 
-
     function error(err) {
     console.warn(`ERROR(${err.code}): ${err.message}`);
     }
-
   
   navigator.geolocation.getCurrentPosition(success, error);
 
@@ -329,11 +327,28 @@ Date.prototype.getWeek = function() {
     var MeinY = 0;
     var Abstand;
 
-  function naheStation(){  
-        x = locations[0].latitude ;
-        y = locations[0].longitude ; 
+
+  var closestlocation;
+  var distance;
+
+  function closest() {
+
+    for (location of locations) {
+
+        x = location.latitude;
+        y = location.longitude; 
         MeinX = Math.sqrt((lat - x) * (lat - x));
         MeinY = Math.sqrt((lng - y) * (lng - y));
-        Abstand = MeinX + MeinY;
-  }
 
+        if (distance && distance > MeinX + MeinY) {
+            closest = MeinX + MeinY
+        } else {
+            closest = location
+            distance = MeinX + MeinY
+        }
+
+    }
+
+
+
+  }
