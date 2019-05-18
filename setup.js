@@ -5,12 +5,12 @@ function start() {
 
     var s = d3.select("#start_circle")
         .append("div").raise()
-    s.append("h1").html("How's")
-    s.append("h1").html("the")
-    s.append("h1").html("weather")
+    s.append("p").html("How's")
+    s.append("p").html("the")
+    s.append("p").html("weather")
     var today = s.append("h1").html("today?")
 
-    var list = s.selectAll("h1")
+    var list = s.selectAll("p")
     var group = list._groups[0]
     list.each( (d,index) => {
         d3.select(group[index])
@@ -30,12 +30,12 @@ function start() {
         //$('#my-element').data('datepicker')
         console.log(today.node().offsetWidth)
         today.remove();
-        s.append("h1").html("on")
+        s.append("p").html("on")
             .transition()
             .duration(300)
             .style("top", "0px")
             .style("opacity", 1)
-        s.append("h1").html("the")
+        s.append("p").html("the")
             .transition()
             .delay(300)
             .duration(300)

@@ -138,7 +138,7 @@ body {
     width: 80vh;
     height: 40vh;
     margin: auto;
-    border-radius: 25%;
+    border-radius: 10px;
     vertical-align: middle;
     box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.3); 
     margin-top: 5vh;
