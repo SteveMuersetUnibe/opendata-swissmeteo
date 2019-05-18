@@ -1,5 +1,4 @@
-var x;
-var y;
+    
 
 var options = new Options(BER.file, x, y, 0, 0)
 var options2 = new Options(BER.file, x, y, 0, 0)

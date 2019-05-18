@@ -1,32 +1,32 @@
-var ALT = { file : "Standorte/ALT.csv", name : "Altdorf" , coords : 690180/193564}; 
-var ANT = { file : "Standorte/ANT.csv", name : "Andermatt" , coords :687444/165044}; 
-var BAS = { file : "Standorte/BAS.csv", name : "Basel" , coords :610908/265611}; 
-var BER = { file : "Standorte/BER.csv", name : "Bern" , coords :601933/204409}; 
-var CDF = { file : "Standorte/CDF.csv", name : "La Chaux de Fonds" , coords :550919/214861}; 
-var CHD = { file : "Standorte/CHD.csv", name : "La Chateau-d'Oex" , coords :577040/147654}; 
-var CHM = { file : "Standorte/CHM.csv", name : "Chaumont" , coords :565060/211006}; 
-var DAV = { file : "Standorte/DAV.csv", name : "Davos" , coords :783518/187458};
-var ELM = { file : "Standorte/ELM.csv", name : "Elm" , coords :732265/198425}; 
-var ENG = { file : "Standorte/ENG.csv", name : "Engelberg" , coords :674160/186069}; 
-var GRC = { file : "Standorte/GRC.csv", name : "Gränchen" , coords :630738/116062}; 
-var GRH = { file : "Standorte/GRH.csv", name : "Grimsel Hospiz" , coords :668583/158215}; 
-var GSB = { file : "Standorte/GSB.csv", name : "Col du Grand St-Bernard" , coords :579192/79753};
-var GVE = { file : "Standorte/GVE.csv", name : "Geneve" , coords :498904/122631}; 
-var JUN = { file : "Standorte/JUN.csv", name : "Jungfraujoch" , coords :641930/155275}; 
-var LUG = { file : "Standorte/LUG.csv", name : "Lugano" , coords :717873/95884 }; 
-var LUZ = { file : "Standorte/LUZ.csv", name : "Luzern" , coords :665543/209849}; 
-var MER = { file : "Standorte/MER.csv", name : "Meiringen" , coords :655844/175930}; 
-var NEU = { file : "Standorte/NEU.csv", name : "Neuchatel" , coords :563086/205559}; 
-var OTL = { file : "Standorte/OTL.csv", name : "Lugano", coords : 704172/114342}; 
-var PAY = { file : "Standorte/PAY.csv", name : "Payerne" , coords :562131/184611}; 
-var RAG = { file : "Standorte/RAG.csv", name : "Bad Ragaz" , coords :756910/209350}; 
-var SAE = { file : "Standorte/SAE.csv", name : "Saenti", coords : 744183/234918}; 
-var SAM = { file : "Standorte/SAM.csv", name : "Samedan" , coords :787249/155685}; 
-var SBE = { file : "Standorte/SBE.csv", name : "S. Bernardino" , coords :734115/147294}; 
-var SIA = { file : "Standorte/SIA.csv", name : "Segl-Maria" , coords :778574/144976}; 
-var SIO = { file : "Standorte/SIO.csv", name : "Sion" , coords :591633/118583}; 
-var SMA = { file : "Standorte/SMA.csv", name : "Zuerich" , coords :685116/248065}; 
-var STG = { file : "Standorte/STG.csv", name : "St. Gallen" , coords :747865/254588};
+var ALT = { file : "Standorte/ALT.csv", name : "Altdorf" , longitude : 8.37, latitude: 46.38}; 
+var ANT = { file : "Standorte/ANT.csv", name : "Andermatt" , longitude :8.35 , latitude: 46.38}; 
+var BAS = { file : "Standorte/BAS.csv", name : "Basel" , longitude :7.35 , latitude: 47.32}; 
+var BER = { file : "Standorte/BER.csv", name : "Bern" , longitude :7.28 , latitude: 46.59}; 
+var CDF = { file : "Standorte/CDF.csv", name : "La Chaux de Fonds" , longitude :6.48 , latitude: 47.05}; 
+var CHD = { file : "Standorte/CHD.csv", name : "La Chateau-d'Oex" , longitude :7.08 , latitude: 46.29 }; 
+var CHM = { file : "Standorte/CHM.csv", name : "Chaumont" , longitude :6.59 , latitude: 47.03}; 
+var DAV = { file : "Standorte/DAV.csv", name : "Davos" , longitude :9.51 , latitude: 46.49};
+var ELM = { file : "Standorte/ELM.csv", name : "Elm" , longitude :9.11 , latitude: 46.55}; 
+var ENG = { file : "Standorte/ENG.csv", name : "Engelberg" , longitude :8.25 , latitude: 46.49}; 
+var GRC = { file : "Standorte/GRC.csv", name : "Gränchen" , longitude :7.50 , latitude: 46.12}; 
+var GRH = { file : "Standorte/GRH.csv", name : "Grimsel Hospiz" , longitude :8.20 , latitude: 46.34}; 
+var GSB = { file : "Standorte/GSB.csv", name : "Col du Grand St-Bernard" , longitude :7.10 , latitude: 45.52};
+var GVE = { file : "Standorte/GVE.csv", name : "Geneve" , longitude :6.08 , latitude: 46.15}; 
+var JUN = { file : "Standorte/JUN.csv", name : "Jungfraujoch" , longitude : 7.59 , latitude: 46.33}; 
+var LUG = { file : "Standorte/LUG.csv", name : "Lugano" , longitude :8.58 , latitude: 46.00}; 
+var LUZ = { file : "Standorte/LUZ.csv", name : "Luzern" , longitude :8.18 , latitude: 47.02}; 
+var MER = { file : "Standorte/MER.csv", name : "Meiringen" , longitude :8.10 , latitude: 46.44}; 
+var NEU = { file : "Standorte/NEU.csv", name : "Neuchatel" , longitude :6.57 , latitude: 47.00}; 
+var OTL = { file : "Standorte/OTL.csv", name : "Lugano", longitude : 8.47 , latitude: 46.10}; 
+var PAY = { file : "Standorte/PAY.csv", name : "Payerne" , longitude :6.57 , latitude: 46.49}; 
+var RAG = { file : "Standorte/RAG.csv", name : "Bad Ragaz" , longitude :79.30 , latitude: 47.01}; 
+var SAE = { file : "Standorte/SAE.csv", name : "Saenti", longitude : 9.21 , latitude: 47.15}; 
+var SAM = { file : "Standorte/SAM.csv", name : "Samedan" , longitude :9.53 , latitude: 46.32}; 
+var SBE = { file : "Standorte/SBE.csv", name : "S. Bernardino" , longitude :9.11 , latitude: 46.28}; 
+var SIA = { file : "Standorte/SIA.csv", name : "Segl-Maria" , longitude :9.46 , latitude: 46.26}; 
+var SIO = { file : "Standorte/SIO.csv", name : "Sion" , longitude :7.20 , latitude: 46.13}; 
+var SMA = { file : "Standorte/SMA.csv", name : "Zuerich" , longitude :8.34 , latitude: 47.23}; 
+var STG = { file : "Standorte/STG.csv", name : "St. Gallen" , longitude :9.24 , latitude: 47.26};
 
 var locations = [
     ALT, ANT, BAS, BER, CDF, CHD, 
@@ -321,10 +321,16 @@ Date.prototype.getWeek = function() {
   
   navigator.geolocation.getCurrentPosition(success, error);
 
-  // nächste Station
+  // nächste Station und Abstand von der nächsten Station
 
-  function naheStation(){
+    var x = 0;
+    var y = 0;
+    var MeinX = 0;
+    var MeinY = 0;
 
+  function naheStation(){  
+        x = ALT.latitude ;
+        y = ALT.longitude ; 
+        MeinX = Math.sqrt((lat - x) * (lat - x));
+        MeinY = Math.sqrt((lng - y) * (lng - y));
   }
-
-  

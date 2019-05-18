@@ -651,7 +651,7 @@ function setInfoBox(box) {
     box.meanTemp = box.body.append("h1")
     box.maxminTemp = box.body.append("label")
 
-    box.spread = box.header.append("button")
+    box.spread = box.header.append("button").html("Aufteilen")
     box.spread
         .classed("spread", true)
         .classed("bttn", true)
