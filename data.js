@@ -48,17 +48,17 @@ var params = [
     new Parameter("Niederschlag (mm)", d3.sum, "Rain", colors[3], false)]
 
 //Options Object Constructor
-function Options(data_path, start_date, end_date, date, param) {
-    this.data_path = data_path
+function Options(loc, start_date, end_date, date) {
+    this.location = loc
+    this.data_path = loc.file
     this.start = start_date
     this.end = end_date
     this.date = date
-    this.param = param
     options = this;
 }
 
 //Data Object Constructor to hold the raw data and the 
-function Data(all_data) {
+function Data(all_data, options) {
     this.all_data = all_data
     
     this.margin = 50
@@ -71,10 +71,11 @@ function Data(all_data) {
 
     this.data = this.zoomLevel[3]
 
-    linearTrendLine(this.zoomLevel[0], params[1].name)
-    
-    current_data = this
-    data_list.push(this)
+    //linearTrendLine(this.zoomLevel[0], params[1].name)
+
+    if (options.date) {
+        this.data = filterDate(all_data, options.date)
+    }
 }
 
 function Parameter(name, agregateFn, short, color, left) {
@@ -83,7 +84,6 @@ function Parameter(name, agregateFn, short, color, left) {
     this.short = short
     this.color = color
     this.left = left
-
 }
 
 //Load and filter data from CSV file
@@ -92,12 +92,12 @@ async function onChangeOptions(options) {
     return d3.dsv(";", 
         String(options.data_path),
         (d, e) => all_data.push(d)
-    ).then(d => options.data = new Data(all_data))
+    ).then(d => {
+        options.data = new Data(all_data, options)})
 }
 
 function changeLocation(){
     var Location = document.getElementById("Location").value;
-    console.log(Location)
 }
 
 
@@ -109,9 +109,13 @@ function changeWidth() {}
 
 function filterData(data, options) {
 
+    if (options.date) {
+        options.zoomLevel
+        return options.data.data
+    }
     var data_focus = data.zoomLevel[options.zoomLevel]
     var change_data = false
-    
+
     if (options.zoomLevelChanged) {
         data.data = data.zoomLevel[options.zoomLevel]
         options.zoomLevelChanged = false
@@ -191,14 +195,16 @@ function findDateIndex(data, date){
 
 function filterDate(data, time) {
     var day = time.getDate() < 10 ? "0" + time.getDate() : time.getDate() + "";
-    var month = time.getMonth() < 10 ? "0" + time.getMonth() : time.getMonth + "";
+    var month = (time.getMonth() + 1) < 10 ? "0" + (time.getMonth() + 1) : (time.getMonth() + 1) + "";
     var str = month + day
-
-    return data.filter(function (value){
+    console.log(str)
+    var d = data.filter(function (value){
         var time = value.time;
         var sub = time.substring(4);
         return sub === str;
     });
+    console.log(d)
+    return d;
 }
 
 function agregate(data, timespan, params){
@@ -274,7 +280,7 @@ function findSpecial(fn, ){
 }
 
 
- // This script is released to the public domain and may be used, modified and
+// This script is released to the public domain and may be used, modified and
 // distributed without restrictions. Attribution not necessary but appreciated.
 // Source: https://weeknumber.net/how-to/javascript
 

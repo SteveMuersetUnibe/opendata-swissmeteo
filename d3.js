@@ -248,10 +248,12 @@ function setHelpLine(line){
     line.xHelpLine = d3.line()
         .x(d => line.xScale(d.x))
         .y(d => line.yScale(d.y))
+        .defined(d => !isNaN(d.y))
 
     line.yHelpLine = d3.line()
         .x(d => line.xScale(d.x))
         .y(d => line.yScale(d.y))
+        .defined(d => !isNaN(d.y))
 }
 
 function setHelpPath(line) {
@@ -277,6 +279,15 @@ function updateHelpPath(line) {
         x : parse(line.mouse_data["time"]),
         y : line.ymin
     }]
+
+    if (isNaN(y_data[0].y)){
+        line.yHelpPath
+            .attr("d", null)
+        line.xHelpPath
+            .attr("d", null)
+        return false;
+    }
+
     line.yHelpPath
         .attr("stroke", line.color)
         .attr("stroke-width", 1)
@@ -340,9 +351,6 @@ function setZoomRect(line) {
     line.zoom_rect = line.group.append("rect")
         .style("pointer-events", "all")
         .call(line.zoom)
-    // if (line.canvas.zoomTransform) {
-    //     line.zoom_rect.call(line.zoom.transform, line.canvas.zoomTransform)
-    // }
 }
 
 function updateZoomRect(line) {
@@ -407,22 +415,6 @@ function zoomLines(line, canvas, transform) {
     canvas.options.newZoomLevel = false
 }
 
-function calculateZoom(canvas) {
-    var start_pos = canvas.xScaleBase(parse(canvas.options.start))
-    var end_pos = canvas.xScaleBase(parse(canvas.options.end))
-    var scaleTo = canvas.line_width / (end_pos - start_pos)
-
-    for (l of canvas.lines) {
-        l.zoom_rect
-            .transition()
-            .duration(5000)
-            .call(l.zoom.transform, d3.zoomIdentity
-                .scale(scaleTo)
-                .translate(-start_pos, 0)
-            )
-    }
-}
-
 function Circle(line,x,y,r) {
     this.line = line
     this.x = x
@@ -441,6 +433,10 @@ function unsetCircle(circle){
 }
 
 function updateCircle(circle) {
+    if (isNaN(circle.y)){
+        circle.self.attr("r", 0)
+        return false
+    }
     circle.self 
         .attr("cx", circle.x)
         .attr("cy", circle.y)
@@ -457,7 +453,6 @@ function setCaptureJerry(line) {
 
 function findPoint(line) {
     var coord = d3.mouse(line.zoom_rect.node())
-
     var x = line.xScale.invert(coord[0])
 
     var index = findDateIndex(line.raw_data.data, format(x))
@@ -466,7 +461,6 @@ function findPoint(line) {
         l.mouse_data = l.raw_data.data[index]
         l.pointerCircle.x = l.xScale(parse(l.mouse_data["time"]))
         l.pointerCircle.y = l.yScale(l.mouse_data[l.param.name])
-        l.pointerCircle.y = isNaN(l.pointerCircle.y) ? 0 : l.pointerCircle.y
         updateCircle(l.pointerCircle)
         updateHelpPath(l)
     }
@@ -485,15 +479,16 @@ function removePoint(line){
     |**|**|         Functions       |**|**|
     |**|**|                         |**|**|
  */
-
-function Canvas(id, options, together, margin, padding) {
-    this.id = id
+var counter = 0
+function Canvas(options, together, margin, padding) {
+    this.id = "canvas" + counter; counter += 1;
     this.options = options
     this.together = together
     this.lines = new Array()
     this.margin = margin ? margin : [0,0,0,0] //bottom, left, top, right
     this.padding = padding ? padding : [0,0,0,0] //bottom, left, top, right
-    this.options.zoomLevel = 3
+    this.options.zoomLevel = options.date ? 0 : 3
+
 
     this.addLine = function(line) { 
         line.canvas = this; 
@@ -537,7 +532,7 @@ function setCanvas(canvas) {
 }
 
 function removeCanvas(canvas) {
-    canvas.group
+    canvas.row
         .transition()
         .duration(500)
             .style("opacity", 0)
@@ -545,11 +540,32 @@ function removeCanvas(canvas) {
 }
 
 function drawCanvas(canvas) {
+    canvas.chart.style("opacity", 0)
+        .style("transform", "translate(-500px, 0px)")
+    
+    canvas.chart
+        .transition()
+        .duration(0)
+        .style("opacity", 1)
+        .style("transition", "all 2s")
+        .style("-webkit-transition", "all 2s")
+        .style("transform", "translate(0px, 0px)")
+    canvas.info.style("opacity", 0)
+        .style("transform", "translate(200px, 0px")
+    
+    canvas.info
+        .transition()
+        .duration(0)
+        .style("opacity", 1)
+        .style("opacity", 1)
+        .style("transition", "all 2s")
+        .style("-webkit-transition", "all 2s")
+        .style("transform", "translate(0px, 0px)")
+
     updateCanvas(canvas)
 }
 
 function updateCanvas(canvas) {
-
     calculateLineSize(canvas)
     calculateLinePosition(canvas)
 
@@ -563,12 +579,10 @@ function updateCanvas(canvas) {
         }
         updateLine(line)
         if (canvas.zoomTransform) {
-            console.log("test")
-            console.log(canvas.zoomTransform)
             canvas.zoomTransform.line = line
             line.zoom_rect.call(line.zoom.transform, canvas.zoomTransform)
         }
-    }
+    } 
 }
 
 function calculateLinePosition(canvas) {
@@ -588,9 +602,9 @@ function calculateLinePosition(canvas) {
 function calculateLineSize(canvas) {
 
     var width = canvas.width - (canvas.margin[1] + canvas.margin[3] + canvas.padding[1] + canvas.padding[3])
-    
-    canvas.line_height = canvas.together ? 300 : 150
+    canvas.line_width = width;
 
+    canvas.line_height = canvas.together ? 300 : 150
     for (line of canvas.lines) {
         line.width = width
         line.height = canvas.line_height
@@ -603,7 +617,6 @@ function calculateLineSize(canvas) {
     
     canvas.group.style("height", svg_height + "px")
     canvas.group.style("width", svg_width + "px")
-    console.log(canvas.group)
 }
 
 function calculateLineScale(canvas) {
@@ -614,12 +627,12 @@ function calculateLineScale(canvas) {
     for (line of canvas.lines) {
 
         if (line.axisLeft) {
-            lmax = lmax > line.ymax ? lmax : line.ymax
-            lmin = lmin < line.ymin ? lmin : line.ymin
+            lmax = lmax > line.ymax || isNaN(line.ymax) ?  lmax : line.ymax
+            lmin = lmin < line.ymin || isNaN(line.ymin) ?   lmin : line.ymin
 
         } else {
-            rmax = rmax > line.ymax ? rmax : line.ymax
-            rmin = rmin < line.ymin ? rmin : line.ymin
+            rmax = rmax > line.ymax || isNaN(line.ymax) ?  rmax: line.ymax
+            rmin = rmin < line.ymin || isNaN(line.ymin) ? rmin  :line.ymin 
         }
     }
 
@@ -656,6 +669,9 @@ function setInfoBox(box) {
         .classed("spread", true)
         .classed("bttn", true)
         .on("click", spread.bind(null, box.canvas))
+
+    box.remove = box.header.append("button")
+    box.remove.on("click", removeCanvas.bind(null,box.canvas))
     
     var checkboxes = box.header.append("div").classed("chckbx", true)
     for (param of params) {
@@ -677,10 +693,7 @@ function setLocationDropDown(box) {
         box.locationList.append("a")
             .classed("", true)
                 .html(loc.name)
-            
-
     }
-
 }
 
 function onCheckBoxClick(box, checkbox, param) {
@@ -691,7 +704,6 @@ function onCheckBoxClick(box, checkbox, param) {
         drawCanvas(box.canvas)
     } else {
         var data = box.canvas.options.data
-        console.log(data)
         var line = new LineParameter(param, data, param.color, param.left)
         box.canvas.addLine(line)
         drawCanvas(box.canvas)
@@ -704,6 +716,7 @@ var infoDateSpanFormat = d3.timeFormat("%d %b %Y")
 var tempFormat = d3.format(".2n")
 var rainFormat = d3.format(".0f")
 function updateInfoBox(box) {
+
 
     var d = box.canvas.mouse_data
     var s = box.canvas.xScale
@@ -719,7 +732,7 @@ function updateInfoBox(box) {
     var min =   tempFormat(d[params[2].name])
     var rain =  rainFormat(d[params[3].name])
 
-    box.location.html("Bern")
+    box.location.html(options.location.name)
     box.timespan.html(date)
     box.meanTemp.html(mean + "°C")
     box.maxminTemp.html(max + "°C / " + min + "°C | " + rain + " mm")
@@ -727,7 +740,7 @@ function updateInfoBox(box) {
 
 function getTimeFormat(canvas){
     var level = canvas.options.zoomLevel
-
+    
     switch (level) {
         case 0:
             return d3.timeFormat("%A %d %b %Y")
