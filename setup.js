@@ -26,7 +26,7 @@ function start() {
         
         var promise = onChangeOptions(options).then(d => {
 
-        var canvas = new Canvas(options, true, [100, 100, 50, 100], [30, 10, 30, 10])
+        var canvas = new Canvas(options, true, [100, 50, 50, 100], [30, 10, 30, 10])
         var lines = [
             new LineParameter(params[0], options.data, colors[0], true),
             new LineParameter(params[1], options.data, colors[1], true),
@@ -41,9 +41,16 @@ function start() {
 
         drawCanvas(canvas)
         })
+
+        d3.select("#start").classed("active", true)
+        
     });
 
     $("#myModal").modal()
+
+    d3.select("#menuIcon").on("click", function() {
+        d3.select("#start").classed("active", false)
+    })
 
 }
 

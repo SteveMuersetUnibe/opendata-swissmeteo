@@ -1,7 +1,9 @@
 <!doctype html>
 <html> 
     <head>
+    <meta charset="UTF-8">
 
+    <link rel="icon" href="iconfinder_cloud_1055089.png">
     <script
         src="https://code.jquery.com/jquery-3.4.1.min.js"
         integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
@@ -26,19 +28,27 @@
     </head>
 
     <body>
+            <div>
+                    <img id="menuIcon" src="iconfinder_cloud_1055089.png" widht="20px" height="20px">
+            </div>
 
-        <div class="grafik" id="content"></div>
+       
 
-        <div id="question-one">
-            
+        <div id="start">
+
+        <div id="cloud">
+
+        </div>
+        
+        <div id="question-one" class="">
             <div class="ask-location">
-                <p>Wetterdaten von</p>
+                <h1>Wetterdaten</h1>
                 <select id="location-one" class="dropbtn">
                     <option value="-1" disabled selected>Standort</option>
                 </select>
             </div>
             <div class="ask-weather">
-                    <p id="ask-weather-text">am</p>
+                    <h2 id="ask-weather-text">am</h2>
                     <input 
                         class="datepicker-here" 
                         data-max-view="months"
@@ -50,28 +60,13 @@
             </div>
 
             <div class="ask-submit">
-                <button id="go-one">Go</button>
+                <button id="go-one" class="checkbx">Go</button>
             </div>
 
         </div>
 
-        <div class="modal" id="myModal">
-                <div class="modal-dialog">
-                  <div class="modal-content">
-              
-                    <!-- Modal Header -->
-                    <div class="modal-header">
-                      <h4 class="modal-title">Location Permission</h4>
-                      <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    </div>
-              
-                    <!-- Modal body -->
-                    <div class="modal-body">
-                        <button type="button" class="btn btn-success" data-dismiss="modal" onclick="requestLocation()">Accept</button>
-                    </div>
-                  </div>
-                </div>
-              </div>
+        </div>
+        <div class="grafik" id="content"></div>
     <script src="data.js"></script>
     <script src="d3.js"></script>
     <script src="setup.js"></script>

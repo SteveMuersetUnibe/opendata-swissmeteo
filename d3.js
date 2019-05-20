@@ -172,8 +172,9 @@ function updateAxisGroup(line) {
  
  function updateYAxisGroup(line) {
      line.yAxisGroup
-     .attr("transform", "translate(" + (line.drawAxisLeft ? 0 : (line.width - 10)) +",0)") 
      .call(line.yAxis)
+     .attr("transform", "translate(" + (line.drawAxisLeft ? 0 : (line.width)) +",0)") 
+     
     
      
  }
@@ -325,6 +326,10 @@ function updateHelpPath(line) {
         .attr("stroke-width", 1)
         .style("opacity", 0.5)
         .attr("d", line.zeroHelpLine(zero_data))
+
+    if (line.ymax < 0 || line.ymin > 0) {
+        line.zeroHelpPath.attr("d", null)
+    }
 
 }
 
@@ -559,7 +564,7 @@ function Canvas(options, together, margin, padding) {
 
 function setCanvas(canvas) {
     canvas.row = d3.select("#content")
-        .append("div")
+        .insert("div", ":first-child")
             .classed("row", true)
     canvas.chart = canvas.row
         .append("div")
@@ -572,7 +577,6 @@ function setCanvas(canvas) {
             .classed("container col-sm-12 col-lg-4 col-xl-3", true)
         .append("div")
             .classed("card ", true)
-            .style("height", "100%")
 
     canvas.infoBox = new InfoBox(canvas, canvas.info)
     setInfoBox(canvas.infoBox)
@@ -593,7 +597,7 @@ function setCanvasSize(canvas) {
 function removeCanvas(canvas) {
     canvas.row
         .transition()
-        .duration(2000)
+        .duration(500)
             .style("opacity", 0)
             .remove()
     
@@ -715,8 +719,8 @@ function InfoBox(canvas, element) {
 
 function setInfoBox(box) {
     box.header = box.element.append("div").classed("card-header", true)
-    box.body = box.element.append("div").classed("text-center", true)
-    box.footer = box.element.append("div").classed("card-footer dropdown", true)
+    box.body = box.element.append("div").classed("text-center card-body", true)
+    box.footer = box.element.append("div").classed("card-footer", true)
 
     box.body.classed("text-center", true).style("margin", "auto")
 
@@ -724,29 +728,34 @@ function setInfoBox(box) {
     box.timespan = box.body.append("p")
     box.meanTemp = box.body.append("h1")
     box.maxminTemp = box.body.append("label")
-
-    box.spread = box.footer.append("button")
-    box.spread
-        .classed("spread", true)
-        .classed("bttn", true)
-        .on("click", spread.bind(null, box.canvas))
-
-    box.remove = box.header.append("button")
-    box.remove.on("click", removeCanvas.bind(null,box.canvas))
     
-    var checkboxes = box.header.append("div").classed("chckbx", true)
+    var checkboxes = box.header.append("div").classed("chckbx row", true)
+
+    box.spread = checkboxes.append("button")
+    box.spread
+        .classed("checkbx col-12 col-md-6 col-lg-6 col-xl-6", true)
+        .on("click", function () {
+            spread(box.canvas);
+            box.spread.classed("active", !box.spread.classed("active"))
+        })
+        .html("Expand")
+
+    checkboxes.append("div").classed("col-0 col-md-3 col-lg-3 col-xl-3", true)
+    box.remove = checkboxes.append("button").classed("checkbx col-12 col-md-3 col-lg-3 col-xl-3", true)
+    box.remove.on("click", removeCanvas.bind(null,box.canvas)).html("X")
+
+   
     for (param of params) {
         var checkbox = checkboxes.append("button")
         checkbox
-            .classed("checkbx active", true)
+            .classed("checkbx col-6 col-lg-12 active", true)
             .html(param.name)
             .on("click", onCheckBoxClick.bind(null,box, checkbox, param))
         checkboxes.append("br")
     }
-
-    console.log(box.canvas.lines)
-    box.footer.append("button").html("+").on("click", zoomButton.bind(null, box.canvas))
-    box.footer.append("button").html("-").on("click", unzoomButton.bind(null, box.canvas))
+    box.footer.append("button").html("+").classed("checkbx col-4", true).on("click", zoomButton.bind(null, box.canvas))
+    box.footer.append("div").classed("col-4", true)
+    box.footer.append("button").html("-").classed("checkbx col-4", true).on("click", unzoomButton.bind(null, box.canvas))
 
 }
 
@@ -776,21 +785,19 @@ function onCheckBoxClick(box, checkbox, param) {
     checkbox.classed("active", !active)
 }
 
-var infoDateFormat = d3.timeFormat("%a %d %b %Y")
-var infoDateSpanFormat = d3.timeFormat("%d %b %Y")
 var tempFormat = d3.format(".2n")
 var rainFormat = d3.format(".0f")
 function updateInfoBox(box) {
-
-
     var d = box.canvas.mouse_data
     var s = box.canvas.xScale
 
-    var from = infoDateSpanFormat(s.domain()[0])
-    var to = infoDateSpanFormat(s.domain()[1])
+   
 
     var dateFormat = getTimeFormat(box.canvas)
     var date = dateFormat(parse(d["time"]))
+
+    var from = dateFormat(s.domain()[0])
+    var to = dateFormat(s.domain()[1])
 
     var mean =  tempFormat(d[params[1].name])
     var max =   tempFormat(d[params[0].name])
@@ -801,8 +808,8 @@ function updateInfoBox(box) {
         window.open('https://www.google.ch/maps/place/' + box.canvas.options.location.latitude + "," + box.canvas.options.location.longitude , '_blank');
     })
     box.timespan.html(date)
-    box.meanTemp.html(mean + "°C")
-    box.maxminTemp.html(max + "°C / " + min + "°C | " + rain + " mm")
+    box.meanTemp.html(mean + " °C")
+    box.maxminTemp.html(max + " °C / " + min + " °C | " + rain + " mm")
 }
 
 function getTimeFormat(canvas){
