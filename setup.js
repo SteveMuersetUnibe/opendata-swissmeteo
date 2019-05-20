@@ -43,14 +43,21 @@ function start() {
         })
 
         d3.select("#start").classed("active", true)
-        
+
     });
 
     $("#myModal").modal()
 
     d3.select("#menuIcon").on("click", function() {
+        d3.select("#menuIcon")
+            .transition()
+            .duration(1000)
+            .style("opacity", 0)
         d3.select("#start").classed("active", false)
     })
+    .transition()
+    .duration(1000)
+    .style("opacity", 1)
 
 }
 

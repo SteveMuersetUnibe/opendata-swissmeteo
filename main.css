@@ -18,7 +18,7 @@ body {
 .dropbtn {
     text-align: center;
     font-size: 16px;
-    background: rgb(110, 106, 106);
+    background-color: rgb(110, 106, 106);
     color: #fff;
     padding: 10 px;
     left: 20px;
@@ -64,7 +64,7 @@ body {
 }
 
 .checkbx{
-    background: rgb(110, 106, 106);
+    background-color: rgb(110, 106, 106);
     box-shadow: 2px 4px 4px rgba(0,0,0,0.5);
     width: 170px;
     height: 30px;
@@ -174,6 +174,10 @@ body {
     -o-transition: all 2s;
     transition: all 2s;
     transform: translate(-600px, -500px) scale(0);
+}
+
+#menuIcon {
+    opacity: 0;
 }
 
 #cloud {

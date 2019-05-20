@@ -731,13 +731,13 @@ function setInfoBox(box) {
     
     var checkboxes = box.header.append("div").classed("chckbx row", true)
 
-    box.spread = box.header.append("button").html("Aufteilen")
+    box.spread = checkboxes.append("button")
     box.spread
         .classed("checkbx col-12 col-md-6 col-lg-6 col-xl-6", true)
         .on("click", function () {
             spread(box.canvas);
             box.spread.classed("active", !box.spread.classed("active"))
-        })
+        }).html("Aufteilen")
 
     checkboxes.append("div").classed("col-0 col-md-3 col-lg-3 col-xl-3", true)
     box.remove = checkboxes.append("button").classed("checkbx col-12 col-md-3 col-lg-3 col-xl-3", true)
@@ -752,9 +752,10 @@ function setInfoBox(box) {
             .on("click", onCheckBoxClick.bind(null,box, checkbox, param))
         checkboxes.append("br")
     }
-    box.footer.append("button").html("+").classed("checkbx col-4", true).on("click", zoomButton.bind(null, box.canvas))
-    box.footer.append("div").classed("col-4", true)
-    box.footer.append("button").html("-").classed("checkbx col-4", true).on("click", unzoomButton.bind(null, box.canvas))
+    var commands = box.footer.append("div").classed("row", true);
+    commands.append("button").html("+").classed("checkbx col-4", true).on("click", zoomButton.bind(null, box.canvas))
+    commands.append("div").classed("col-4", true)
+    commands.append("button").html("-").classed("checkbx col-4", true).on("click", unzoomButton.bind(null, box.canvas))
 
 }
 

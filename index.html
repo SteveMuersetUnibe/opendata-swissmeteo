@@ -1,41 +1,76 @@
 <!doctype html>
 <html> 
     <head>
-    
-        <title>Wetterdaten 1860 - Heute Schweiz</title>
-        <script src="d3/d3.js"></script>
-        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" type="text/css">
-        <link rel="stylesheet" type="text/css" href="main.css">
-        <!-- <link rel="stylesheet" type="text/css" href="freshmarker/stylesheet.css"> -->
+    <meta charset="UTF-8">
+
+    <link rel="icon" href="iconfinder_cloud_1055089.png">
+    <script
+        src="https://code.jquery.com/jquery-3.4.1.min.js"
+        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+        crossorigin="anonymous"></script>
+
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+    <title>Wetterdaten 1860 - Heute Schweiz</title>
+    <script src="d3/d3.js"></script>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" type="text/css" href="main.css">
+    <link rel="stylesheet" type="text/css" href="spinner.css">
+    <!-- <link rel="stylesheet" type="text/css" href="freshmarker/stylesheet.css"> -->
+
+    <link href="dist/css/datepicker.min.css" rel="stylesheet" type="text/css">
+    <script src="dist/js/datepicker.min.js"></script>
+
+    <!-- Include English language  http://t1m0n.name/air-datepicker/docs/ -->
+    <script src="dist/js/i18n/datepicker.de.js"></script>
+     
 
     </head>
 
     <body>
-    <div>
-        <img src="iconfinder_cloud_1055089.png" widht="20px" height="20px">
-    </div>
-
-    <div class="grafik" id="content">
-        <div class="row">
-            <div id="currentWeather" class="container col-8">
-                <div class="card">
-
-                </div>
+            <div>
+                    <img id="menuIcon" src="iconfinder_cloud_1055089.png" widht="30px" height="30px">
             </div>
-            <div id="walkthrough" class="container col-4">
-                <div class="card">
-                </div>
-            </div>
-        </div>
+
        
-    </div>
-    
-   
-    
 
+        <div id="start">
+
+        <div id="cloud">
+
+        </div>
+        
+        <div id="question-one" class="">
+            <div class="ask-location">
+                <h1>Wetterdaten</h1>
+                <select id="location-one" class="dropbtn">
+                    <option value="-1" disabled selected>Standort</option>
+                </select>
+            </div>
+            <div class="ask-weather">
+                    <h2 id="ask-weather-text">am</h2>
+                    <input 
+                        class="datepicker-here" 
+                        data-max-view="months"
+                        data-view="days"
+                        data-date-format="dd MM"
+                        data-language='de' 
+                        type="text" 
+                        id="today1" />
+            </div>
+
+            <div class="ask-submit">
+                <button id="go-one" class="checkbx">Go</button>
+            </div>
+
+        </div>
+
+        </div>
+        <div class="grafik" id="content"></div>
     <script src="data.js"></script>
     <script src="d3.js"></script>
-    <script src="present.js"></script>
+    <script src="setup.js"></script>
+
         
     </body>
 </html>
