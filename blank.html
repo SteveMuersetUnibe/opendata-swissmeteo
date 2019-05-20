@@ -18,25 +18,42 @@
     <script src="dist/js/datepicker.min.js"></script>
 
     <!-- Include English language  http://t1m0n.name/air-datepicker/docs/ -->
-    <script src="dist/js/i18n/datepicker.en.js"></script>
+    <script src="dist/js/i18n/datepicker.de.js"></script>
      
 
     </head>
 
     <body>
 
-        <div id="start_circle" class="start_circle">
-            
-            
+        <div class="grafik" id="content">
+                    
         </div>
 
-        <div id="submit_circle" class="submit_circle">
-            <div>
-                <p>Let's find out!</p>
+        <div id="question-one">
+            
+            <div class="ask-location">
+                <p>Wetterdaten von</p>
+                <select id="location-one" class="dropbtn">
+                    <option value="-1" disabled selected>Standort</option>
+                </select>
             </div>
-                
-        </div>
+            <div class="ask-weather">
+                    <p id="ask-weather-text">am</p>
+                    <input 
+                        class="datepicker-here" 
+                        data-max-view="months"
+                        data-view="days"
+                        data-date-format="dd MM"
+                        data-language='de' 
+                        type="text" 
+                        id="today1" />
+            </div>
 
+            <div class="ask-submit">
+                <button id="go-one">Go</button>
+            </div>
+
+        </div>
     <script src="data.js"></script>
     <script src="d3.js"></script>
     <script src="setup.js"></script>

@@ -2,56 +2,47 @@ var my_format = d3.timeFormat("%d/%m/%Y")
 
 function start() {
 
+    var question1 = d3.select("#question-one")
+    var location1 = d3.select("#location-one")
+    var go1 = d3.select("#go-one")
 
-    var s = d3.select("#start_circle")
-        .append("div").raise()
-    s.append("p").html("How's")
-    s.append("p").html("the")
-    s.append("p").html("weather")
-    var today = s.append("h1").html("today?")
+    for (index in locations) {
 
-    var list = s.selectAll("p")
-    var group = list._groups[0]
-    list.each( (d,index) => {
-        d3.select(group[index])
-            
-        .transition()
-        .delay(index * 300)
-        .duration(300)
-        .style("top", "0px")
-        .style("opacity", 1)
-    })
+        location1.append("option")
+            .classed("", true)
+                .attr("value", index)
+                .html(locations[index].name)
+    }
 
-    today.on("click", function() {
+    
 
-        // Initialization
-        //$('#my-element').datepicker([options])
-        // Access instance of plugin
-        //$('#my-element').data('datepicker')
-        console.log(today.node().offsetWidth)
-        today.remove();
-        s.append("p").html("on")
-            .transition()
-            .duration(300)
-            .style("top", "0px")
-            .style("opacity", 1)
-        s.append("p").html("the")
-            .transition()
-            .delay(300)
-            .duration(300)
-            .style("top", "0px")
-            .style("opacity", 1)
-        s.append("input")
-            .attr("id", "dayDate")
-            .attr("type", "text")
-            .classed("datepicker-here", true)
-            .attr("value", my_format(new Date()))
-            .style("width", "100px")
-            .style("text-align", "center")
+    go1.on("click", function() {
+
+        var location = location1.node().value != -1 ? location1.node().value : 0
+
+        var date = $('#today1').data('datepicker').lastSelectedDate
+        console.log(date)
         
-        $('#dayDate').datepicker({ language : "en", maxDate : new Date()})
-    })
+        var options = new Options(locations[location], null, null, date)
+        
+        var promise = onChangeOptions(options).then(d => {
 
+        var canvas = new Canvas(options, true, [100, 100, 50, 100], [30, 10, 30, 10])
+        var lines = [
+            new LineParameter(params[0], options.data, colors[0], true),
+            new LineParameter(params[1], options.data, colors[1], true),
+            new LineParameter(params[2], options.data, colors[2], true),
+            new LineParameter(params[3], options.data, colors[3], false)
+        ]
+
+        canvas.addLine(lines[0])
+        canvas.addLine(lines[1])    
+        canvas.addLine(lines[2])    
+        canvas.addLine(lines[3])    
+
+        drawCanvas(canvas)
+        })
+    });
 
 }
 
