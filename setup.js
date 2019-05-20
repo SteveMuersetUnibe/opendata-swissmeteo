@@ -43,6 +43,8 @@ function start() {
         })
     });
 
+    $("#myModal").modal()
+
 }
 
 start()

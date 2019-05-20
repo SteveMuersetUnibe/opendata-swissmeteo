@@ -108,7 +108,7 @@ function setScales(line) {
     line.canvas.xScaleBase = line.xScaleBase
     line.canvas.xScale = line.xScaleBase
 
-    line.yScale = d3.scaleLinear().clamp(true)
+    line.yScale = d3.scaleLinear() 
 }
 
 function updateScales(line) {
@@ -145,7 +145,10 @@ function updateXAxis(line) {
 function updateYAxis(line) {
     line.drawAxisLeft = line.canvas.together ? line.axisLeft : true
     line.yAxis = line.drawAxisLeft ? d3.axisLeft() : d3.axisRight()
-    line.yAxis.tickValues(line.axisLeft ? [line.ymax, 0, line.ymin] : [line.ymax, line.ymin])
+    var noNull = line.ymax > 0 && line.ymin < 0
+    var tickValues = noNull ? [line.ymax, 0, line.ymin] : [line.ymax, line.ymin];
+    
+    line.yAxis.tickValues(line.axisLeft ? tickValues : [line.ymax, line.ymin])
     line.yAxis.scale(line.yScale);
     line.yAxis.tickFormat(d => line.axisLeft ? tempFormat(d) + " °C" : rainFormat(d) + " mm")
 }
@@ -169,7 +172,7 @@ function updateAxisGroup(line) {
  
  function updateYAxisGroup(line) {
      line.yAxisGroup
-     .attr("transform", "translate(" + (line.drawAxisLeft ? 0 : line.width) +",0)") 
+     .attr("transform", "translate(" + (line.drawAxisLeft ? 0 : (line.width - 10)) +",0)") 
      .call(line.yAxis)
     
      
@@ -436,7 +439,6 @@ function zoomLines(line, canvas, transform) {
         updatePath(l)
         findPoint(l)
     }
-
     canvas.options.newZoomLevel = false
 }
 
@@ -748,16 +750,16 @@ function setInfoBox(box) {
 
 }
 
-function setLocationDropDown(box) {
-    box.header.append("button").classed("dropbtn", true).html("Standorte")
-    box.locationList = box.header.append("div").classed("dropdown-content", true)
-    for (loc of locations) {
+// function setLocationDropDown(box) {
+//     box.header.append("button").classed("dropbtn", true).html("Standorte")
+//     box.locationList = box.header.append("div").classed("dropdown-content", true)
+//     for (loc of locations) {
 
-        box.locationList.append("a")
-            .classed("", true)
-                .html(loc.name)
-    }
-}
+//         box.locationList.append("a")
+//             .classed("", true)
+//                 .html(loc.name)
+//     }
+// }
 
 function onCheckBoxClick(box, checkbox, param) {
     var active = checkbox.classed("active")
@@ -795,7 +797,9 @@ function updateInfoBox(box) {
     var min =   tempFormat(d[params[2].name])
     var rain =  rainFormat(d[params[3].name])
 
-    box.location.html(box.canvas.options.location.name)
+    box.location.html(box.canvas.options.location.name).on("click", function() {
+        window.open('https://www.google.ch/maps/place/' + box.canvas.options.location.latitude + "," + box.canvas.options.location.longitude , '_blank');
+    })
     box.timespan.html(date)
     box.meanTemp.html(mean + "°C")
     box.maxminTemp.html(max + "°C / " + min + "°C | " + rain + " mm")

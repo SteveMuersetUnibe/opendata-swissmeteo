@@ -306,36 +306,36 @@ Date.prototype.getWeek = function() {
 
 
   // Position wird gemessen
-    var lat =  0;
-    var lng = 0;
+var lat =  0;
+var lng = 0;
 
-    function success(pos) {
+function success(pos) {
     var crd = pos.coords;
-
-
     console.log(`Latitude : ${crd.latitude}`);
     console.log(`Longitude: ${crd.longitude}`);
     lat = pos.coords.latitude;
     lng = pos.coords.longitude;
-    }
+    closestLocation()
+}
 
-    function error(err) {
+function error(err) {
     console.warn(`ERROR(${err.code}): ${err.message}`);
-    }
+}
   
-  navigator.geolocation.getCurrentPosition(success, error);
+function requestLocation() {
+    navigator.geolocation.getCurrentPosition(success, error);
+}
 
   // nächste Station und Abstand von der nächsten Station
 
-    var x = 0;
-    var y = 0;
-    var MeinX = 0;
-    var MeinY = 0;
-    var Abstand;
+var x = 0;
+var y = 0;
+var MeinX = 0;
+var MeinY = 0;
+var Abstand;
 
-  var closest_location;
-  var distance;
-
+var closest_location;
+var distance;
   
 function closestLocation() {
     for (loc of locations) {
@@ -354,8 +354,12 @@ function closestLocation() {
             distance = Math.sqrt((MeinX * MeinX) + (MeinY * MeinY))
             closest_location = loc
         }
-        console.log(distance);
     }
+
+    var index = locations.indexOf(closest_location)
+    var options = d3.select("#location-one").selectAll("option")._groups[0]
+    d3.select(options[index + 1]).attr("selected", true)
+    console.log(index, options, loc.longitude, loc.latitude, loc.name, closest_location)
 
     return closest_location;
    
