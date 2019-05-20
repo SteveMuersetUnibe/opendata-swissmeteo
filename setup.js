@@ -21,7 +21,6 @@ function start() {
         var location = location1.node().value != -1 ? location1.node().value : 0
 
         var date = $('#today1').data('datepicker').lastSelectedDate
-        console.log(date)
         
         var options = new Options(locations[location], null, null, date)
         
@@ -44,6 +43,33 @@ function start() {
         })
     });
 
+    $("#myModal").modal()
+
 }
 
 start()
+
+
+function showAll() {
+
+
+   
+    for (index in locations){
+        setTimeout( function (index) {
+        var options = new Options(locations[index], null, null, null)
+        
+        var promise = onChangeOptions(options).then(d => {
+
+        var canvas = new Canvas(options, true, [100, 100, 50, 100], [30, 10, 30, 10])
+        var lines = [
+            new LineParameter(params[1], options.data, colors[1], true),
+        ]
+
+        canvas.addLine(lines[0]) 
+
+        drawCanvas(canvas)
+        })
+        }, 2000 * index, index)
+    }
+    
+}

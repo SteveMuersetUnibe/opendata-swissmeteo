@@ -17,7 +17,7 @@ var LUG = { file : "Standorte/LUG.csv", name : "Lugano" , longitude :8.58 , lati
 var LUZ = { file : "Standorte/LUZ.csv", name : "Luzern" , longitude :8.18 , latitude: 47.02}; 
 var MER = { file : "Standorte/MER.csv", name : "Meiringen" , longitude :8.10 , latitude: 46.44}; 
 var NEU = { file : "Standorte/NEU.csv", name : "Neuchatel" , longitude :6.57 , latitude: 47.00}; 
-var OTL = { file : "Standorte/OTL.csv", name : "Lugano", longitude : 8.47 , latitude: 46.10}; 
+var OTL = { file : "Standorte/OTL.csv", name : "Locarno", longitude : 8.47 , latitude: 46.10}; 
 var PAY = { file : "Standorte/PAY.csv", name : "Payerne" , longitude :6.57 , latitude: 46.49}; 
 var RAG = { file : "Standorte/RAG.csv", name : "Bad Ragaz" , longitude :79.30 , latitude: 47.01}; 
 var SAE = { file : "Standorte/SAE.csv", name : "Saenti", longitude : 9.21 , latitude: 47.15}; 
@@ -54,7 +54,6 @@ function Options(loc, start_date, end_date, date) {
     this.start = start_date
     this.end = end_date
     this.date = date
-    options = this;
 }
 
 //Data Object Constructor to hold the raw data and the 
@@ -168,13 +167,14 @@ function filterData(data, options) {
         if (d.length < 500 && d.length > 0) return d
     }
 
+    var level = options.zoomLevel
     if (finish_index - begin_index > 250) {
-        options.zoomLevel += 1
-        options.zoomLevelChanged = true
+        options.zoomLevel += options.zoomLevel < 3 ? 1 : 0
+      
     } else if (finish_index - begin_index < 20) {
-        options.zoomLevel -= 1
-        options.zoomLevelChanged = true
+        options.zoomLevel -= options.zoomLevel > 0 ? 1 : 0
     }
+    options.zoomLevelChanged = level != options.zoomLevel
     return data.data
 }
 
@@ -212,8 +212,8 @@ function agregate(data, timespan, params){
     var new_data = new Array()
     var time = new agregateHelper(parse(data[0]["time"]), timespan)
     var holder = new Array()
-
     for (d of data) {
+        if (!parse(d["time"])) continue;
         var t = new agregateHelper(parse(d["time"]), timespan)
         if ( t.start >= time.start && t.start < time.end ){
             holder.push(d)
@@ -306,36 +306,36 @@ Date.prototype.getWeek = function() {
 
 
   // Position wird gemessen
-    var lat =  0;
-    var lng = 0;
+var lat =  0;
+var lng = 0;
 
-    function success(pos) {
+function success(pos) {
     var crd = pos.coords;
-
-
     console.log(`Latitude : ${crd.latitude}`);
     console.log(`Longitude: ${crd.longitude}`);
     lat = pos.coords.latitude;
     lng = pos.coords.longitude;
-    }
+    closestLocation()
+}
 
-    function error(err) {
+function error(err) {
     console.warn(`ERROR(${err.code}): ${err.message}`);
-    }
+}
   
-  navigator.geolocation.getCurrentPosition(success, error);
+function requestLocation() {
+    navigator.geolocation.getCurrentPosition(success, error);
+}
 
   // nächste Station und Abstand von der nächsten Station
 
-    var x = 0;
-    var y = 0;
-    var MeinX = 0;
-    var MeinY = 0;
-    var Abstand;
+var x = 0;
+var y = 0;
+var MeinX = 0;
+var MeinY = 0;
+var Abstand;
 
-  var closest_location;
-  var distance;
-
+var closest_location;
+var distance;
   
 function closestLocation() {
     for (loc of locations) {
@@ -354,8 +354,12 @@ function closestLocation() {
             distance = Math.sqrt((MeinX * MeinX) + (MeinY * MeinY))
             closest_location = loc
         }
-        console.log(distance);
     }
+
+    var index = locations.indexOf(closest_location)
+    var options = d3.select("#location-one").selectAll("option")._groups[0]
+    d3.select(options[index + 1]).attr("selected", true)
+    console.log(index, options, loc.longitude, loc.latitude, loc.name, closest_location)
 
     return closest_location;
    
