@@ -442,14 +442,16 @@ function zoomLines(line, canvas, transform) {
 
 function zoomButton(canvas) {
     var line = canvas.lines[0]
-    console.log(line)
+    line.zoom_rect.transition().duration(500).call(line.zoom.scaleBy, 2)
+}
+function unzoomButton(canvas) {
+    var line = canvas.lines[0]
+    line.zoom_rect.transition().duration(500).call(line.zoom.scaleBy, 0.5)
+}
 
-    console.log(line.zoom.scaleBy(1.1))
-
-    //line.transition().duration(750).call(zoom.event);
-
-
-    //line.zoom_rect.call(line.zoom.transform, canvas.zoomTransform)
+function slide(canvas) {
+    var line = canvas.lines[0]
+    line.zoom_rect.call(line.zoom.translateTo, [x, y])
 }
   
 function coordinates(point) {
@@ -498,8 +500,6 @@ function setCaptureJerry(line) {
     setCircle(line.pointerCircle)
     line.zoom_rect.on("mousemove", findPoint.bind(line.zoom_rect.node(), line))
     line.zoom_rect.on("mouseleave", removePoint.bind(null, line))
-    line.zoom_rect.on("touchmove", findPoint.bind(line.zoom_rect.node(), line))
-    line.zoom_rect.on("touchend", removePoint.bind(null, line))
 }
 
 function findPoint(line) {
@@ -743,7 +743,8 @@ function setInfoBox(box) {
     }
 
     console.log(box.canvas.lines)
-    box.footer.append("button").html("test").on("click", zoomButton.bind(null, box.canvas))
+    box.footer.append("button").html("+").on("click", zoomButton.bind(null, box.canvas))
+    box.footer.append("button").html("-").on("click", unzoomButton.bind(null, box.canvas))
 
 }
 
