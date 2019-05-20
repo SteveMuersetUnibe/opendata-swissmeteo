@@ -75,6 +75,8 @@ function dataAnalysis(line) {
     line.xmin = parse(line.raw_data.all_data[0]["time"])
     
     line.xmax = parse(line.raw_data.all_data[line.raw_data.all_data.length - 1]["time"])
+
+    if (isNaN(line.ymin) || isNaN(line.ymax)) {line.ymin = 0; line.ymax = 0;}
 }
 
 function setLineGroup(line) {
@@ -121,6 +123,7 @@ function updateXScale(line) {
 }
 
 function updateYScale(line) {
+    
     line.yScale.domain([line.ymin, line.ymax]).range([line.height, 0])
 }
 
@@ -142,8 +145,9 @@ function updateXAxis(line) {
 function updateYAxis(line) {
     line.drawAxisLeft = line.canvas.together ? line.axisLeft : true
     line.yAxis = line.drawAxisLeft ? d3.axisLeft() : d3.axisRight()
-    line.yAxis.tickValues([line.ymax, line.ymin])
+    line.yAxis.tickValues(line.axisLeft ? [line.ymax, 0, line.ymin] : [line.ymax, line.ymin])
     line.yAxis.scale(line.yScale);
+    line.yAxis.tickFormat(d => line.axisLeft ? tempFormat(d) + " °C" : rainFormat(d) + " mm")
 }
 
 function setAxisGroup(line) {
@@ -254,11 +258,17 @@ function setHelpLine(line){
         .x(d => line.xScale(d.x))
         .y(d => line.yScale(d.y))
         .defined(d => !isNaN(d.y))
+
+    line.zeroHelpLine = d3.line()
+        .x(d => line.xScale(d.x))
+        .y(d => line.yScale(d.y))
+        .defined(d => !isNaN(d.y))
 }
 
 function setHelpPath(line) {
     line.yHelpPath = line.group.append("path")
     line.xHelpPath = line.group.append("path")
+    line.zeroHelpPath = line.group.append("path")
 }
 
 function updateHelpPath(line) {
@@ -280,6 +290,14 @@ function updateHelpPath(line) {
         y : line.ymin
     }]
 
+    var zero_data = [{
+        x : line.xScale.domain()[0],
+        y : 0
+    }, {
+        x : line.xScale.domain()[1],
+        y : 0
+    }]
+
     if (isNaN(y_data[0].y)){
         line.yHelpPath
             .attr("d", null)
@@ -298,6 +316,13 @@ function updateHelpPath(line) {
         .attr("stroke-width", 1)
         .style("opacity", 0.5)
         .attr("d", line.xHelpLine(x_data))
+
+    line.zeroHelpPath
+        .attr("stroke", "black")
+        .attr("stroke-width", 1)
+        .style("opacity", 0.5)
+        .attr("d", line.zeroHelpLine(zero_data))
+
 }
 
 function setParamInfo(line) {
@@ -415,6 +440,30 @@ function zoomLines(line, canvas, transform) {
     canvas.options.newZoomLevel = false
 }
 
+function zoomButton(canvas) {
+    var line = canvas.lines[0]
+    console.log(line)
+
+    console.log(line.zoom.scaleBy(1.1))
+
+    //line.transition().duration(750).call(zoom.event);
+
+
+    //line.zoom_rect.call(line.zoom.transform, canvas.zoomTransform)
+}
+  
+function coordinates(point) {
+    var scale = zoom.scale(), translate = zoom.translate();
+    return [(point[0] - translate[0]) / scale, (point[1] - translate[1]) / scale];
+}
+  
+function point(coordinates) {
+    var scale = zoom.scale(), translate = zoom.translate();
+    return [coordinates[0] * scale + translate[0], coordinates[1] * scale + translate[1]];
+}
+
+
+
 function Circle(line,x,y,r) {
     this.line = line
     this.x = x
@@ -449,6 +498,8 @@ function setCaptureJerry(line) {
     setCircle(line.pointerCircle)
     line.zoom_rect.on("mousemove", findPoint.bind(line.zoom_rect.node(), line))
     line.zoom_rect.on("mouseleave", removePoint.bind(null, line))
+    line.zoom_rect.on("touchmove", findPoint.bind(line.zoom_rect.node(), line))
+    line.zoom_rect.on("touchend", removePoint.bind(null, line))
 }
 
 function findPoint(line) {
@@ -479,6 +530,7 @@ function removePoint(line){
     |**|**|         Functions       |**|**|
     |**|**|                         |**|**|
  */
+var canvasList = new Array()
 var counter = 0
 function Canvas(options, together, margin, padding) {
     this.id = "canvas" + counter; counter += 1;
@@ -499,6 +551,7 @@ function Canvas(options, together, margin, padding) {
     this.removeLine = function(line) {
         this.lines = this.lines.filter(d => d != line);
     }
+    canvasList.push(this)
     setCanvas(this)
 }
 
@@ -508,13 +561,13 @@ function setCanvas(canvas) {
             .classed("row", true)
     canvas.chart = canvas.row
         .append("div")
-            .classed("container col-8", true)
+            .classed("container col-sm-12 col-lg-8 col-xl-9", true)
         .append("div")
             .classed("card ", true)
 
     canvas.info = canvas.row
         .append("div")
-            .classed("container col-4", true)
+            .classed("container col-sm-12 col-lg-4 col-xl-3", true)
         .append("div")
             .classed("card ", true)
             .style("height", "100%")
@@ -522,21 +575,27 @@ function setCanvas(canvas) {
     canvas.infoBox = new InfoBox(canvas, canvas.info)
     setInfoBox(canvas.infoBox)
 
+    canvas.group = canvas.chart.append("svg")
+    setCanvasSize(canvas)
+}
+
+function setCanvasSize(canvas) {
     var dom = canvas.chart.node().getBoundingClientRect()
     canvas.width = dom.width
     canvas.height = win_height / 2
-    canvas.group = canvas.chart
-        .append("svg")
-            .style("height", (win_height / 2) + canvas.margin[0] + canvas.margin[2])
-            .style("width", dom.width)
+    canvas.group = canvas.group
+        .style("height", (win_height / 2) + canvas.margin[0] + canvas.margin[2])
+        .style("width", dom.width)
 }
 
 function removeCanvas(canvas) {
     canvas.row
         .transition()
-        .duration(500)
+        .duration(2000)
             .style("opacity", 0)
             .remove()
+    
+    canvasList = canvasList.filter(d => d != canvas)
 }
 
 function drawCanvas(canvas) {
@@ -682,7 +741,10 @@ function setInfoBox(box) {
             .on("click", onCheckBoxClick.bind(null,box, checkbox, param))
         checkboxes.append("br")
     }
-    setLocationDropDown(box)
+
+    console.log(box.canvas.lines)
+    box.footer.append("button").html("test").on("click", zoomButton.bind(null, box.canvas))
+
 }
 
 function setLocationDropDown(box) {
@@ -732,7 +794,7 @@ function updateInfoBox(box) {
     var min =   tempFormat(d[params[2].name])
     var rain =  rainFormat(d[params[3].name])
 
-    box.location.html(options.location.name)
+    box.location.html(box.canvas.options.location.name)
     box.timespan.html(date)
     box.meanTemp.html(mean + "°C")
     box.maxminTemp.html(max + "°C / " + min + "°C | " + rain + " mm")
@@ -765,6 +827,14 @@ function weekFormat(date) {
 function spread(canvas) {
     canvas.together = !canvas.together
     drawCanvas(canvas)
+}
+
+window.addEventListener("resize", onResize)
+function onResize() {
+    for (canvas of canvasList){
+        setCanvasSize(canvas)
+        updateCanvas(canvas)
+    }
 }
 
 
