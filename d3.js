@@ -731,14 +731,13 @@ function setInfoBox(box) {
     
     var checkboxes = box.header.append("div").classed("chckbx row", true)
 
-    box.spread = checkboxes.append("button")
+    box.spread = box.header.append("button").html("Aufteilen")
     box.spread
         .classed("checkbx col-12 col-md-6 col-lg-6 col-xl-6", true)
         .on("click", function () {
             spread(box.canvas);
             box.spread.classed("active", !box.spread.classed("active"))
         })
-        .html("Expand")
 
     checkboxes.append("div").classed("col-0 col-md-3 col-lg-3 col-xl-3", true)
     box.remove = checkboxes.append("button").classed("checkbx col-12 col-md-3 col-lg-3 col-xl-3", true)

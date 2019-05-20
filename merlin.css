@@ -6,6 +6,13 @@ body {
     font-size: 16;
 }
   
+.plzwork{
+    color: #fff;
+    background: rgb(88, 86, 86);
+    padding: 20px;
+    margin-left: -30px;
+    width: 10000px;
+}
 
 /* Dropdown Liste */
 .dropdown {
@@ -16,6 +23,7 @@ body {
 .dropbtn {
     text-align: center;
     font-size: 16px;
+    margin-left: 170px;
     background: rgb(110, 106, 106);
     color: #fff;
     padding: 10 px;
@@ -60,6 +68,7 @@ body {
 .spread {
     position: absolute;
     text-align: center;
+    margin-top: 70px;
     margin-left: 170px;
     background: rgb(110, 106, 106);
     color: #fff;
@@ -147,8 +156,6 @@ body {
 }
 
 .text-center{
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 16;
     text-align: center;
     color: #fff;
 }
