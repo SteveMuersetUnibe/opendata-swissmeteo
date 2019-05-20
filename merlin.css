@@ -16,6 +16,7 @@ body {
 .dropbtn {
     text-align: center;
     font-size: 16px;
+    margin-left: 170px;
     background: rgb(110, 106, 106);
     color: #fff;
     padding: 10 px;
@@ -60,6 +61,7 @@ body {
 .spread {
     position: absolute;
     text-align: center;
+    margin-top: 70px;
     margin-left: 170px;
     background: rgb(110, 106, 106);
     color: #fff;
