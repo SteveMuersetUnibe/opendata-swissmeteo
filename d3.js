@@ -336,7 +336,7 @@ function updateHelpPath(line) {
 function setParamInfo(line) {
     line.paramInfoGroup = line.group.append("g")
     line.paramInfoRect = line.paramInfoGroup.append("rect")
-    line.paramInfoText = line.paramInfoGroup.append("text")
+    line.paramInfoText = line.paramInfoGroup.append("text").style('fill', '#fff')
         
 }
 

@@ -39,7 +39,7 @@ var data_list = new Array();
 
 var parse = d3.timeParse("%Y%m%d");
 var format = d3.timeFormat("%Y%m%d")
-var colors = ["rgb(255, 0, 0)", "rgb(0, 0, 0)", "rgb(65, 102, 253)", "#2c10cc"]
+var colors = ["rgb(255, 0, 0)", "rgb(0, 0, 0)", "#99ddff", "#2c10cc"]
 
 var params = [ 
     new Parameter("Maximaltemperatur", d3.max, "MaxTemp", colors[0], true),
