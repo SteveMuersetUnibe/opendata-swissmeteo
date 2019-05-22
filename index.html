@@ -23,6 +23,8 @@
 
     <!-- Include English language  http://t1m0n.name/air-datepicker/docs/ -->
     <script src="dist/js/i18n/datepicker.de.js"></script>
+
+    <link href="https://fonts.googleapis.com/css?family=Nixie+One|Oswald|Quicksand|Sue+Ellen+Francisco&display=swap" rel="stylesheet">
      
 
     </head>
@@ -43,12 +45,17 @@
         <div id="question-one" class="">
             <div class="ask-location">
                 <h1>Wetterdaten</h1>
-                <select id="location-one" class="dropbtn">
-                    <option value="-1" disabled selected>Standort</option>
-                </select>
+                <div class="dropdown">
+                <button id="standortbtn" class="dropbtn" value="-1" disabled selected>Standort</button>
+                <br>
+                <div id="location-one" class="row">
+                </div>
+                    
+                </div>
+               
             </div>
             <div class="ask-weather">
-                    <h2 id="ask-weather-text">am</h2>
+                    <h2 id="ask-weather-text">Datum</h2>
                     <input 
                         class="datepicker-here" 
                         data-max-view="months"
@@ -56,12 +63,14 @@
                         data-date-format="dd MM"
                         data-language='de' 
                         type="text" 
+                        data-auto-close="true"
                         id="today1" />
             </div>
-
+            
             <div class="ask-submit">
                 <button id="go-one" class="checkbx">Go</button>
             </div>
+
 
         </div>
 

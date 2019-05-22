@@ -8,19 +8,24 @@ function start() {
 
     for (index in locations) {
 
-        location1.append("option")
-            .classed("", true)
+        location1.append("button")
+            .classed("dropdown-content col-6 col-sm-6 col-md-4", true)
                 .attr("value", index)
                 .html(locations[index].name)
+                .on("click", function(index) {
+                    console.log(index)
+                    d3.select("#standortbtn")
+                        .attr("value", index)
+                        .html(locations[index].name)
+                }.bind(null, index))
     }
-
-    
 
     go1.on("click", function() {
 
-        var location = location1.node().value != -1 ? location1.node().value : 0
+        var location = d3.select("#standortbtn").node().value != -1 ? d3.select("#standortbtn").node().value : 0
 
         var date = $('#today1').data('datepicker').lastSelectedDate
+        $('#today1').data('datepicker').removeDate(date)
         
         var options = new Options(locations[location], null, null, date)
         
@@ -42,23 +47,25 @@ function start() {
         drawCanvas(canvas)
         })
 
-        d3.select("#start").classed("active", true)
+        d3.select("#start").classed("active", !d3.select("#start").classed("active"));
+
+        var startbbox = d3.select("#start").node().getBoundingClientRect()
+        d3.select("#start").style("transform", "translate(-"+ (startbbox.width / 2) + "px,-" + (startbbox.height / 2) +"px) scale(0)")
 
     });
 
-    $("#myModal").modal()
+    
 
     d3.select("#menuIcon").on("click", function() {
-        d3.select("#menuIcon")
-            .transition()
-            .duration(1000)
-            .style("opacity", 0)
-        d3.select("#start").classed("active", false)
+        if (d3.select("#content").classed("active")) {
+            d3.select("#start").style("transform", "translate(0px, 0px) scale(1)")
+        } else {
+            var startbbox = d3.select("#start").node().getBoundingClientRect()
+            d3.select("#start").style("transform", "translate(-"+ (startbbox.width / 2) + "px,-" + (startbbox.height / 2) +"px) scale(0)")
+        }
+        d3.select("#content").classed("active", !d3.select("#content").classed("active"));
+        d3.select("#start").classed("active", !d3.select("#start").classed("active"));
     })
-    .transition()
-    .duration(1000)
-    .style("opacity", 1)
-
 }
 
 start()
