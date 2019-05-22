@@ -276,3 +276,10 @@ body {
     transition: all 0.5s;
 
 }
+
+.copyright {
+    font-size: 8px;
+    position: absolute;
+    bottom: 0px;
+
+}
