@@ -3,24 +3,25 @@
     <head>
     <meta charset="UTF-8">
 
-    <link rel="icon" href="iconfinder_cloud_1055089.png">
+    <link rel="icon" href="css/iconfinder_cloud_1055089.png">
+    <title>Wetterdaten 1860 - Heute Schweiz</title>
+
     <script
         src="https://code.jquery.com/jquery-3.4.1.min.js"
         integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
         crossorigin="anonymous"></script>
-
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-
-    <title>Wetterdaten 1860 - Heute Schweiz</title>
-    <script src="d3/d3.js"></script>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" type="text/css">
-    <link rel="stylesheet" type="text/css" href="main.css">
 
-    <link href="dist/css/datepicker.min.css" rel="stylesheet" type="text/css">
-    <script src="dist/js/datepicker.min.js"></script>
+    <script src="js/d3/d3.js"></script>
+    
+    <link rel="stylesheet" type="text/css" href="css/main.css">
+
+    <link href="js/dist/css/datepicker.min.css" rel="stylesheet" type="text/css">
+    <script src="js/dist/js/datepicker.min.js"></script>
 
     <!-- Include English language  http://t1m0n.name/air-datepicker/docs/ -->
-    <script src="dist/js/i18n/datepicker.de.js"></script>
+    <script src="js/dist/js/i18n/datepicker.de.js"></script>
 
     <link href="https://fonts.googleapis.com/css?family=Nixie+One|Oswald|Quicksand|Sue+Ellen+Francisco&display=swap" rel="stylesheet">
      
@@ -29,7 +30,7 @@
 
     <body>
             <div>
-                    <img id="menuIcon" src="iconfinder_cloud_1055089.png" widht="30px" height="30px">
+                <img id="menuIcon" src="css/iconfinder_cloud_1055089.png" widht="30px" height="30px">
             </div>
 
        
@@ -74,9 +75,9 @@
 
         </div>
         <div class="grafik" id="content"></div>
-    <script src="data.js"></script>
-    <script src="d3.js"></script>
-    <script src="setup.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/d3.js"></script>
+    <script src="js/setup.js"></script>
 
     <a class="copyleft" href="https://www.meteoschweiz.admin.ch/home.html?tab=overview">Daten erhoben vom Bundesamt für Meteorologie und Klimatologie, MeteoSchweiz</a>
     <a class="copyright" href="https://github.com/SteveMuersetUnibe/opendata-swissmeteo"> Steve Mürset und Merlin Schwendener (Github)</a>

@@ -1,0 +1,12 @@
+{
+    "title": "Wetterdaten 1860 - Heute Schweiz",
+    "description": "Ist Klimaerwärmung nur eine Erfindung der Chinesen? Regnet es wirklich immer an meinem Geburtstag? Wo mache ich am besten Ferien in der Schweiz? All das und noch vieles mehr kann man mit unserer Datenvisualisierung beantworten. Stütztend auf 1.5 Millionen Messwerten sehen sie die Vergangenheit des Schweizer Wetters von 1865 bis Heute. Täglich aufgenommene Werte zu Temperatur und Niederschlag lassen sich hier bestaunen und führt sie zu weltverändernden Erkentnissen",
+    "authors": [
+        {"name": "Steve Muerset", "email": "steve.muerset@students.unibe.ch"},
+        {"name": "Merlin Schwendener", "email": "merlin.schwendener@students.unibe.ch"}
+    ],
+    "date": "2019-05-23",
+    "category": "environment",
+    "software_license": "GNU General Public License v3"
+    }
+    
