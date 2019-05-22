@@ -42,7 +42,6 @@ body {
     display: none;
     margin-top: 10px;
 }
-
   
 .dropdown-content {
     background-color: rgb(110, 106, 106);
@@ -69,9 +68,6 @@ body {
     background-color: rgb(110, 106, 106);
     box-shadow: inset 2px 4px 4px rgba(0,0,0,0.5);
 }
-
-
-
 
 .chckbx {
     margin: 5px
@@ -123,7 +119,6 @@ body {
     font-size: 16;
     /* display: inline-block; */
 }
-
 
 .row {  
     display: flex;
@@ -188,12 +183,7 @@ body {
     transition: all 1s;
     -webkit-transition: all 1s;
     -moz-transition: all 1s;
-    -o-transition: all 1s;
-    
-    
-}
-
-#menuIcon {
+    -o-transition: all 1s;   
 }
 
 #cloud {
@@ -210,8 +200,7 @@ body {
     height: 40vh;
     width: 60vh;
     margin: auto;
-    padding-bottom: 5vh;
-    
+    padding-bottom: 5vh;    
 }
 
 
@@ -269,7 +258,7 @@ body {
     -moz-transition: all 2s;
     -o-transition: all 2s;
     transition: all 2s;
-    transform: translate(0, 0)
+    transform: translate(0, 0);
 }
 
 #content.invisible {
@@ -280,7 +269,6 @@ body {
     -moz-transition: all  0.5s;
     -o-transition: all 0.5s;
     transition: all 0.5s;
-
 }
 
 .copyleft {
