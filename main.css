@@ -32,6 +32,7 @@ body {
     width: 150px;
     height: 50px;
     border: none;
+    
 }
 
 .dropdown:hover > #location-one {
@@ -41,6 +42,7 @@ body {
 #location-one {
     display: none;
     margin-top: 10px;
+    background-color: rgb(110, 106, 106); /* #ffcccc;*/
 }
 
   
@@ -58,6 +60,11 @@ body {
 
 .dropdown-content:focus {
     outline: none;
+}
+
+.dropdown-content:hover {
+    background-color: rgb(110, 106, 106);
+    box-shadow: inset 2px 4px 4px rgba(0,0,0,0.5);
 }
   
  .dropdown-content:active {
@@ -208,7 +215,7 @@ body {
 
 #question-one {
     height: 40vh;
-    width: 60vh;
+    width: 70vh;
     margin: auto;
     padding-bottom: 5vh;
     
@@ -229,6 +236,7 @@ body {
     right: 0;
     height: 15vh;
     text-align: center;
+    
 }
 
 .ask-location select{
