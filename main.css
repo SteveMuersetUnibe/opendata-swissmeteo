@@ -231,6 +231,10 @@ body {
     text-align: center;
 }
 
+.locationName{
+    cursor: pointer;
+}
+
 .ask-location select{
     width: 25vh;
 }
@@ -279,9 +283,33 @@ body {
 
 }
 
+.copyleft {
+    font-size: 8px;
+    position: fixed;
+    bottom: 10px;
+    color: #fff;
+}
+
+.copyleft:focus{
+    color: white;
+}
+
+.copyleft:hover{
+    color: white;
+}
+
 .copyright {
     font-size: 8px;
-    position: absolute;
-    bottom: 0px;
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    color: #fff;
+}
 
+.copyright:focus{
+    color: white;
+}
+
+.copyright:hover{
+    color: white;
 }
