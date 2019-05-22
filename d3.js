@@ -605,29 +605,9 @@ function removeCanvas(canvas) {
 }
 
 function drawCanvas(canvas) {
-    canvas.chart.style("opacity", 0)
-        .style("transform", "translate(-500px, 0px)")
-    
-    canvas.chart
-        .transition()
-        .duration(0)
-        .style("opacity", 1)
-        .style("transition", "all 2s")
-        .style("-webkit-transition", "all 2s")
-        .style("transform", "translate(0px, 0px)")
-    canvas.info.style("opacity", 0)
-        .style("transform", "translate(200px, 0px")
-    
-    canvas.info
-        .transition()
-        .duration(0)
-        .style("opacity", 1)
-        .style("opacity", 1)
-        .style("transition", "all 2s")
-        .style("-webkit-transition", "all 2s")
-        .style("transform", "translate(0px, 0px)")
-
+        
     updateCanvas(canvas)
+    d3.select("#content").classed("active", true)
 }
 
 function updateCanvas(canvas) {
@@ -724,7 +704,12 @@ function setInfoBox(box) {
 
     box.body.classed("text-center", true).style("margin", "auto")
 
-    box.location = box.body.append("label")
+    box.location = box.body.append("h3").classed("locationName", true)
+
+    box.location.html(box.canvas.options.location.name).on("click", function() {
+        window.open('https://www.google.ch/maps/place/' + box.canvas.options.location.latitude + "," + box.canvas.options.location.longitude , '_blank');
+    })
+
     box.timespan = box.body.append("p")
     box.meanTemp = box.body.append("h1")
     box.maxminTemp = box.body.append("label")
@@ -753,9 +738,9 @@ function setInfoBox(box) {
         checkboxes.append("br")
     }
     var commands = box.footer.append("div").classed("row", true);
-    commands.append("button").html("+").classed("checkbx col-4", true).on("click", zoomButton.bind(null, box.canvas))
-    commands.append("div").classed("col-4", true)
-    commands.append("button").html("-").classed("checkbx col-4", true).on("click", unzoomButton.bind(null, box.canvas))
+    commands.append("button").html("+").classed("checkbx col-3", true).on("click", zoomButton.bind(null, box.canvas))
+    commands.append("div").classed("col-6", true)
+    commands.append("button").html("-").classed("checkbx col-3", true).on("click", unzoomButton.bind(null, box.canvas))
 
 }
 
@@ -791,8 +776,6 @@ function updateInfoBox(box) {
     var d = box.canvas.mouse_data
     var s = box.canvas.xScale
 
-   
-
     var dateFormat = getTimeFormat(box.canvas)
     var date = dateFormat(parse(d["time"]))
 
@@ -804,9 +787,7 @@ function updateInfoBox(box) {
     var min =   tempFormat(d[params[2].name])
     var rain =  rainFormat(d[params[3].name])
 
-    box.location.html(box.canvas.options.location.name).on("click", function() {
-        window.open('https://www.google.ch/maps/place/' + box.canvas.options.location.latitude + "," + box.canvas.options.location.longitude , '_blank');
-    })
+    
     box.timespan.html(date)
     box.meanTemp.html(mean + " °C")
     box.maxminTemp.html(max + " °C / " + min + " °C | " + rain + " mm")
